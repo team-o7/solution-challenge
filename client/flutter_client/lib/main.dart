@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_client/screens/home/home.dart';
+import 'package:flutter_client/reusables/constants.dart';
+
+import 'screens/mainScreen.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,10 +12,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'sast',
+      title: 'backbench',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(),
-      home: Home(),
+      theme: ThemeData(
+        accentColor: kPrimaryColor1,
+      ),
+      home: MainScreen(),
     );
   }
 }
