@@ -10,14 +10,13 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int index = 1;
+  int index;
   PageController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller =
-        PageController(initialPage: 1, viewportFraction: index == 0 ? 0.6 : 1);
+    _controller = PageController(initialPage: 1);
   }
 
   @override
@@ -35,7 +34,13 @@ class _MainScreenState extends State<MainScreen> {
         setState(() {});
       },
       controller: _controller,
-      children: [LeftDrawer(), Home(controller: _controller), DmScreen()],
+      children: [
+        LeftDrawer(),
+        Home(controller: _controller),
+        DmScreen(
+          controller: _controller,
+        )
+      ],
     );
   }
 }

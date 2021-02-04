@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/reusables/constants.dart';
+import 'package:flutter_client/screens/createTopic/create.dart';
+import 'package:flutter_client/screens/home/body.dart';
+import 'package:flutter_client/screens/profile/profile.dart';
+import 'package:flutter_client/screens/search/search.dart';
 
-class Home extends StatelessWidget {
-  const Home({
+class Home extends StatefulWidget {
+  Home({
     Key key,
     @required PageController controller,
   })  : _controller = controller,
@@ -12,15 +16,25 @@ class Home extends StatelessWidget {
   final PageController _controller;
 
   @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  List<Widget> _screens = [Body(), Search(), Create(), Profile()];
+
+  int _selectedIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-          title: Text('topictitle'),
+          title: Text('sensei'),
+          centerTitle: true,
           leading: IconButton(
             icon: Icon(Icons.menu),
             onPressed: () {
-              _controller.animateToPage(0,
+              widget._controller.animateToPage(0,
                   duration: Duration(milliseconds: 200), curve: Curves.easeIn);
             },
           ),
@@ -29,7 +43,7 @@ class Home extends StatelessWidget {
             IconButton(
                 icon: Icon(Icons.messenger_outline_sharp),
                 onPressed: () {
-                  _controller.animateToPage(2,
+                  widget._controller.animateToPage(2,
                       duration: Duration(milliseconds: 200),
                       curve: Curves.easeIn);
                 })
@@ -42,6 +56,14 @@ class Home extends StatelessWidget {
           type: BottomNavigationBarType.fixed,
           selectedLabelStyle: kBottomNavIconTextStyle,
           unselectedLabelStyle: kBottomNavIconTextStyle,
+          currentIndex: _selectedIndex,
+          selectedFontSize: 14,
+          unselectedFontSize: 14,
+          onTap: (_index) {
+            setState(() {
+              _selectedIndex = _index;
+            });
+          },
           items: [
             BottomNavigationBarItem(
                 icon: Icon(
@@ -59,6 +81,7 @@ class Home extends StatelessWidget {
           ],
         ),
       ),
+      body: _screens.elementAt(_selectedIndex),
     );
   }
 }
