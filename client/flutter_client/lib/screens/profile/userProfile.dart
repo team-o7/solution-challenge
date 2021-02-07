@@ -3,83 +3,105 @@ import 'package:flutter/material.dart';
 import 'package:stued/reusables/constants.dart';
 import 'package:stued/reusables/sizeConfig.dart';
 
-class YourProfile extends StatelessWidget {
+class UserProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kPrimaryColor1,
-        actions: [
-          Row(
-            children: [
-              IconButton(
-                  icon: Icon(
-                    Icons.edit_outlined,
-                    color: Colors.white,
-                    size: SizeConfig.screenWidth * 25 / 360,
-                  ),
-                  onPressed: () {}),
-              IconButton(
-                  icon: Icon(
-                    Icons.settings_applications_rounded,
-                    color: Colors.white,
-                    size: SizeConfig.screenWidth * 25 / 360,
-                  ),
-                  onPressed: () {}),
-              SizedBox(width: SizeConfig.screenWidth * 15 / 360)
-            ],
-          )
-        ],
+        leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+              size: SizeConfig.screenWidth * 25 / 360,
+            ),
+            onPressed: () {}),
       ),
       backgroundColor: Colors.white,
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: SizeConfig.screenHeight * 5 / 640),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
+                margin: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.screenWidth * 10 / 360),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(200),
                   child: Icon(
                     Icons.account_circle,
-                    size: SizeConfig.screenWidth * 120 / 360,
+                    size: SizeConfig.screenWidth * 80 / 360,
                   ),
                 ),
               ),
             ],
           ),
           SizedBox(
-            height: SizeConfig.screenHeight * 10 / 640,
+            height: SizeConfig.screenHeight * 8 / 640,
           ),
-          Container(
-            margin: EdgeInsets.symmetric(
-                horizontal: SizeConfig.screenWidth * 15 / 360),
-            child: Center(
-              child: Text(
-                'Shubham Mandan',
-                style: TextStyle(
-                  fontSize: SizeConfig.screenWidth * 22 / 360,
-                  fontWeight: FontWeight.w700,
+          Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.screenWidth * 20 / 360),
+                    child: Text(
+                      'Shubham Mandan',
+                      style: TextStyle(
+                        fontSize: SizeConfig.screenWidth * 18 / 360,
+                        fontWeight: FontWeight.w700,
+                        color: kPrimaryColor1,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.screenHeight * 5 / 640,
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.screenWidth * 20 / 360),
+                    child: Text(
+                      '@mandanshimpi',
+                      style: TextStyle(
+                        fontSize: SizeConfig.screenWidth * 12 / 360,
+                        fontWeight: FontWeight.w400,
+                        color: kPrimaryColor1,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                width: SizeConfig.screenWidth * 65 / 360,
+              ),
+              Container(
+                child: MaterialButton(
+                  onPressed: () {
+                    //todo:
+                  },
+                  height: SizeConfig.screenHeight * 30 / 640,
                   color: kPrimaryColor1,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        SizeConfig.screenWidth * 20 / 360),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Add Friend',
+                      style: TextStyle(
+                        fontSize: SizeConfig.screenWidth * 14 / 360,
+                        fontWeight: FontWeight.w300,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          SizedBox(
-            height: SizeConfig.screenHeight * 5 / 640,
-          ),
-          Container(
-            child: Text(
-              '@mandanshimpi',
-              style: TextStyle(
-                fontSize: SizeConfig.screenWidth * 12 / 360,
-                fontWeight: FontWeight.w400,
-                color: kPrimaryColor1,
-              ),
-            ),
+            ],
           ),
           SizedBox(
             height: SizeConfig.screenHeight * 20 / 640,
@@ -112,13 +134,6 @@ class YourProfile extends StatelessWidget {
                     //todo:
                   },
                 ),
-                ProfileWidget0(
-                  text: 'Requests',
-                  count: '13',
-                  onTap: () {
-                    //todo:
-                  },
-                ),
               ],
             ),
           ),
@@ -140,53 +155,11 @@ class YourProfile extends StatelessWidget {
               ),
             ),
           ),
-          ListTile(
-            leading: Icon(
-              Icons.celebration,
-              size: SizeConfig.screenWidth * 25 / 360,
-              color: Colors.black54,
-            ),
-            title: Text(
-              '18 Novemeber, 2000',
-              style: TextStyle(
-                fontSize: SizeConfig.screenWidth * 14 / 360,
-                fontWeight: FontWeight.w500,
-                color: kPrimaryColor1,
-              ),
-            ),
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.person_outline,
-              size: SizeConfig.screenWidth * 25 / 360,
-              color: Colors.black54,
-            ),
-            title: Text(
-              'Male',
-              style: TextStyle(
-                fontSize: SizeConfig.screenWidth * 14 / 360,
-                fontWeight: FontWeight.w500,
-                color: kPrimaryColor1,
-              ),
-            ),
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.library_books_sharp,
-              size: SizeConfig.screenWidth * 25 / 360,
-              color: Colors.black54,
-            ),
-            title: Text(
-              'About me',
-              style: TextStyle(
-                fontSize: SizeConfig.screenWidth * 14 / 360,
-                fontWeight: FontWeight.w500,
-                color: kPrimaryColor1,
-              ),
-            ),
+          SizedBox(
+            height: SizeConfig.screenHeight * 20 / 640,
           ),
           Container(
-            height: SizeConfig.screenHeight * 100 / 640,
+            height: SizeConfig.screenHeight * 150 / 640,
             width: SizeConfig.screenWidth,
             padding: EdgeInsets.all(SizeConfig.screenWidth * 10 / 360),
             margin: EdgeInsets.symmetric(
@@ -203,21 +176,6 @@ class YourProfile extends StatelessWidget {
               style: TextStyle(
                 fontSize: SizeConfig.screenWidth * 14 / 360,
                 fontWeight: FontWeight.w300,
-                color: kPrimaryColor1,
-              ),
-            ),
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.logout,
-              size: SizeConfig.screenWidth * 25 / 360,
-              color: Colors.black54,
-            ),
-            title: Text(
-              'Logout',
-              style: TextStyle(
-                fontSize: SizeConfig.screenWidth * 14 / 360,
-                fontWeight: FontWeight.w500,
                 color: kPrimaryColor1,
               ),
             ),
