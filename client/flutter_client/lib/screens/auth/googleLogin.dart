@@ -31,7 +31,7 @@ class GoogleLogin extends StatelessWidget {
                   height: SizeConfig.screenHeight * 5 / 640,
                 ),
                 Text(
-                  'Sign in to continue your\nSensei account',
+                  'Sign in to continue your\nsensei account',
                   style: TextStyle(
                     fontSize: SizeConfig.screenWidth * 22 / 360,
                     fontWeight: FontWeight.w300,
@@ -45,6 +45,7 @@ class GoogleLogin extends StatelessWidget {
                 MaterialButton(
                   onPressed: () {
                     //todo:
+                    Navigator.pushNamed(context, '/registration1');
                   },
                   height: SizeConfig.screenHeight * 40 / 640,
                   color: kPrimaryColor1,
@@ -78,10 +79,23 @@ class GoogleLogin extends StatelessWidget {
                       ),
                     ],
                   ),
-                )
+                ),
+                SizedBox(
+                  height: SizeConfig.screenHeight * 10 / 640,
+                ),
+                Container(
+                  child: Text(
+                    'Don\'t have an account? sign up',
+                    style: TextStyle(
+                      fontSize: SizeConfig.screenWidth * 14 / 360,
+                      fontWeight: FontWeight.w300,
+                      color: kPrimaryColor1,
+                    ),
+                  ),
+                ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
