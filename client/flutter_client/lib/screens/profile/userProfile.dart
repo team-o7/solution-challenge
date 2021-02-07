@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:stued/reusables/constants.dart';
-import 'package:stued/reusables/sizeConfig.dart';
+import 'package:flutter_client/reusables/constants.dart';
+import 'package:flutter_client/reusables/sizeConfig.dart';
 
 class UserProfile extends StatelessWidget {
   @override
@@ -113,7 +113,7 @@ class UserProfile extends StatelessWidget {
             decoration: BoxDecoration(
               color: Color(0xffF5F5F5),
               borderRadius:
-              BorderRadius.circular(SizeConfig.screenWidth * 10 / 360),
+                  BorderRadius.circular(SizeConfig.screenWidth * 10 / 360),
               border: Border.all(
                   color: kPrimaryColor1,
                   width: SizeConfig.screenHeight * 0.2 / 640),
@@ -167,7 +167,7 @@ class UserProfile extends StatelessWidget {
             decoration: BoxDecoration(
                 color: Color(0xffF5F5F5),
                 borderRadius:
-                BorderRadius.circular(SizeConfig.screenWidth * 10 / 360),
+                    BorderRadius.circular(SizeConfig.screenWidth * 10 / 360),
                 border: Border.all(
                     color: kPrimaryColor1,
                     width: SizeConfig.screenHeight * 0.2 / 640)),

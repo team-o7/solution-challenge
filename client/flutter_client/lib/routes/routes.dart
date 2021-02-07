@@ -3,6 +3,7 @@ import 'package:flutter_client/screens/auth/googleLogin.dart';
 import 'package:flutter_client/screens/auth/registration1.dart';
 import 'package:flutter_client/screens/auth/registration2.dart';
 import 'package:flutter_client/screens/mainScreen.dart';
+import 'package:flutter_client/screens/profile/userProfile.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -22,6 +23,8 @@ class Routes {
         return MaterialPageRoute(builder: (_) => Registration2());
       case '/drawerHolder':
         return MaterialPageRoute(builder: (_) => DrawerHolder());
+      case '/userProfile':
+        return MaterialPageRoute(builder: (_) => UserProfile());
       default:
         // If there is no such named route in the switch statement, e.g. /third
         return _errorRoute();
