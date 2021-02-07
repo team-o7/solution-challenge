@@ -1,37 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:stued/reusables/constants.dart';
 import 'package:stued/reusables/sizeConfig.dart';
 
-class YourProfile extends StatelessWidget {
+class Profile extends StatelessWidget {
+  
+  final GlobalKey<InnerDrawerState> innerDrawerKey;
+
+  const Profile({Key key, @required this.innerDrawerKey}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: kPrimaryColor1,
-        actions: [
-          Row(
-            children: [
-              IconButton(
-                  icon: Icon(
-                    Icons.edit_outlined,
-                    color: Colors.white,
-                    size: SizeConfig.screenWidth * 25 / 360,
-                  ),
-                  onPressed: () {}),
-              IconButton(
-                  icon: Icon(
-                    Icons.settings_applications_rounded,
-                    color: Colors.white,
-                    size: SizeConfig.screenWidth * 25 / 360,
-                  ),
-                  onPressed: () {}),
-              SizedBox(width: SizeConfig.screenWidth * 15 / 360)
-            ],
-          )
-        ],
-      ),
+      appBar:  PreferredSize(
+          preferredSize: const Size.fromHeight(56),
+          child: MainAppBar(
+            innerDrawerKey: innerDrawerKey,
+            title: 'Profile',
+          )),
       backgroundColor: Colors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -271,6 +258,7 @@ class ProfileWidget0 extends StatelessWidget {
           ],
         ),
       ),
+
     );
   }
 }

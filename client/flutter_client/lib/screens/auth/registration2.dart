@@ -71,6 +71,7 @@ class Registration2 extends StatelessWidget {
                 child: MaterialButton(
                   onPressed: () {
                     //todo:
+                    Navigator.pushNamed(context, '/drawerHolder');
                   },
                   height: SizeConfig.screenHeight * 40 / 640,
                   color: kPrimaryColor1,

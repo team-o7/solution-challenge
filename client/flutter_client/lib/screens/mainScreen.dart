@@ -1,46 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_client/screens/leftDrawer/leftDrawer.dart';
+import 'package:flutter_inner_drawer/inner_drawer.dart';
 
 import 'DMscreen/dmScreen.dart';
 import 'home/home.dart';
-import 'leftDrawer/leftDrawer.dart';
 
-class MainScreen extends StatefulWidget {
+class DrawerHolder extends StatefulWidget {
   @override
-  _MainScreenState createState() => _MainScreenState();
+  _DrawerHolderState createState() => _DrawerHolderState();
 }
 
-class _MainScreenState extends State<MainScreen> {
-  int index;
-  PageController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = PageController(initialPage: 1);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+class _DrawerHolderState extends State<DrawerHolder> {
+  final GlobalKey<InnerDrawerState> _innerDrawerKey =
+      GlobalKey<InnerDrawerState>();
 
   @override
   Widget build(BuildContext context) {
-    return PageView(
-      onPageChanged: (index) {
-        index = index;
-        // _controller = PageController(viewportFraction: index == 0 ? 0.8 : 1);
-        setState(() {});
-      },
-      controller: _controller,
-      children: [
-        LeftDrawer(),
-        Home(controller: _controller),
-        DmScreen(
-          controller: _controller,
-        )
-      ],
+    // Size size = MediaQuery.of(context).size;
+    return InnerDrawer(
+      scaffold: Home(
+        innerDrawerKey: _innerDrawerKey,
+      ),
+      leftChild: LeftDrawer(),
+      rightChild: DmScreen(innerDrawerKey: _innerDrawerKey),
+      key: _innerDrawerKey,
+      offset: IDOffset.only(left: 0.7, right: 1.0),
+      swipeChild: true,
+      onTapClose: true,
     );
   }
 }

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/widgets/dmtile.dart';
 import 'package:flutter_client/reusables/widgets/searchTextField.dart';
+import 'package:flutter_inner_drawer/inner_drawer.dart';
 
 class DmScreen extends StatelessWidget {
-  final PageController controller;
+  final GlobalKey<InnerDrawerState> innerDrawerKey;
 
-  const DmScreen({Key key, @required this.controller}) : super(key: key);
+  const DmScreen({Key key, this.innerDrawerKey}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,8 +18,8 @@ class DmScreen extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            controller.animateToPage(1,
-                duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+            innerDrawerKey.currentState
+                .close(direction: InnerDrawerDirection.end);
           },
         ),
       ),
