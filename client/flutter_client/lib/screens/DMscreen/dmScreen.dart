@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/widgets/dmtile.dart';
-import 'package:flutter_client/reusables/widgets/searchTextField.dart';
+import 'package:flutter_client/reusables/widgets/roundedTextField.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 
 class DmScreen extends StatelessWidget {
@@ -26,6 +26,7 @@ class DmScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {},
+        heroTag: 'hero0',
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -33,7 +34,13 @@ class DmScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SearchTextField(),
+              RoundedTextField(
+                hintText: 'search',
+                suffixIcon: Icon(
+                  Icons.search_outlined,
+                  color: kPrimaryColor0,
+                ),
+              ),
               DmTile(),
               DmTile(),
               DmTile(),

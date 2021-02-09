@@ -83,16 +83,6 @@ class GoogleLogin extends StatelessWidget {
                 SizedBox(
                   height: SizeConfig.screenHeight * 10 / 640,
                 ),
-                Container(
-                  child: Text(
-                    'Don\'t have an account? sign up',
-                    style: TextStyle(
-                      fontSize: SizeConfig.screenWidth * 14 / 360,
-                      fontWeight: FontWeight.w300,
-                      color: kPrimaryColor1,
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
