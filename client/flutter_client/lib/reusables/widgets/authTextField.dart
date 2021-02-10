@@ -12,6 +12,7 @@ class AuthTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      cursorColor: kPrimaryColorLight,
       enabled: true, // to trigger disabledBorder
       decoration: InputDecoration(
           filled: true,

@@ -21,8 +21,10 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         initialRoute: '/welcome',
         onGenerateRoute: Routes.generateRoute,
-        theme:
-            ThemeData(accentColor: kPrimaryColor1, splashColor: kPrimaryColor1),
+        theme: ThemeData(
+            brightness: Brightness.dark,
+            accentColor: kPrimaryColor1,
+            splashColor: kPrimaryColorVeryLight),
       ),
     );
   }

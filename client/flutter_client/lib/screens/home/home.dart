@@ -51,8 +51,8 @@ class _HomeState extends State<Home> {
             selectedItemColor: Colors.white,
             unselectedItemColor: Colors.grey[400],
             type: BottomNavigationBarType.fixed,
-            selectedLabelStyle: kBottomNavIconTextStyle,
-            unselectedLabelStyle: kBottomNavIconTextStyle,
+            selectedLabelStyle: kBottomNavLabelTextStyle,
+            unselectedLabelStyle: kBottomNavLabelTextStyle,
             currentIndex: _selectedIndex,
             selectedFontSize: 14,
             unselectedFontSize: 14,
@@ -65,17 +65,17 @@ class _HomeState extends State<Home> {
             items: [
               BottomNavigationBarItem(
                   icon: Icon(
-                    Icons.home_filled,
+                    Icons.home_outlined,
                   ),
                   label: 'Home'),
               BottomNavigationBarItem(
-                icon: Icon(Icons.search),
+                icon: Icon(Icons.search_outlined),
                 label: 'Search',
               ),
               BottomNavigationBarItem(
                   icon: Icon(Icons.create_outlined), label: 'Create'),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.account_circle), label: 'Profile'),
+                  icon: Icon(Icons.account_circle_outlined), label: 'Profile'),
             ],
           ),
         ),

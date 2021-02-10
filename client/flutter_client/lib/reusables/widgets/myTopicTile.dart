@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import '../constants.dart';
@@ -28,8 +29,7 @@ class MyTopicTile extends StatelessWidget {
                 title: Text(
                   'Machine Learning',
                   style: TextStyle(
-                      color: kTextColor,
-                      fontSize: 36,
+                      fontSize: SizeConfig.screenWidth * 30 / 360,
                       fontWeight: FontWeight.w700),
                 ),
                 subtitle: Text(
@@ -48,7 +48,6 @@ class MyTopicTile extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 18.0),
                 child: Text(
                   '34 peoples',
-                  style: TextStyle(color: kTextColor),
                 ),
               ),
               Container(
