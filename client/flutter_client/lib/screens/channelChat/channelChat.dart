@@ -11,7 +11,7 @@ class ChannelChat extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kPrimaryColor0,
-        title: Text('#$title'),
+        title: Text('# $title'),
       ),
       body: SafeArea(
         child: Column(
@@ -43,14 +43,18 @@ class ChannelMessageBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: CircleAvatar(
-        child: Text('P'),
+        backgroundColor: kPrimaryColor0,
+        child: Text(
+          'P',
+          style: TextStyle(fontSize: 12),
+        ),
         radius: 12,
       ),
       title: Text(
         'Prakash Kumar',
         style: TextStyle(fontSize: 12),
       ),
-      subtitle: Text('lorem ipsum dollar lawra lassun',
+      subtitle: Text('lorem ipsum dollar lawra lassun ',
           style: TextStyle(fontSize: 15)),
       dense: true,
       minLeadingWidth: 13,

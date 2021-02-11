@@ -213,14 +213,14 @@ class PublicPrivateSwitchListTile extends StatefulWidget {
 
 class _PublicPrivateSwitchListTileState
     extends State<PublicPrivateSwitchListTile> {
-  bool _privatePublic = false;
+  bool _private = false;
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return SwitchListTile(
       title: Text(
-        'Private - Public',
+        'Private',
         style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w400,
@@ -228,10 +228,10 @@ class _PublicPrivateSwitchListTileState
           letterSpacing: 1.5,
         ),
       ),
-      value: _privatePublic,
+      value: _private,
       onChanged: (bool value) {
         setState(() {
-          _privatePublic = value;
+          _private = value;
         });
       },
       secondary: const Icon(Icons.lock_rounded),

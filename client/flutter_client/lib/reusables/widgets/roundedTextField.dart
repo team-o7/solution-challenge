@@ -30,11 +30,11 @@ class RoundedTextField extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
           ),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: kPrimaryColor0, width: 2.0),
+            borderSide: BorderSide(color: kPrimaryColor0, width: 1.0),
             borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: kPrimaryColor0, width: 4.0),
+            borderSide: BorderSide(color: kPrimaryColor0, width: 2.0),
             borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
           ),
           suffixIcon: suffixIcon),

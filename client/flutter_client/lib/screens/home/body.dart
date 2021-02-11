@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_client/reusables/widgets/mainAppBar.dart';
+import 'package:flutter_client/reusables/widgets/roundedTextField.dart';
 
 class Body extends StatelessWidget {
   final innerDrawerKey;
@@ -19,103 +20,135 @@ class Body extends StatelessWidget {
       //todo: Admin channels:- documents, announcements
       //todo: Public channels:- general, random, topic_name
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 12,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: RoundedTextField(
+                hintText: 'Jump to...',
+                borderRadius: 5,
+              ),
+            ),
+            SizedBox(
+              height: SizeConfig.screenHeight * 0.02,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Text(
                 'Admin channels',
                 style: TextStyle(
                     fontSize: SizeConfig.screenWidth * 18 / 360,
                     fontWeight: FontWeight.w600),
               ),
-              ChannelTile(
-                hasSendAccess: false,
-                title: 'documents',
+            ),
+            ChannelTile(
+              channel: Channel.admin,
+              title: 'documents',
+            ),
+            ChannelTile(
+              channel: Channel.admin,
+              title: 'announcements',
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 6, top: 8),
+              child: Row(
+                children: [
+                  Icon(
+                    CupertinoIcons.add_circled_solid,
+                  ),
+                  SizedBox(
+                    width: SizeConfig.screenWidth * 8 / 360,
+                  ),
+                  Text(
+                    'Add Channel',
+                    style: TextStyle(
+                        fontSize: SizeConfig.screenWidth * 15 / 360,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ],
               ),
-              ChannelTile(
-                hasSendAccess: false,
-                title: 'announcements',
+            ),
+            SizedBox(
+              height: 24,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Text(
+                'Private channels',
+                style: TextStyle(
+                    fontSize: SizeConfig.screenWidth * 18 / 360,
+                    fontWeight: FontWeight.w600),
               ),
-              SizedBox(
-                height: 24,
+            ),
+            ChannelTile(
+              channel: Channel.private,
+              title: 'Suggestion',
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 6, top: 8),
+              child: Row(
+                children: [
+                  Icon(
+                    CupertinoIcons.add_circled_solid,
+                  ),
+                  SizedBox(
+                    width: SizeConfig.screenWidth * 8 / 360,
+                  ),
+                  Text(
+                    'Add Channel',
+                    style: TextStyle(
+                        fontSize: SizeConfig.screenWidth * 15 / 360,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ],
               ),
-              Text(
+            ),
+            SizedBox(
+              height: 24,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Text(
                 'Public channels',
                 style: TextStyle(
                     fontSize: SizeConfig.screenWidth * 18 / 360,
                     fontWeight: FontWeight.w600),
               ),
-              ChannelTile(
-                hasSendAccess: true,
-                title: 'general',
-              ),
-              ChannelTile(
-                hasSendAccess: true,
-                title: 'random',
-              ),
-              ChannelTile(
-                hasSendAccess: true,
-                title: 'team 7',
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8, top: 12),
-                child: Row(
-                  children: [
-                    Icon(
-                      CupertinoIcons.add_circled_solid,
-                    ),
-                    SizedBox(
-                      width: SizeConfig.screenWidth * 8 / 360,
-                    ),
-                    Text(
-                      'Add Channel',
-                      style: TextStyle(
-                          fontSize: SizeConfig.screenWidth * 15 / 360,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class ChannelTile extends StatelessWidget {
-  final bool hasSendAccess;
-  final String title;
-
-  const ChannelTile(
-      {Key key, @required this.hasSendAccess, @required this.title})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, '/channelChat', arguments: title);
-      },
-      child: Padding(
-        padding: const EdgeInsets.only(left: 8, top: 12),
-        child: Row(
-          children: [
-            Icon(
-              CupertinoIcons.heart_circle,
-              color: hasSendAccess ? Colors.green : Colors.redAccent,
             ),
-            SizedBox(
-              width: SizeConfig.screenWidth * 8 / 360,
+            ChannelTile(
+              channel: Channel.public,
+              title: 'general',
             ),
-            Text(
-              '#$title',
-              style: TextStyle(
-                  fontSize: SizeConfig.screenWidth * 15 / 360,
-                  fontWeight: FontWeight.w400),
+            ChannelTile(
+              channel: Channel.public,
+              title: 'random',
+            ),
+            ChannelTile(
+              channel: Channel.public,
+              title: 'team 7',
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 6, top: 8),
+              child: Row(
+                children: [
+                  Icon(
+                    CupertinoIcons.add_circled_solid,
+                  ),
+                  SizedBox(
+                    width: SizeConfig.screenWidth * 8 / 360,
+                  ),
+                  Text(
+                    'Add Channel',
+                    style: TextStyle(
+                        fontSize: SizeConfig.screenWidth * 15 / 360,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -123,3 +156,70 @@ class ChannelTile extends StatelessWidget {
     );
   }
 }
+
+class ChannelTile extends StatelessWidget {
+  final Channel channel;
+  final String title;
+
+  const ChannelTile({Key key, @required this.channel, @required this.title})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      padding: EdgeInsets.all(0),
+      onPressed: () {
+        Navigator.pushNamed(context, '/channelChat', arguments: title);
+      },
+      child: Row(
+        children: [
+          SizedBox(
+            width: 12,
+          ),
+          iconType(channel),
+          SizedBox(
+            width: SizeConfig.screenWidth * 8 / 360,
+          ),
+          Text(
+            '# $title',
+            style: TextStyle(
+                fontSize: SizeConfig.screenWidth * 15 / 360,
+                fontWeight: FontWeight.w400),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Icon iconType(Channel channel) {
+    switch (channel) {
+      case Channel.admin:
+        return Icon(
+          Icons.circle,
+          color: Colors.redAccent,
+          size: 12,
+        );
+      case Channel.private:
+        return Icon(
+          Icons.circle,
+          color: Colors.yellow,
+          size: 12,
+        );
+      case Channel.public:
+        return Icon(
+          Icons.circle,
+          color: Colors.green,
+          size: 12,
+        );
+      default:
+        return Icon(
+          Icons.circle,
+          color: Colors.green,
+          size: 12,
+        );
+    }
+  }
+}
+
+enum Channel { public, private, admin }
