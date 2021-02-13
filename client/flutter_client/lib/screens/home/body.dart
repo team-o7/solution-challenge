@@ -20,137 +20,121 @@ class Body extends StatelessWidget {
       //todo: Admin channels:- documents, announcements
       //todo: Public channels:- general, random, topic_name
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 12,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: RoundedTextField(
-                hintText: 'Jump to...',
-                borderRadius: 5,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 6, right: 6),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 12,
               ),
-            ),
-            SizedBox(
-              height: SizeConfig.screenHeight * 0.02,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Text(
-                'Admin channels',
-                style: TextStyle(
-                    fontSize: SizeConfig.screenWidth * 18 / 360,
-                    fontWeight: FontWeight.w600),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: RoundedTextField(
+                  hintText: 'Jump to...',
+                  borderRadius: 5,
+                ),
               ),
-            ),
-            ChannelTile(
-              channel: Channel.admin,
-              title: 'documents',
-            ),
-            ChannelTile(
-              channel: Channel.admin,
-              title: 'announcements',
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 6, top: 8),
-              child: Row(
-                children: [
-                  Icon(
-                    CupertinoIcons.add_circled_solid,
-                  ),
-                  SizedBox(
-                    width: SizeConfig.screenWidth * 8 / 360,
-                  ),
-                  Text(
-                    'Add Channel',
-                    style: TextStyle(
-                        fontSize: SizeConfig.screenWidth * 15 / 360,
-                        fontWeight: FontWeight.w400),
-                  ),
-                ],
+              SizedBox(
+                height: SizeConfig.screenHeight * 0.02,
               ),
-            ),
-            SizedBox(
-              height: 24,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Text(
-                'Private channels',
-                style: TextStyle(
-                    fontSize: SizeConfig.screenWidth * 18 / 360,
-                    fontWeight: FontWeight.w600),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  'Admin channels',
+                  style: TextStyle(
+                      fontSize: SizeConfig.screenWidth * 18 / 360,
+                      fontWeight: FontWeight.w600),
+                ),
               ),
-            ),
-            ChannelTile(
-              channel: Channel.private,
-              title: 'Suggestion',
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 6, top: 8),
-              child: Row(
-                children: [
-                  Icon(
-                    CupertinoIcons.add_circled_solid,
-                  ),
-                  SizedBox(
-                    width: SizeConfig.screenWidth * 8 / 360,
-                  ),
-                  Text(
-                    'Add Channel',
-                    style: TextStyle(
-                        fontSize: SizeConfig.screenWidth * 15 / 360,
-                        fontWeight: FontWeight.w400),
-                  ),
-                ],
+              ChannelTile(
+                channel: Channel.admin,
+                title: 'documents',
               ),
-            ),
-            SizedBox(
-              height: 24,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Text(
-                'Public channels',
-                style: TextStyle(
-                    fontSize: SizeConfig.screenWidth * 18 / 360,
-                    fontWeight: FontWeight.w600),
+              ChannelTile(
+                channel: Channel.admin,
+                title: 'announcements',
               ),
-            ),
-            ChannelTile(
-              channel: Channel.public,
-              title: 'general',
-            ),
-            ChannelTile(
-              channel: Channel.public,
-              title: 'random',
-            ),
-            ChannelTile(
-              channel: Channel.public,
-              title: 'team 7',
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 6, top: 8),
-              child: Row(
-                children: [
-                  Icon(
-                    CupertinoIcons.add_circled_solid,
-                  ),
-                  SizedBox(
-                    width: SizeConfig.screenWidth * 8 / 360,
-                  ),
-                  Text(
-                    'Add Channel',
-                    style: TextStyle(
-                        fontSize: SizeConfig.screenWidth * 15 / 360,
-                        fontWeight: FontWeight.w400),
-                  ),
-                ],
+              SizedBox(
+                height: 24,
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  'Private channels',
+                  style: TextStyle(
+                      fontSize: SizeConfig.screenWidth * 18 / 360,
+                      fontWeight: FontWeight.w600),
+                ),
+              ),
+              ChannelTile(
+                channel: Channel.private,
+                title: 'Suggestion',
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 6, top: 8),
+                child: Row(
+                  children: [
+                    Icon(
+                      CupertinoIcons.add_circled_solid,
+                    ),
+                    SizedBox(
+                      width: SizeConfig.screenWidth * 8 / 360,
+                    ),
+                    Text(
+                      'Add Channel',
+                      style: TextStyle(
+                          fontSize: SizeConfig.screenWidth * 15 / 360,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 24,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  'Public channels',
+                  style: TextStyle(
+                      fontSize: SizeConfig.screenWidth * 18 / 360,
+                      fontWeight: FontWeight.w600),
+                ),
+              ),
+              ChannelTile(
+                channel: Channel.public,
+                title: 'general',
+              ),
+              ChannelTile(
+                channel: Channel.public,
+                title: 'random',
+              ),
+              ChannelTile(
+                channel: Channel.public,
+                title: 'team 7',
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 6, top: 8),
+                child: Row(
+                  children: [
+                    Icon(
+                      CupertinoIcons.add_circled_solid,
+                    ),
+                    SizedBox(
+                      width: SizeConfig.screenWidth * 8 / 360,
+                    ),
+                    Text(
+                      'Add Channel',
+                      style: TextStyle(
+                          fontSize: SizeConfig.screenWidth * 15 / 360,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -184,8 +168,8 @@ class ChannelTile extends StatelessWidget {
           Text(
             '# $title',
             style: TextStyle(
-                fontSize: SizeConfig.screenWidth * 15 / 360,
-                fontWeight: FontWeight.w400),
+                fontSize: SizeConfig.screenWidth * 16 / 360,
+                fontWeight: FontWeight.w500),
           ),
         ],
       ),
@@ -196,27 +180,27 @@ class ChannelTile extends StatelessWidget {
     switch (channel) {
       case Channel.admin:
         return Icon(
-          Icons.circle,
+          CupertinoIcons.circle,
           color: Colors.redAccent,
-          size: 12,
+          size: 8,
         );
       case Channel.private:
         return Icon(
-          Icons.circle,
+          CupertinoIcons.circle,
           color: Colors.yellow,
-          size: 12,
+          size: 8,
         );
       case Channel.public:
         return Icon(
-          Icons.circle,
+          CupertinoIcons.circle,
           color: Colors.green,
-          size: 12,
+          size: 8,
         );
       default:
         return Icon(
-          Icons.circle,
-          color: Colors.green,
-          size: 12,
+          CupertinoIcons.circle,
+          color: Colors.black,
+          size: 8,
         );
     }
   }

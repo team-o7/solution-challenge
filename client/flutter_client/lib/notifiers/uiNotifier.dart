@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 
 class UiNotifier extends ChangeNotifier {
-  int bottomNavIndex = 0;
+  int leftNavIndex = 0;
 
-  void setBottomNavIndex(int index) {
-    bottomNavIndex = index;
+  void setLeftNavIndex(int index) {
+    leftNavIndex = index;
     notifyListeners();
   }
 }

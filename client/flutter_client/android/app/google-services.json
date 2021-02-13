@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "895725549739",
+    "project_id": "sensei-56215",
+    "storage_bucket": "sensei-56215.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:895725549739:android:9ce5e057d771bc38f1dfee",
+        "android_client_info": {
+          "package_name": "com.prakash.sensei"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "895725549739-90qa5fslm9vm487tkhbd1skd7vsgvpk7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.prakash.sensei",
+            "certificate_hash": "89c4113ddaee0d9489dfcc172273ca216fe77894"
+          }
+        },
+        {
+          "client_id": "895725549739-jvpgmlkjqg94bpi3ghn1060jvjpsaddh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1GICAdrfBGY6TkX9Np5Ui-Uyi4-CuSxg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "895725549739-jvpgmlkjqg94bpi3ghn1060jvjpsaddh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
