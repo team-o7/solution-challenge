@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_client/notifiers/uiNotifier.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
 import '../sizeConfig.dart';
 
 class DobPicker extends StatefulWidget {
+  final Function dob;
+
+  const DobPicker({Key key, this.dob}) : super(key: key);
+
   @override
   _DobPickerState createState() => _DobPickerState();
 }
@@ -15,7 +21,7 @@ class _DobPickerState extends State<DobPicker> {
     final DateTime picked = await showDatePicker(
       context: context,
       initialDate: selectedDate,
-      firstDate: DateTime(2015, 8),
+      firstDate: DateTime(1900, 8),
       lastDate: DateTime(2101),
       builder: (context, child) {
         return Theme(
@@ -32,6 +38,7 @@ class _DobPickerState extends State<DobPicker> {
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
+        Provider.of<UiNotifier>(context, listen: false).setDob(selectedDate);
       });
   }
 

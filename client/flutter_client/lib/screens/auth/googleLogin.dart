@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
+import 'package:flutter_client/services/authProvider.dart';
 
 class GoogleLogin extends StatelessWidget {
   @override
@@ -44,8 +45,16 @@ class GoogleLogin extends StatelessWidget {
                 ),
                 MaterialButton(
                   onPressed: () {
-                    //todo:
-                    Navigator.pushNamed(context, '/registration1');
+                    AuthProvider().signInWithGoogle().then((user) {
+                      print(user.additionalUserInfo.profile['picture']);
+                      if (!user.additionalUserInfo.isNewUser) {
+                        Navigator.pushNamed(context, '/drawerHolder');
+                      } else {
+                        Navigator.pushNamed(context, '/registration1');
+                      }
+                    }).catchError((e) {
+                      print(e);
+                    });
                   },
                   height: SizeConfig.screenHeight * 40 / 640,
                   color: kPrimaryColor1,
