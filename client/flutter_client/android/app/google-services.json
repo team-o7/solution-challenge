@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "895725549739-jqpfmkqlb0lgrfte4bm5mueteijoa5mf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.prakash.sensei",
+            "certificate_hash": "a04cef9a31a49bde4900afd1a7ea4996db87517e"
+          }
+        },
+        {
           "client_id": "895725549739-p11qmv08j5fj6ds578t68fvbl3amptjk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
