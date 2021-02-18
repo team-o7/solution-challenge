@@ -3,32 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
+import 'package:flutter_client/services/authProvider.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
-class LeftDrawer extends StatefulWidget {
-  static List<TopicChannelTile> _list = [
-    TopicChannelTile(
-      topicAcronym: 'T7',
-      index: 0,
-    ),
-    TopicChannelTile(
-      topicAcronym: 'ML',
-      index: 1,
-    ),
-    TopicChannelTile(
-      topicAcronym: 'AI',
-      index: 2,
-    ),
-  ];
-
-  @override
-  _LeftDrawerState createState() => _LeftDrawerState();
-}
-
-class _LeftDrawerState extends State<LeftDrawer> {
+class LeftDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     //todo: mute notification, dark mode, notifications, peoples, rate, leave, invite
     //todo: ADMIN remove people,
     return Drawer(
@@ -45,7 +27,20 @@ class _LeftDrawerState extends State<LeftDrawer> {
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: LeftDrawer._list,
+                      children: [
+                        TopicChannelTile(
+                          topicAcronym: 'T7',
+                          index: 0,
+                        ),
+                        TopicChannelTile(
+                          topicAcronym: 'ML',
+                          index: 1,
+                        ),
+                        TopicChannelTile(
+                          topicAcronym: 'AI',
+                          index: 2,
+                        ),
+                      ],
                     ),
                   )),
             ),
@@ -122,7 +117,14 @@ class _LeftDrawerState extends State<LeftDrawer> {
                 SizedBox(
                   height: SizeConfig.screenHeight * 1 / 40,
                 ),
-                TopicOptionTile(title: 'Sign out', icon: Icons.logout),
+                TopicOptionTile(
+                  title: 'Sign out',
+                  icon: Icons.logout,
+                  onPressed: () {
+                    AuthProvider().signOut();
+                    Navigator.pushNamed(context, '/logIn');
+                  },
+                ),
                 SizedBox(
                   height: SizeConfig.screenHeight * 1 / 40,
                 ),
@@ -170,28 +172,34 @@ class _LeftDrawerState extends State<LeftDrawer> {
 class TopicOptionTile extends StatelessWidget {
   final String title;
   final IconData icon;
+  final Function onPressed;
 
-  const TopicOptionTile({Key key, @required this.title, @required this.icon})
+  const TopicOptionTile(
+      {Key key, @required this.title, @required this.icon, this.onPressed})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SizedBox(
-          width: 8,
-        ),
-        Icon(icon),
-        SizedBox(
-          width: 8,
-        ),
-        Text(
-          title,
-          style: TextStyle(
-              fontSize: SizeConfig.screenWidth * 1 / 25,
-              fontWeight: FontWeight.w600),
-        )
-      ],
+    SizeConfig().init(context);
+    return GestureDetector(
+      onTap: onPressed,
+      child: Row(
+        children: [
+          SizedBox(
+            width: 8,
+          ),
+          Icon(icon),
+          SizedBox(
+            width: 8,
+          ),
+          Text(
+            title,
+            style: TextStyle(
+                fontSize: SizeConfig.screenWidth * 1 / 25,
+                fontWeight: FontWeight.w600),
+          )
+        ],
+      ),
     );
   }
 }
@@ -208,6 +216,7 @@ class TopicChannelTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return GestureDetector(
       onTap: () {
         Provider.of<UiNotifier>(context, listen: false).setLeftNavIndex(index);

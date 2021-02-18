@@ -11,12 +11,16 @@ class DrawerHolder extends StatefulWidget {
 }
 
 class _DrawerHolderState extends State<DrawerHolder> {
-  final GlobalKey<InnerDrawerState> _innerDrawerKey =
-      GlobalKey<InnerDrawerState>();
+  GlobalKey<InnerDrawerState> _innerDrawerKey;
+
+  @override
+  void initState() {
+    _innerDrawerKey = new GlobalKey<InnerDrawerState>();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Size size = MediaQuery.of(context).size;
     return InnerDrawer(
       scaffold: Home(
         innerDrawerKey: _innerDrawerKey,

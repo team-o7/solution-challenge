@@ -6,13 +6,17 @@ import '../sizeConfig.dart';
 //used in authScreens
 class AuthTextField extends StatelessWidget {
   final String hintText;
+  final Function(String) onChanged;
+  final int maxLength;
 
-  const AuthTextField({Key key, this.hintText}) : super(key: key);
+  const AuthTextField({Key key, this.hintText, this.onChanged, this.maxLength})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       cursorColor: kPrimaryColorLight,
+      onChanged: onChanged,
       enabled: true, // to trigger disabledBorder
       decoration: InputDecoration(
           filled: true,

@@ -6,6 +6,7 @@ import 'package:flutter_client/screens/auth/registration2.dart';
 import 'package:flutter_client/screens/channelChat/channelChat.dart';
 import 'package:flutter_client/screens/mainScreen.dart';
 import 'package:flutter_client/screens/profile/userProfile.dart';
+import 'package:flutter_client/screens/welcome.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -13,9 +14,9 @@ class Routes {
     final args = settings.arguments;
 
     switch (settings.name) {
-      // case '/':
-      //   return MaterialPageRoute(builder: (_) => null);
-      case '/welcome':
+      case '/':
+        return MaterialPageRoute(builder: (_) => Welcome());
+      case '/logIn':
         return MaterialPageRoute(
           builder: (_) => GoogleLogin(),
         );
