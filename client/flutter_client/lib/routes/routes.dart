@@ -5,6 +5,7 @@ import 'package:flutter_client/screens/auth/registration1.dart';
 import 'package:flutter_client/screens/auth/registration2.dart';
 import 'package:flutter_client/screens/channelChat/channelChat.dart';
 import 'package:flutter_client/screens/mainScreen.dart';
+import 'package:flutter_client/screens/profile/editProfile.dart';
 import 'package:flutter_client/screens/profile/userProfile.dart';
 import 'package:flutter_client/screens/welcome.dart';
 
@@ -28,6 +29,8 @@ class Routes {
         return MaterialPageRoute(builder: (_) => DrawerHolder());
       case '/userProfile':
         return MaterialPageRoute(builder: (_) => UserProfile());
+      case '/editProfile':
+        return MaterialPageRoute(builder: (_) => EditProfile());
       case '/chat':
         return MaterialPageRoute(builder: (_) => Chat());
       case '/channelChat':

@@ -26,6 +26,20 @@ class Profile extends StatelessWidget {
           children: [
             SizedBox(height: SizeConfig.screenHeight * 5 / 640),
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.edit_outlined,
+                    color: kPrimaryColor1,
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/editProfile');
+                  },
+                ),
+              ],
+            ),
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
@@ -77,7 +91,7 @@ class Profile extends StatelessWidget {
               margin: EdgeInsets.symmetric(
                   horizontal: SizeConfig.screenWidth * 10 / 360),
               decoration: BoxDecoration(
-                color: Color(0xffF5F5F5),
+                color: Color(0x80F5F5F5),
                 borderRadius:
                     BorderRadius.circular(SizeConfig.screenWidth * 10 / 360),
                 border: Border.all(
@@ -91,6 +105,7 @@ class Profile extends StatelessWidget {
                     count: '96',
                     onTap: () {
                       //todo:
+                      print('Clicked on Friends');
                     },
                   ),
                   ProfileWidget0(
@@ -98,6 +113,7 @@ class Profile extends StatelessWidget {
                     count: '5',
                     onTap: () {
                       //todo:
+                      print('Clicked on Channels');
                     },
                   ),
                   ProfileWidget0(
@@ -105,6 +121,7 @@ class Profile extends StatelessWidget {
                     count: '13',
                     onTap: () {
                       //todo:
+                      print('Clicked on request');
                     },
                   ),
                 ],
@@ -120,7 +137,7 @@ class Profile extends StatelessWidget {
                 color: Colors.black54,
               ),
               title: Text(
-                'Indian Institute of information Technology, Surat',
+                'Indian Institute of information Technology, Delhi',
                 style: TextStyle(
                   fontSize: SizeConfig.screenWidth * 14 / 360,
                   fontWeight: FontWeight.w500,
@@ -145,27 +162,12 @@ class Profile extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(
-                Icons.person_outline,
-                size: SizeConfig.screenWidth * 25 / 360,
-                color: Colors.black54,
-              ),
-              title: Text(
-                'Male',
-                style: TextStyle(
-                  fontSize: SizeConfig.screenWidth * 14 / 360,
-                  fontWeight: FontWeight.w500,
-                  color: kPrimaryColor1,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: Icon(
                 Icons.library_books_sharp,
                 size: SizeConfig.screenWidth * 25 / 360,
                 color: Colors.black54,
               ),
               title: Text(
-                'About me',
+                'Bio',
                 style: TextStyle(
                   fontSize: SizeConfig.screenWidth * 14 / 360,
                   fontWeight: FontWeight.w500,
@@ -196,6 +198,9 @@ class Profile extends StatelessWidget {
               ),
             ),
             ListTile(
+              onTap: () {
+                print('Logout');
+              },
               leading: Icon(
                 Icons.logout,
                 size: SizeConfig.screenWidth * 25 / 360,
@@ -234,13 +239,14 @@ class ProfileWidget0 extends StatelessWidget {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Expanded(
-      child: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            InkWell(
-              onTap: onTap,
-              child: Text(
+      child: InkWell(
+        customBorder: CircleBorder(),
+        onTap: onTap,
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
                 count,
                 style: TextStyle(
                   fontSize: countFontSize,
@@ -248,16 +254,16 @@ class ProfileWidget0 extends StatelessWidget {
                   color: kPrimaryColor1,
                 ),
               ),
-            ),
-            Text(
-              text,
-              style: TextStyle(
-                fontSize: SizeConfig.screenWidth * 12 / 360,
-                fontWeight: FontWeight.w600,
-                color: Color(0x803F0E40),
+              Text(
+                text,
+                style: TextStyle(
+                  fontSize: SizeConfig.screenWidth * 12 / 360,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0x803F0E40),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
