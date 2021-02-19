@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_client/notifiers/uiNotifier.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_client/reusables/widgets/authTextField.dart';
 import 'package:flutter_client/services/databaseHandler.dart';
+import 'package:provider/provider.dart';
 
 class Registration1 extends StatefulWidget {
   @override
@@ -73,7 +75,7 @@ class _Registration1State extends State<Registration1> {
                       userExists = true;
                     } else {
                       userExists = false;
-                      _username = val;
+                      _username = val.trim();
                     }
                     setState(() {});
                   },
@@ -137,18 +139,18 @@ class _Registration1State extends State<Registration1> {
                 child: MaterialButton(
                   onPressed: () async {
                     if (_username != null &&
+                        _username != '' &&
                         _firstName != null &&
-                        _lastName != null) {
-                      await DatabaseHandler()
-                          .addUserToDatabase(_username, _firstName, _lastName)
-                          .then((value) =>
-                              Navigator.pushNamed(context, '/registration2'))
-                          .catchError((e) {
-                        Scaffold.of(context)
-                            .showSnackBar(SnackBar(content: Text(e)));
-                      });
+                        _firstName != '' &&
+                        _lastName != null &&
+                        !userExists &&
+                        _lastName != '') {
+                      Provider.of<UiNotifier>(context, listen: false)
+                          .setAuthCred(_username, _firstName, _lastName);
+                      Navigator.pushNamed(context, '/registration2');
+                      print('hello');
                     } else {
-                      Scaffold.of(context).showSnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('There is an error')));
                     }
                   },
