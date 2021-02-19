@@ -21,16 +21,19 @@ class _DrawerHolderState extends State<DrawerHolder> {
 
   @override
   Widget build(BuildContext context) {
-    return InnerDrawer(
-      scaffold: Home(
-        innerDrawerKey: _innerDrawerKey,
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: InnerDrawer(
+        scaffold: Home(
+          innerDrawerKey: _innerDrawerKey,
+        ),
+        leftChild: LeftDrawer(),
+        rightChild: DmScreen(innerDrawerKey: _innerDrawerKey),
+        key: _innerDrawerKey,
+        offset: IDOffset.only(left: 0.7, right: 1.0),
+        swipeChild: true,
+        onTapClose: true,
       ),
-      leftChild: LeftDrawer(),
-      rightChild: DmScreen(innerDrawerKey: _innerDrawerKey),
-      key: _innerDrawerKey,
-      offset: IDOffset.only(left: 0.7, right: 1.0),
-      swipeChild: true,
-      onTapClose: true,
     );
   }
 }

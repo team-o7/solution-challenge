@@ -1,11 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_client/reusables/widgets/authTextField.dart';
 import 'package:flutter_client/reusables/widgets/dateOfBirth.dart';
+import 'package:flutter_client/services/databaseHandler.dart';
 import 'package:provider/provider.dart';
 
 class Registration2 extends StatelessWidget {
@@ -81,30 +80,20 @@ class Registration2 extends StatelessWidget {
                       horizontal: SizeConfig.screenWidth * 15 / 360),
                   child: MaterialButton(
                     onPressed: () async {
-                      FirebaseFirestore firestore = FirebaseFirestore.instance;
                       var dob =
                           Provider.of<UiNotifier>(context, listen: false).dob;
                       if (dob != null && college != null) {
                         try {
-                          var snapshot = await firestore
-                              .collection('users')
-                              .limit(1)
-                              .where('uid',
-                                  isEqualTo:
-                                      FirebaseAuth.instance.currentUser.uid)
-                              .get();
-                          String id = snapshot.docs[0].id;
-                          await firestore
-                              .collection('users')
-                              .doc(id)
-                              .update({'dateOfBirth': dob, 'college': college});
-                          Navigator.pushNamed(context, '/drawerHolder');
+                          DatabaseHandler()
+                              .addUserToDatabase(dob, college)
+                              .then((value) => Navigator.pushNamed(
+                                  context, '/drawerHolder'));
                         } catch (e) {
-                          Scaffold.of(context).showSnackBar(
-                              SnackBar(content: Text('There is an error')));
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text(e)));
                         }
                       } else {
-                        Scaffold.of(context).showSnackBar(
+                        ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text('There is an error')));
                       }
                     },
