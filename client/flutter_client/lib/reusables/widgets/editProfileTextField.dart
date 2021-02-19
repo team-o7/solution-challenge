@@ -1,0 +1,50 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_client/reusables/constants.dart';
+import 'package:flutter_client/reusables/sizeConfig.dart';
+
+class EditProfileTextField extends StatelessWidget {
+  final String labelText;
+  final Function(String) onChanged;
+  final int maxLength;
+  final int maxLines;
+
+  const EditProfileTextField({
+    Key key,
+    this.labelText,
+    this.onChanged,
+    this.maxLength,
+    this.maxLines = 1,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(
+          horizontal: SizeConfig.screenWidth * 15 / 360,
+          vertical: SizeConfig.screenHeight * 5 / 640),
+      child: TextField(
+        cursorColor: kPrimaryColorLight,
+        maxLines: maxLines,
+        onChanged: onChanged,
+        enabled: true,
+        decoration: InputDecoration(
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: kPrimaryColor1, width: 1.5),
+          ),
+          labelStyle: TextStyle(
+            fontSize: SizeConfig.screenWidth * 14 / 360,
+            fontWeight: FontWeight.w400,
+            color: kTextColor,
+          ),
+          labelText: labelText,
+        ),
+        style: TextStyle(
+          fontSize: SizeConfig.screenWidth * 14 / 360,
+          fontWeight: FontWeight.w500,
+          color: kTextColor,
+          letterSpacing: 1.5,
+        ),
+      ),
+    );
+  }
+}

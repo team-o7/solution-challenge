@@ -66,7 +66,7 @@ class Registration2 extends StatelessWidget {
                   margin: EdgeInsets.symmetric(
                       horizontal: SizeConfig.screenWidth * 15 / 360),
                   child: AuthTextField(
-                    hintText: 'College / University/ Work Place',
+                    hintText: 'College / University / Work Place',
                     onChanged: (val) {
                       val.trim();
                       college = val;

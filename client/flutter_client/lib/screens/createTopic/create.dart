@@ -41,8 +41,8 @@ class CreateTopic extends StatelessWidget {
                         height: SizeConfig.screenHeight * 40 / 640,
                       ),
                       Container(
-                        height: SizeConfig.screenHeight * 80 / 640,
-                        width: SizeConfig.screenHeight * 80 / 640,
+                        height: SizeConfig.screenHeight * 75 / 640,
+                        width: SizeConfig.screenHeight * 75 / 640,
                         decoration: BoxDecoration(
                           color: Color(0x80350D36),
                           borderRadius: BorderRadius.circular(
@@ -56,7 +56,7 @@ class CreateTopic extends StatelessWidget {
                       ),
                       CreateTopicTextField(
                         hintText: 'Description',
-                        maxLines: 8,
+                        maxLines: 5,
                         topMargin: 0,
                       ),
                       PublicPrivateSwitchListTile(),
