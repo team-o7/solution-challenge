@@ -16,6 +16,8 @@ class EditProfile extends StatelessWidget {
   TextEditingController controller4 = new TextEditingController();
   TextEditingController controller5 = new TextEditingController();
 
+  TextEditingValue firstNameTEV = TextEditingValue();
+
   bool userNameIsOkay = true;
   EditProfile(
       {Key key,
@@ -33,6 +35,36 @@ class EditProfile extends StatelessWidget {
       appBar: AppBar(
         title: Text('Edit Profile'),
         backgroundColor: kPrimaryColor1,
+        leading: IconButton(
+          icon: Icon(Icons.close_rounded),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.check,
+              color: Colors.green,
+            ),
+            onPressed: () async {
+              if (userNameIsOkay &&
+                  userName != '' &&
+                  firstName != '' &&
+                  lastName != '' &&
+                  college != '') {
+                await DatabaseHandler().updateUserDatabase(data: {
+                  'userName': userName,
+                  'firstName': firstName,
+                  'lastName': lastName,
+                  'college': college,
+                  'bio': bio
+                });
+                Navigator.pop(context);
+              }
+            },
+          )
+        ],
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -43,7 +75,7 @@ class EditProfile extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Stack(
+                Column(
                   children: [
                     InkWell(
                       customBorder: CircleBorder(),
@@ -51,23 +83,30 @@ class EditProfile extends StatelessWidget {
                         print('Change your photo');
                       },
                       child: Container(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(200),
-                          child: CachedNetworkImage(
-                            imageUrl: dp,
-                            placeholder: (context, url) => Icon(
-                              Icons.account_circle,
-                              size: SizeConfig.screenWidth * 120 / 360,
+                        child: CachedNetworkImage(
+                          imageUrl: dp,
+                          imageBuilder: (context, imageProvider) => Container(
+                            width: 100.0,
+                            height: 100.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.cover),
                             ),
+                          ),
+                          placeholder: (context, url) => Icon(
+                            Icons.account_circle,
+                            size: SizeConfig.screenWidth * 120 / 360,
                           ),
                         ),
                       ),
                     ),
-                    Positioned(
-                      bottom: SizeConfig.screenHeight * 10 / 640,
-                      right: SizeConfig.screenWidth * 18 / 360,
-                      child: Icon(
-                        Icons.camera_alt,
+                    SizedBox(height: SizeConfig.screenHeight * 5 / 640),
+                    Text(
+                      'Change Profile Photo',
+                      style: TextStyle(
+                        fontSize: SizeConfig.screenWidth * 16 / 360,
+                        fontWeight: FontWeight.w600,
                         color: kPrimaryColor1,
                       ),
                     ),
@@ -76,10 +115,14 @@ class EditProfile extends StatelessWidget {
               ],
             ),
             EditProfileTextField(
-              //todo: cursor is at start, should be at end
               //todo: textField breaks on adding emoji, fix bugs in textfield
               labelText: 'Username',
-              controller: controller1..text = userName,
+              controller: TextEditingController.fromValue(
+                TextEditingValue(
+                  text: userName,
+                  selection: TextSelection.collapsed(offset: userName.length),
+                ),
+              ),
               onChanged: (val) async {
                 userName = val.trim();
                 userNameIsOkay =
@@ -88,9 +131,10 @@ class EditProfile extends StatelessWidget {
                 print(userNameIsOkay);
               },
             ),
-            SizedBox(
-              height: SizeConfig.screenHeight * 20 / 640,
-              //todo: fix alignment to start
+            Container(
+              margin: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.screenWidth * 15 / 360),
+              width: SizeConfig.screenWidth,
               child: Text(
                 Provider.of<UiNotifier>(context, listen: true).isUserNameOkay
                     ? ''
@@ -99,68 +143,55 @@ class EditProfile extends StatelessWidget {
               ),
             ),
             EditProfileTextField(
-              controller: controller2..text = firstName,
+              controller: TextEditingController.fromValue(
+                TextEditingValue(
+                  text: firstName,
+                  selection: TextSelection.collapsed(offset: firstName.length),
+                ),
+              ),
               labelText: 'First Name',
               onChanged: (val) {
                 firstName = val.trim();
               },
             ),
             EditProfileTextField(
-              controller: controller3..text = lastName,
+              controller: TextEditingController.fromValue(
+                TextEditingValue(
+                  text: lastName,
+                  selection: TextSelection.collapsed(offset: lastName.length),
+                ),
+              ),
               labelText: 'Last Name',
               onChanged: (val) {
                 lastName = val.trim();
               },
             ),
             EditProfileTextField(
-              controller: controller4..text = college,
+              controller: TextEditingController.fromValue(
+                TextEditingValue(
+                  text: college,
+                  selection: TextSelection.collapsed(offset: college.length),
+                ),
+              ),
               labelText: 'College',
               onChanged: (val) {
                 college = val.trim();
               },
             ),
             EditProfileTextField(
-              controller: controller5..text = bio,
+              controller: TextEditingController.fromValue(
+                TextEditingValue(
+                  text: bio,
+                  selection: TextSelection.collapsed(offset: bio.length),
+                ),
+              ),
               labelText: 'Bio',
+              keyboardType: TextInputType.multiline,
+              maxLines: 5,
               onChanged: (val) {
                 bio = val.trim();
               },
             ),
-            SizedBox(height: SizeConfig.screenHeight * 10 / 640),
-            Row(
-              //todo: replace these buttons with better buttons
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                MaterialButton(
-                  color: Colors.black26,
-                  onPressed: () {},
-                  child: Text('Cancel'),
-                ),
-                MaterialButton(
-                  onPressed: () async {
-                    if (userNameIsOkay &&
-                        userName != '' &&
-                        firstName != '' &&
-                        lastName != '' &&
-                        college != '') {
-                      await DatabaseHandler().updateUserDatabase(data: {
-                        'userName': userName,
-                        'firstName': firstName,
-                        'lastName': lastName,
-                        'college': college,
-                        'bio': bio
-                      });
-                      Navigator.pop(context);
-                    }
-                  },
-                  color: kPrimaryColor0,
-                  child: Text(
-                    'Apply',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            )
           ],
         ),
       ),
