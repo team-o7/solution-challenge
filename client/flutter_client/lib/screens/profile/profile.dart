@@ -1,14 +1,50 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_client/notifiers/uiNotifier.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_client/reusables/widgets/mainAppBar.dart';
+import 'package:flutter_client/screens/profile/editProfile.dart';
+import 'package:flutter_client/services/authProvider.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
+import 'package:provider/provider.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   final GlobalKey<InnerDrawerState> innerDrawerKey;
 
   const Profile({Key key, @required this.innerDrawerKey}) : super(key: key);
+
+  @override
+  _ProfileState createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  String _firstName, _lastName, _userName, _dp, _bio, _college;
+  Timestamp _dob;
+  List _friends, _topics, _requests;
+
+  void initData() {
+    var data = Provider.of<UiNotifier>(context, listen: false).userData;
+    _firstName = data['firstName'];
+    _lastName = data['lastName'];
+    _userName = data['userName'];
+    _dp = data['dp'];
+    _bio = data['bio'];
+    _college = data['college'];
+    _dob = data['dateOfBirth'];
+    _friends = data['friends'];
+    _requests = data['friendRequest'];
+    _topics = data['topics'];
+  }
+
+  @override
+  void initState() {
+    initData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -16,10 +52,9 @@ class Profile extends StatelessWidget {
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(56),
           child: MainAppBar(
-            innerDrawerKey: innerDrawerKey,
+            innerDrawerKey: widget.innerDrawerKey,
             title: 'Profile',
           )),
-      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -34,7 +69,17 @@ class Profile extends StatelessWidget {
                     color: kPrimaryColor1,
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/editProfile');
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => EditProfile(
+                                  dp: _dp,
+                                  userName: _userName,
+                                  firstName: _firstName,
+                                  lastName: _lastName,
+                                  bio: _bio,
+                                  college: _college,
+                                )));
                   },
                 ),
               ],
@@ -44,12 +89,14 @@ class Profile extends StatelessWidget {
               children: [
                 Container(
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(200),
-                    child: Icon(
-                      Icons.account_circle,
-                      size: SizeConfig.screenWidth * 120 / 360,
-                    ),
-                  ),
+                      borderRadius: BorderRadius.circular(200),
+                      child: CachedNetworkImage(
+                        imageUrl: _dp,
+                        placeholder: (context, url) => Icon(
+                          Icons.account_circle,
+                          size: SizeConfig.screenWidth * 120 / 360,
+                        ),
+                      )),
                 ),
               ],
             ),
@@ -61,7 +108,7 @@ class Profile extends StatelessWidget {
                   horizontal: SizeConfig.screenWidth * 15 / 360),
               child: Center(
                 child: Text(
-                  'Shubham Mandan',
+                  '$_firstName $_lastName',
                   style: TextStyle(
                     fontSize: SizeConfig.screenWidth * 22 / 360,
                     fontWeight: FontWeight.w700,
@@ -75,7 +122,7 @@ class Profile extends StatelessWidget {
             ),
             Container(
               child: Text(
-                '@mandanshimpi',
+                '@$_userName',
                 style: TextStyle(
                   fontSize: SizeConfig.screenWidth * 12 / 360,
                   fontWeight: FontWeight.w400,
@@ -102,23 +149,22 @@ class Profile extends StatelessWidget {
                 children: [
                   ProfileWidget0(
                     text: 'Friends',
-                    count: '96',
+                    count: _friends.length.toString(),
                     onTap: () {
                       //todo:
                       print('Clicked on Friends');
                     },
                   ),
                   ProfileWidget0(
-                    text: 'Channels',
-                    count: '5',
+                    text: 'Topics',
+                    count: _topics.length.toString(),
                     onTap: () {
                       //todo:
-                      print('Clicked on Channels');
                     },
                   ),
                   ProfileWidget0(
                     text: 'Requests',
-                    count: '13',
+                    count: _requests.length.toString(),
                     onTap: () {
                       //todo:
                       print('Clicked on request');
@@ -137,7 +183,7 @@ class Profile extends StatelessWidget {
                 color: Colors.black54,
               ),
               title: Text(
-                'Indian Institute of information Technology, Delhi',
+                _college,
                 style: TextStyle(
                   fontSize: SizeConfig.screenWidth * 14 / 360,
                   fontWeight: FontWeight.w500,
@@ -152,22 +198,7 @@ class Profile extends StatelessWidget {
                 color: Colors.black54,
               ),
               title: Text(
-                '18 Novemeber, 2000',
-                style: TextStyle(
-                  fontSize: SizeConfig.screenWidth * 14 / 360,
-                  fontWeight: FontWeight.w500,
-                  color: kPrimaryColor1,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.library_books_sharp,
-                size: SizeConfig.screenWidth * 25 / 360,
-                color: Colors.black54,
-              ),
-              title: Text(
-                'Bio',
+                _dob.toDate().toString(),
                 style: TextStyle(
                   fontSize: SizeConfig.screenWidth * 14 / 360,
                   fontWeight: FontWeight.w500,
@@ -189,7 +220,7 @@ class Profile extends StatelessWidget {
                       color: kPrimaryColor1,
                       width: SizeConfig.screenHeight * 0.2 / 640)),
               child: Text(
-                'These are My Specifications',
+                _bio == '' ? 'Bio' : _bio,
                 style: TextStyle(
                   fontSize: SizeConfig.screenWidth * 14 / 360,
                   fontWeight: FontWeight.w300,
@@ -199,7 +230,8 @@ class Profile extends StatelessWidget {
             ),
             ListTile(
               onTap: () {
-                print('Logout');
+                AuthProvider().signOut();
+                Navigator.pushNamed(context, '/logIn');
               },
               leading: Icon(
                 Icons.logout,

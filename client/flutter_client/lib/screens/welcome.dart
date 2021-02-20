@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_client/notifiers/uiNotifier.dart';
 import 'package:flutter_client/services/databaseHandler.dart';
+import 'package:provider/provider.dart';
 
 class Welcome extends StatefulWidget {
   @override
@@ -17,7 +19,9 @@ class _WelcomeState extends State<Welcome> {
       // if user signed in but quit app without filling rest of the information
       await Navigator.pushNamed(context, '/registration1');
     } else {
-      await Navigator.pushNamed(context, '/drawerHolder');
+      Provider.of<UiNotifier>(context, listen: false)
+          .setUserData()
+          .then((value) => Navigator.pushNamed(context, '/drawerHolder'));
     }
   }
 

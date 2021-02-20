@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_client/notifiers/uiNotifier.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_client/services/authProvider.dart';
+import 'package:provider/provider.dart';
 
 class GoogleLogin extends StatelessWidget {
   @override
@@ -49,7 +51,10 @@ class GoogleLogin extends StatelessWidget {
                     onPressed: () {
                       AuthProvider().signInWithGoogle().then((user) {
                         if (!user.additionalUserInfo.isNewUser) {
-                          Navigator.pushNamed(context, '/drawerHolder');
+                          Provider.of<UiNotifier>(context, listen: false)
+                              .setUserData()
+                              .then((value) => Navigator.pushNamed(
+                                  context, '/drawerHolder'));
                         } else {
                           Navigator.pushNamed(context, '/registration1');
                         }

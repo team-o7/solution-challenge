@@ -82,12 +82,16 @@ class Registration2 extends StatelessWidget {
                     onPressed: () async {
                       var dob =
                           Provider.of<UiNotifier>(context, listen: false).dob;
-                      if (dob != null && college != null) {
+                      if (dob != null && college != null && college != '') {
                         try {
                           DatabaseHandler()
                               .addUserToDatabase(dob, college)
-                              .then((value) => Navigator.pushNamed(
-                                  context, '/drawerHolder'));
+                              .then((value) {
+                            Provider.of<UiNotifier>(context, listen: false)
+                                .setUserData()
+                                .then((value) => Navigator.pushNamed(
+                                    context, '/drawerHolder'));
+                          });
                         } catch (e) {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(SnackBar(content: Text(e)));

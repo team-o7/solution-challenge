@@ -7,12 +7,14 @@ class EditProfileTextField extends StatelessWidget {
   final Function(String) onChanged;
   final int maxLength;
   final int maxLines;
+  final TextEditingController controller;
 
   const EditProfileTextField({
     Key key,
     this.labelText,
     this.onChanged,
     this.maxLength,
+    this.controller,
     this.maxLines = 1,
   }) : super(key: key);
 
@@ -26,6 +28,7 @@ class EditProfileTextField extends StatelessWidget {
         cursorColor: kPrimaryColorLight,
         maxLines: maxLines,
         onChanged: onChanged,
+        controller: controller,
         enabled: true,
         decoration: InputDecoration(
           focusedBorder: UnderlineInputBorder(
