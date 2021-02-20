@@ -8,6 +8,7 @@ class EditProfileTextField extends StatelessWidget {
   final int maxLength;
   final int maxLines;
   final TextEditingController controller;
+  final TextInputType keyboardType;
 
   const EditProfileTextField({
     Key key,
@@ -16,6 +17,7 @@ class EditProfileTextField extends StatelessWidget {
     this.maxLength,
     this.controller,
     this.maxLines = 1,
+    this.keyboardType = TextInputType.text,
   }) : super(key: key);
 
   @override
@@ -26,6 +28,7 @@ class EditProfileTextField extends StatelessWidget {
           vertical: SizeConfig.screenHeight * 5 / 640),
       child: TextField(
         cursorColor: kPrimaryColorLight,
+        keyboardType: keyboardType,
         maxLines: maxLines,
         onChanged: onChanged,
         controller: controller,

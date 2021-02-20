@@ -70,16 +70,18 @@ class _ProfileState extends State<Profile> {
                   ),
                   onPressed: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => EditProfile(
-                                  dp: _dp,
-                                  userName: _userName,
-                                  firstName: _firstName,
-                                  lastName: _lastName,
-                                  bio: _bio,
-                                  college: _college,
-                                )));
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => EditProfile(
+                          dp: _dp,
+                          userName: _userName,
+                          firstName: _firstName,
+                          lastName: _lastName,
+                          bio: _bio,
+                          college: _college,
+                        ),
+                      ),
+                    );
                   },
                 ),
               ],
@@ -88,15 +90,22 @@ class _ProfileState extends State<Profile> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(200),
-                      child: CachedNetworkImage(
-                        imageUrl: _dp,
-                        placeholder: (context, url) => Icon(
-                          Icons.account_circle,
-                          size: SizeConfig.screenWidth * 120 / 360,
-                        ),
-                      )),
+                  child: CachedNetworkImage(
+                    imageUrl: _dp,
+                    imageBuilder: (context, imageProvider) => Container(
+                      width: 120.0,
+                      height: 120.0,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image: imageProvider, fit: BoxFit.cover),
+                      ),
+                    ),
+                    placeholder: (context, url) => Icon(
+                      Icons.account_circle,
+                      size: SizeConfig.screenWidth * 120 / 360,
+                    ),
+                  ),
                 ),
               ],
             ),
