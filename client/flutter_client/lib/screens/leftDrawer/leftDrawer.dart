@@ -93,27 +93,31 @@ class LeftDrawer extends StatelessWidget {
                     Switch(value: true, onChanged: (val) {})
                   ],
                 ),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Icon(Icons.nights_stay_outlined),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Text(
-                      'Dark mode',
-                      style: TextStyle(
-                          fontSize: SizeConfig.screenWidth * 1 / 25,
-                          fontWeight: FontWeight.w600),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.screenWidth * 1 / 7.8,
-                    ),
-                    Switch(value: false, onChanged: (val) {})
-                  ],
+                // Row(
+                //   children: [
+                //     SizedBox(
+                //       width: 8,
+                //     ),
+                //     Icon(Icons.nights_stay_outlined),
+                //     SizedBox(
+                //       width: 8,
+                //     ),
+                //     Text(
+                //       'Dark mode',
+                //       style: TextStyle(
+                //           fontSize: SizeConfig.screenWidth * 1 / 25,
+                //           fontWeight: FontWeight.w600),
+                //     ),
+                //     SizedBox(
+                //       width: SizeConfig.screenWidth * 1 / 7.8,
+                //     ),
+                //     Switch(value: false, onChanged: (val) {})
+                //   ],
+                // ),
+                SizedBox(
+                  height: SizeConfig.screenHeight * 1 / 120,
                 ),
+                TopicOptionTile(title: 'Requests', icon: CupertinoIcons.bell),
                 SizedBox(
                   height: SizeConfig.screenHeight * 1 / 40,
                 ),

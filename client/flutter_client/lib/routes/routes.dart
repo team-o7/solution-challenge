@@ -31,6 +31,8 @@ class Routes {
         return MaterialPageRoute(builder: (_) => UserProfile());
       case '/editProfile':
         return MaterialPageRoute(builder: (_) => EditProfile());
+      case '/userProfile':
+        return MaterialPageRoute(builder: (_) => UserProfile());
       case '/chat':
         return MaterialPageRoute(builder: (_) => Chat());
       case '/channelChat':

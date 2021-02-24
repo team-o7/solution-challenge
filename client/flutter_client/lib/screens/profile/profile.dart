@@ -24,6 +24,7 @@ class _ProfileState extends State<Profile> {
   String _firstName, _lastName, _userName, _dp, _bio, _college;
   Timestamp _dob;
   List _friends, _topics, _requests;
+  var refresh = false;
 
   void initData() {
     var data = Provider.of<UiNotifier>(context, listen: false).userData;
@@ -68,8 +69,8 @@ class _ProfileState extends State<Profile> {
                     Icons.edit_outlined,
                     color: kPrimaryColor1,
                   ),
-                  onPressed: () {
-                    Navigator.push(
+                  onPressed: () async {
+                    refresh = await Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (_) => EditProfile(
@@ -92,6 +93,7 @@ class _ProfileState extends State<Profile> {
                 Container(
                   child: CachedNetworkImage(
                     imageUrl: _dp,
+                    fadeInDuration: Duration(microseconds: 0),
                     imageBuilder: (context, imageProvider) => Container(
                       width: 120.0,
                       height: 120.0,
@@ -216,7 +218,7 @@ class _ProfileState extends State<Profile> {
               ),
             ),
             Container(
-              height: SizeConfig.screenHeight * 100 / 640,
+              height: SizeConfig.screenHeight * 80 / 640,
               width: SizeConfig.screenWidth,
               padding: EdgeInsets.all(SizeConfig.screenWidth * 10 / 360),
               margin: EdgeInsets.symmetric(
@@ -233,6 +235,22 @@ class _ProfileState extends State<Profile> {
                 style: TextStyle(
                   fontSize: SizeConfig.screenWidth * 14 / 360,
                   fontWeight: FontWeight.w300,
+                  color: kPrimaryColor1,
+                ),
+              ),
+            ),
+            ListTile(
+              onTap: () {},
+              leading: Icon(
+                Icons.nights_stay_outlined,
+                size: SizeConfig.screenWidth * 25 / 360,
+                color: Colors.black54,
+              ),
+              title: Text(
+                'Night mode',
+                style: TextStyle(
+                  fontSize: SizeConfig.screenWidth * 14 / 360,
+                  fontWeight: FontWeight.w500,
                   color: kPrimaryColor1,
                 ),
               ),

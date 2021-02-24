@@ -8,6 +8,7 @@ class UiNotifier extends ChangeNotifier {
   Map<String, dynamic> userData;
   bool isUserNameOkay = true;
   //todo: replace with notifier in registration1
+  int searchFilterOptionIndex = 0;
 
   void setAuthCred(String username, fn, ln) {
     userName = username;
@@ -22,6 +23,11 @@ class UiNotifier extends ChangeNotifier {
 
   void setLeftNavIndex(int index) {
     leftNavIndex = index;
+    notifyListeners();
+  }
+
+  void setSearchFilterOptionIndex(int index) {
+    searchFilterOptionIndex = index;
     notifyListeners();
   }
 

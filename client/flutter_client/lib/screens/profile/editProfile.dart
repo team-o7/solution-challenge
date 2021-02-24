@@ -10,11 +10,6 @@ import 'package:provider/provider.dart';
 // ignore: must_be_immutable
 class EditProfile extends StatelessWidget {
   String dp, firstName, lastName, college, bio, userName;
-  TextEditingController controller1 = new TextEditingController();
-  TextEditingController controller3 = new TextEditingController();
-  TextEditingController controller2 = new TextEditingController();
-  TextEditingController controller4 = new TextEditingController();
-  TextEditingController controller5 = new TextEditingController();
 
   TextEditingValue firstNameTEV = TextEditingValue();
 
@@ -59,8 +54,10 @@ class EditProfile extends StatelessWidget {
                   'lastName': lastName,
                   'college': college,
                   'bio': bio
-                });
-                Navigator.pop(context);
+                }).then((value) =>
+                    Provider.of<UiNotifier>(context, listen: false)
+                        .setUserData()
+                        .then((value) => Navigator.pop(context, true)));
               }
             },
           )
