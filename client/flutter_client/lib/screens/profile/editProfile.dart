@@ -1,10 +1,15 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_client/reusables/widgets/editProfileTextField.dart';
 import 'package:flutter_client/services/databaseHandler.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
@@ -17,6 +22,8 @@ class EditProfile extends StatelessWidget {
   TextEditingController controller5 = new TextEditingController();
 
   TextEditingValue firstNameTEV = TextEditingValue();
+
+  FirebaseStorage _storage = FirebaseStorage.instance;
 
   bool userNameIsOkay = true;
   EditProfile(
@@ -58,7 +65,8 @@ class EditProfile extends StatelessWidget {
                   'firstName': firstName,
                   'lastName': lastName,
                   'college': college,
-                  'bio': bio
+                  'bio': bio,
+                  'dp': dp
                 });
                 Navigator.pop(context);
               }
@@ -79,8 +87,33 @@ class EditProfile extends StatelessWidget {
                   children: [
                     InkWell(
                       customBorder: CircleBorder(),
-                      onTap: () {
-                        print('Change your photo');
+                      onTap: () async {
+                        File image;
+                        final pickedFile = await ImagePicker()
+                            .getImage(source: ImageSource.gallery);
+
+                        if (pickedFile != null) {
+                          image = File(pickedFile.path);
+                        } else {
+                          print('No image selected.');
+                          return;
+                        }
+                        final String imageId =
+                            DatabaseHandler().firebaseAuth.currentUser.uid;
+                        final reference = FirebaseStorage.instance
+                            .ref()
+                            .child("profileImages/$imageId");
+
+                        var uploadTask = reference.putFile(image);
+
+                        var taskSnapshot =
+                            await uploadTask.whenComplete(() => null);
+
+                        // Waits till the file is uploaded then stores the download url
+                        String profileImageUrl =
+                            await taskSnapshot.ref.getDownloadURL();
+                        dp = profileImageUrl;
+                        print(profileImageUrl);
                       },
                       child: Container(
                         child: CachedNetworkImage(
