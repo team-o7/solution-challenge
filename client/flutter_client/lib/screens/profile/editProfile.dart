@@ -7,14 +7,13 @@ import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_client/reusables/widgets/editProfileTextField.dart';
 import 'package:flutter_client/services/databaseHandler.dart';
+import 'package:flutter_client/services/storageHandler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_client/services/storageHandler.dart';
 
 // ignore: must_be_immutable
 class EditProfile extends StatelessWidget {
   String dp, firstName, lastName, college, bio, userName;
-
   TextEditingValue firstNameTEV = TextEditingValue();
 
   bool userNameIsOkay = true;
@@ -57,6 +56,7 @@ class EditProfile extends StatelessWidget {
                   'firstName': firstName,
                   'lastName': lastName,
                   'college': college,
+                  'dp': dp,
                   'bio': bio
                 }).then((value) =>
                     Provider.of<UiNotifier>(context, listen: false)
@@ -90,14 +90,15 @@ class EditProfile extends StatelessWidget {
 
                         if (pickedFile != null) {
                           image = File(pickedFile.path);
-                          Future<String> profileImageUrl = StorageHandler()
-                              .uploadDisplayImageToFireStorage(
-                                  image, imageName);
-
-                          dp = profileImageUrl as String;
-                          print("Dp is-----> $dp");
+                          StorageHandler()
+                              .uploadDisplayImageToFireStorage(image, imageName)
+                              .then((value) {
+                            dp = value;
+                          });
+                          //todo: show circularprogress while image is uploading
+                          //if submitted before upload finish then
+                          // dp doesn't update in database
                         } else {
-                          print('No image selected.');
                           return;
                         }
                       },

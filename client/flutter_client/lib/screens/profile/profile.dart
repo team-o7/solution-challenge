@@ -257,8 +257,8 @@ class _ProfileState extends State<Profile> {
               ),
             ),
             ListTile(
-              onTap: () {
-                AuthProvider().signOut();
+              onTap: () async {
+                await AuthProvider().signOut();
                 Navigator.pushNamed(context, '/logIn');
               },
               leading: Icon(
