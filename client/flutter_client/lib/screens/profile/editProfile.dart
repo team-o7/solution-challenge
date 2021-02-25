@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
@@ -5,7 +7,9 @@ import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_client/reusables/widgets/editProfileTextField.dart';
 import 'package:flutter_client/services/databaseHandler.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_client/services/storageHandler.dart';
 
 // ignore: must_be_immutable
 class EditProfile extends StatelessWidget {
@@ -76,8 +80,26 @@ class EditProfile extends StatelessWidget {
                   children: [
                     InkWell(
                       customBorder: CircleBorder(),
-                      onTap: () {
-                        print('Change your photo');
+                      onTap: () async {
+                        String imageName =
+                            DatabaseHandler().firebaseAuth.currentUser.uid;
+
+                        final pickedFile = await ImagePicker()
+                            .getImage(source: ImageSource.gallery);
+                        File image;
+
+                        if (pickedFile != null) {
+                          image = File(pickedFile.path);
+                          Future<String> profileImageUrl = StorageHandler()
+                              .uploadDisplayImageToFireStorage(
+                                  image, imageName);
+
+                          dp = profileImageUrl as String;
+                          print("Dp is-----> $dp");
+                        } else {
+                          print('No image selected.');
+                          return;
+                        }
                       },
                       child: Container(
                         child: CachedNetworkImage(
