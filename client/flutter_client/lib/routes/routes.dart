@@ -27,12 +27,15 @@ class Routes {
         return MaterialPageRoute(builder: (_) => Registration2());
       case '/drawerHolder':
         return MaterialPageRoute(builder: (_) => DrawerHolder());
-      case '/userProfile':
-        return MaterialPageRoute(builder: (_) => UserProfile());
+      // case '/userProfile':
+      //   return MaterialPageRoute(builder: (_) => UserProfile());
       case '/editProfile':
         return MaterialPageRoute(builder: (_) => EditProfile());
       case '/userProfile':
-        return MaterialPageRoute(builder: (_) => UserProfile());
+        return MaterialPageRoute(
+            builder: (_) => UserProfile(
+                  userData: args,
+                ));
       case '/chat':
         return MaterialPageRoute(builder: (_) => Chat());
       case '/channelChat':

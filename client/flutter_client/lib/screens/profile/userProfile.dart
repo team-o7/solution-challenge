@@ -1,24 +1,20 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
 
 class UserProfile extends StatelessWidget {
+  final Map<String, dynamic> userData;
+
+  const UserProfile({Key key, this.userData}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kPrimaryColor1,
-        leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-              size: SizeConfig.screenWidth * 25 / 360,
-            ),
-            onPressed: () {}),
       ),
-      backgroundColor: Colors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -28,11 +24,22 @@ class UserProfile extends StatelessWidget {
               Container(
                 margin: EdgeInsets.symmetric(
                     horizontal: SizeConfig.screenWidth * 10 / 360),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(200),
-                  child: Icon(
+                child: CachedNetworkImage(
+                  imageUrl: userData['dp'],
+                  fadeInDuration: Duration(microseconds: 0),
+                  fadeOutDuration: Duration(microseconds: 0),
+                  imageBuilder: (context, imageProvider) => Container(
+                    width: 100.0,
+                    height: 100.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: imageProvider, fit: BoxFit.cover),
+                    ),
+                  ),
+                  placeholder: (context, url) => Icon(
                     Icons.account_circle,
-                    size: SizeConfig.screenWidth * 80 / 360,
+                    size: SizeConfig.screenWidth * 120 / 360,
                   ),
                 ),
               ),
@@ -50,7 +57,7 @@ class UserProfile extends StatelessWidget {
                     margin: EdgeInsets.symmetric(
                         horizontal: SizeConfig.screenWidth * 20 / 360),
                     child: Text(
-                      'Shubham Mandan',
+                      '${userData['firstName']} ${userData['lastName']}',
                       style: TextStyle(
                         fontSize: SizeConfig.screenWidth * 18 / 360,
                         fontWeight: FontWeight.w700,
@@ -65,7 +72,7 @@ class UserProfile extends StatelessWidget {
                     margin: EdgeInsets.symmetric(
                         horizontal: SizeConfig.screenWidth * 20 / 360),
                     child: Text(
-                      '@mandanshimpi',
+                      '@${userData['userName']}',
                       style: TextStyle(
                         fontSize: SizeConfig.screenWidth * 12 / 360,
                         fontWeight: FontWeight.w400,
@@ -122,14 +129,14 @@ class UserProfile extends StatelessWidget {
               children: [
                 ProfileWidget0(
                   text: 'Friends',
-                  count: '96',
+                  count: userData['friends'].length.toString(),
                   onTap: () {
                     //todo:
                   },
                 ),
                 ProfileWidget0(
-                  text: 'Channels',
-                  count: '5',
+                  text: 'Topics',
+                  count: userData['topics'].length.toString(),
                   onTap: () {
                     //todo:
                   },
@@ -147,7 +154,7 @@ class UserProfile extends StatelessWidget {
               color: Colors.black54,
             ),
             title: Text(
-              'Indian Institute of information Technology, Surat',
+              userData['college'],
               style: TextStyle(
                 fontSize: SizeConfig.screenWidth * 14 / 360,
                 fontWeight: FontWeight.w500,
@@ -172,7 +179,7 @@ class UserProfile extends StatelessWidget {
                     color: kPrimaryColor1,
                     width: SizeConfig.screenHeight * 0.2 / 640)),
             child: Text(
-              'These are My Specifications',
+              userData['bio'],
               style: TextStyle(
                 fontSize: SizeConfig.screenWidth * 14 / 360,
                 fontWeight: FontWeight.w300,

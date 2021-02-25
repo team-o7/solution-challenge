@@ -50,6 +50,33 @@ class DatabaseHandler {
       throw 'No signed in user';
   }
 
+  Future<Map<String, dynamic>> getUserDataByUid(String uid) async {
+    if (firebaseAuth.currentUser != null) {
+      var value = await firestore
+          .collection('users')
+          .where('uid', isEqualTo: uid)
+          .get();
+      return value.docs[0].data();
+    } else
+      throw 'No signed in user';
+  }
+
+  /// currently this returns all signed un users
+  /// should update with search query
+  Stream<QuerySnapshot> searchedUsers() {
+    return firestore
+        .collection('users')
+        .where('uid', isNotEqualTo: firebaseAuth.currentUser.uid)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> searchedTopics() {
+    return firestore
+        .collection('topics')
+        .where('creator', isNotEqualTo: firebaseAuth.currentUser.uid)
+        .snapshots();
+  }
+
   Future<void> addUserToDatabase(DateTime dob, String college) async {
     User currentUser = firebaseAuth.currentUser;
     String deviceToken = await firebaseMessaging.getToken();
@@ -88,13 +115,14 @@ class DatabaseHandler {
   }
 
   Future<void> createTopic(
-      String description, String title, bool isPrivate, String dp) {
+      String description, String title, bool isPrivate, String dp) async {
     firestore.collection('topics').add({
       'creator': firebaseAuth.currentUser.uid,
       'description': description,
       'dp': dp,
       'avgRating': 0,
       'title': title,
+      'private': isPrivate,
       'requests': [],
       'peoples': [
         {
@@ -104,7 +132,6 @@ class DatabaseHandler {
           'rating': 0
         }
       ],
-      'private': isPrivate
     }).then((value) {
       value.update({'id': value.id});
       value.collection('adminChannels').add({'title': 'Announcements'});

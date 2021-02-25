@@ -94,6 +94,7 @@ class _ProfileState extends State<Profile> {
                   child: CachedNetworkImage(
                     imageUrl: _dp,
                     fadeInDuration: Duration(microseconds: 0),
+                    fadeOutDuration: Duration(microseconds: 0),
                     imageBuilder: (context, imageProvider) => Container(
                       width: 120.0,
                       height: 120.0,

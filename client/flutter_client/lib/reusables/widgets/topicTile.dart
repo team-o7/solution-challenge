@@ -1,12 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
+import 'package:flutter_client/services/databaseHandler.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-class TopicTile extends StatelessWidget {
-  final bool isPublic;
+class TopicTile extends StatefulWidget {
+  final bool isPrivate;
+  final String title, description, creator, peoplesSize, dp;
+  final int rating;
 
-  const TopicTile({Key key, @required this.isPublic}) : super(key: key);
+  const TopicTile(
+      {Key key,
+      this.isPrivate,
+      this.dp,
+      this.title,
+      this.description,
+      this.creator,
+      this.rating,
+      this.peoplesSize})
+      : super(key: key);
+
+  @override
+  _TopicTileState createState() => _TopicTileState();
+}
+
+class _TopicTileState extends State<TopicTile> {
+  static Map<String, dynamic> creatorData;
+
+  void getCreator() async {
+    creatorData = await DatabaseHandler().getUserDataByUid(widget.creator);
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    getCreator();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +53,13 @@ class TopicTile extends StatelessWidget {
             children: [
               ListTile(
                 title: Text(
-                  'Machine Learning',
+                  widget.title,
                   style: TextStyle(
                       fontSize: SizeConfig.screenWidth * 30 / 360,
                       fontWeight: FontWeight.w700),
                 ),
                 subtitle: Text(
-                  'Learn and play with machine learning with me.'
-                  'my ML Models can even train a dog',
+                  widget.description,
                 ),
                 trailing: IconButton(
                   icon: Icon(
@@ -46,7 +75,7 @@ class TopicTile extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '34 peoples',
+                      '${widget.peoplesSize} peoples',
                     ),
                     RatingBarIndicator(
                       itemBuilder: (_, index) => Icon(
@@ -55,7 +84,7 @@ class TopicTile extends StatelessWidget {
                       ),
                       itemCount: 5,
                       direction: Axis.horizontal,
-                      rating: 1,
+                      rating: widget.rating.toDouble(),
                       itemSize: 18,
                       unratedColor: Colors.grey,
                     ),
@@ -63,20 +92,30 @@ class TopicTile extends StatelessWidget {
                 ),
               ),
               ListTile(
-                title: Text('By Karanjeet'),
+                title: InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/userProfile',
+                        arguments: creatorData);
+                  },
+                  child: Text(creatorData != null
+                      ? '${creatorData['firstName']} ${creatorData['lastName']}'
+                      : ''),
+                ),
                 trailing: SizedBox(
                   width: SizeConfig.screenWidth * 0.4,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(isPublic ? Icons.public : Icons.lock_outline),
+                      Icon(!widget.isPrivate
+                          ? Icons.public
+                          : Icons.lock_outline),
                       SizedBox(
                         width: SizeConfig.screenWidth * 0.1,
                       ),
                       MaterialButton(
                         color: Colors.grey[200],
                         child: Text(
-                          isPublic ? 'Join' : 'Request',
+                          !widget.isPrivate ? 'Join' : 'Request',
                           style: TextStyle(
                               color: kPrimaryColor0,
                               fontWeight: FontWeight.w400),
