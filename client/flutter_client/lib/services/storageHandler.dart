@@ -10,7 +10,7 @@ class StorageHandler {
 
   Future<String> uploadDisplayImageToFireStorage(
       File file, String fileName) async {
-    final reference = storageReference.child("profileImage/$fileName");
+    final reference = storageReference.child(fileName);
     final uploadTask = reference.putFile(file);
     final taskSnapshot = await uploadTask.whenComplete(() => null);
     String url = await taskSnapshot.ref.getDownloadURL();
