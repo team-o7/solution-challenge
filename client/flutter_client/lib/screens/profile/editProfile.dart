@@ -56,8 +56,11 @@ class EditProfile extends StatelessWidget {
                   'firstName': firstName,
                   'lastName': lastName,
                   'college': college,
+
+
                   'dp': dp,
                   'bio': bio
+
                 }).then((value) =>
                     Provider.of<UiNotifier>(context, listen: false)
                         .setUserData()
@@ -81,7 +84,7 @@ class EditProfile extends StatelessWidget {
                     InkWell(
                       customBorder: CircleBorder(),
                       onTap: () async {
-                        String imageName =
+                        String imageName = "profileImage/" +
                             DatabaseHandler().firebaseAuth.currentUser.uid;
 
                         final pickedFile = await ImagePicker()
@@ -135,7 +138,6 @@ class EditProfile extends StatelessWidget {
               ],
             ),
             EditProfileTextField(
-              //todo: textField breaks on adding emoji, fix bugs in textfield
               labelText: 'Username',
               controller: TextEditingController.fromValue(
                 TextEditingValue(
