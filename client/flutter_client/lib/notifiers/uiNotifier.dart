@@ -9,6 +9,7 @@ class UiNotifier extends ChangeNotifier {
   bool isUserNameOkay = true;
   //todo: replace with notifier in registration1
   int searchFilterOptionIndex = 0;
+  DatabaseHandler _databaseHandler = new DatabaseHandler();
 
   void setAuthCred(String username, fn, ln) {
     userName = username;
@@ -17,7 +18,7 @@ class UiNotifier extends ChangeNotifier {
   }
 
   Future<void> setUserData() async {
-    userData = await DatabaseHandler().getUserData();
+    userData = await _databaseHandler.getUserData();
     notifyListeners();
   }
 
@@ -32,7 +33,7 @@ class UiNotifier extends ChangeNotifier {
   }
 
   Future<bool> getUserNameNotExist(String u) async {
-    isUserNameOkay = await DatabaseHandler().userNameNotExist(u);
+    isUserNameOkay = await _databaseHandler.userNameNotExist(u);
     notifyListeners();
     return isUserNameOkay;
   }
