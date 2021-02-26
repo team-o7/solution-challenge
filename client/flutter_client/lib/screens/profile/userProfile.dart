@@ -54,6 +54,7 @@ class UserProfile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
+                    width: SizeConfig.screenWidth * 200 / 360,
                     margin: EdgeInsets.symmetric(
                         horizontal: SizeConfig.screenWidth * 20 / 360),
                     child: Text(
@@ -81,9 +82,6 @@ class UserProfile extends StatelessWidget {
                     ),
                   ),
                 ],
-              ),
-              SizedBox(
-                width: SizeConfig.screenWidth * 65 / 360,
               ),
               Container(
                 child: MaterialButton(

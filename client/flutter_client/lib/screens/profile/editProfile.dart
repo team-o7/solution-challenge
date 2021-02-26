@@ -12,11 +12,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
-class EditProfile extends StatelessWidget {
+class EditProfile extends StatefulWidget {
   String dp, firstName, lastName, college, bio, userName;
-  TextEditingValue firstNameTEV = TextEditingValue();
 
-  bool userNameIsOkay = true;
   EditProfile(
       {Key key,
       this.dp,
@@ -26,6 +24,27 @@ class EditProfile extends StatelessWidget {
       this.bio,
       this.userName})
       : super(key: key);
+
+  @override
+  _EditProfileState createState() => _EditProfileState();
+}
+
+class _EditProfileState extends State<EditProfile> {
+  TextEditingValue firstNameTEV = TextEditingValue();
+  File imageFile;
+  String imageName;
+  bool userNameIsOkay = true;
+  bool isLoading = false;
+
+  Widget myIndicator() {
+    if (isLoading == true) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    } else
+      return Container();
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -46,25 +65,40 @@ class EditProfile extends StatelessWidget {
               color: Colors.green,
             ),
             onPressed: () async {
-              if (userNameIsOkay &&
-                  userName != '' &&
-                  firstName != '' &&
-                  lastName != '' &&
-                  college != '') {
-                await DatabaseHandler().updateUserDatabase(data: {
-                  'userName': userName,
-                  'firstName': firstName,
-                  'lastName': lastName,
-                  'college': college,
+              String imageName = "profileImage/" +
+                  DatabaseHandler().firebaseAuth.currentUser.uid;
 
+              if (imageFile != null && isLoading == false) {
+                setState(() {
+                  isLoading = true;
+                });
+                StorageHandler()
+                    .uploadDisplayImageToFireStorage(imageFile, imageName)
+                    .then((value) {
+                  widget.dp = value;
 
-                  'dp': dp,
-                  'bio': bio
+                  setState(() {
+                    isLoading = false;
+                  });
 
-                }).then((value) =>
-                    Provider.of<UiNotifier>(context, listen: false)
-                        .setUserData()
-                        .then((value) => Navigator.pop(context, true)));
+                  if (userNameIsOkay &&
+                      widget.userName != '' &&
+                      widget.firstName != '' &&
+                      widget.lastName != '' &&
+                      widget.college != '') {
+                    DatabaseHandler().updateUserDatabase(data: {
+                      'userName': widget.userName,
+                      'firstName': widget.firstName,
+                      'lastName': widget.lastName,
+                      'college': widget.college,
+                      'dp': widget.dp,
+                      'bio': widget.bio
+                    }).then((value) =>
+                        Provider.of<UiNotifier>(context, listen: false)
+                            .setUserData()
+                            .then((value) => Navigator.pop(context, true)));
+                  }
+                });
               }
             },
           )
@@ -72,147 +106,168 @@ class EditProfile extends StatelessWidget {
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: Stack(
           children: [
-            SizedBox(height: SizeConfig.screenHeight * 20 / 640),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Column(
+                SizedBox(height: SizeConfig.screenHeight * 20 / 640),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    InkWell(
-                      customBorder: CircleBorder(),
-                      onTap: () async {
-                        String imageName = "profileImage/" +
-                            DatabaseHandler().firebaseAuth.currentUser.uid;
+                    Column(
+                      children: [
+                        InkWell(
+                          customBorder: CircleBorder(),
+                          onTap: () async {
+                            final pickedFile = await ImagePicker()
+                                .getImage(source: ImageSource.gallery);
 
-                        final pickedFile = await ImagePicker()
-                            .getImage(source: ImageSource.gallery);
-                        File image;
-
-                        if (pickedFile != null) {
-                          image = File(pickedFile.path);
-                          StorageHandler()
-                              .uploadDisplayImageToFireStorage(image, imageName)
-                              .then((value) {
-                            dp = value;
-                          });
-                          //todo: show circularprogress while image is uploading
-                          //if submitted before upload finish then
-                          // dp doesn't update in database
-                        } else {
-                          return;
-                        }
-                      },
-                      child: Container(
-                        child: CachedNetworkImage(
-                          imageUrl: dp,
-                          imageBuilder: (context, imageProvider) => Container(
-                            width: 100.0,
-                            height: 100.0,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                  image: imageProvider, fit: BoxFit.cover),
-                            ),
-                          ),
-                          placeholder: (context, url) => Icon(
-                            Icons.account_circle,
-                            size: SizeConfig.screenWidth * 120 / 360,
+                            if (pickedFile != null) {
+                              imageFile = File(pickedFile.path);
+                            } else {
+                              print('No image selected.');
+                              return;
+                            }
+                          },
+                          child: imageFile == null
+                              ? Container(
+                                  child: CachedNetworkImage(
+                                    imageUrl: widget.dp,
+                                    imageBuilder: (context, imageProvider) =>
+                                        Container(
+                                      width: SizeConfig.screenWidth * 100 / 360,
+                                      height:
+                                          SizeConfig.screenWidth * 100 / 360,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover),
+                                      ),
+                                    ),
+                                    placeholder: (context, url) => Icon(
+                                      Icons.account_circle,
+                                      size: SizeConfig.screenWidth * 120 / 360,
+                                    ),
+                                  ),
+                                )
+                              : Container(
+                                  width: SizeConfig.screenWidth * 100 / 360,
+                                  height: SizeConfig.screenWidth * 100 / 360,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      image: FileImage(imageFile),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                        ),
+                        SizedBox(height: SizeConfig.screenHeight * 5 / 640),
+                        Text(
+                          'Change Profile Photo',
+                          style: TextStyle(
+                            fontSize: SizeConfig.screenWidth * 16 / 360,
+                            fontWeight: FontWeight.w600,
+                            color: kPrimaryColor1,
                           ),
                         ),
-                      ),
-                    ),
-                    SizedBox(height: SizeConfig.screenHeight * 5 / 640),
-                    Text(
-                      'Change Profile Photo',
-                      style: TextStyle(
-                        fontSize: SizeConfig.screenWidth * 16 / 360,
-                        fontWeight: FontWeight.w600,
-                        color: kPrimaryColor1,
-                      ),
+                      ],
                     ),
                   ],
                 ),
+                EditProfileTextField(
+                  labelText: 'Username',
+                  controller: TextEditingController.fromValue(
+                    TextEditingValue(
+                      text: widget.userName,
+                      selection: TextSelection.collapsed(
+                          offset: widget.userName.length),
+                    ),
+                  ),
+                  onChanged: (val) async {
+                    widget.userName = val.trim();
+                    userNameIsOkay =
+                        await Provider.of<UiNotifier>(context, listen: false)
+                            .getUserNameNotExist(val);
+                    print(userNameIsOkay);
+                  },
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.screenWidth * 15 / 360),
+                  width: SizeConfig.screenWidth,
+                  child: Text(
+                    Provider.of<UiNotifier>(context, listen: true)
+                            .isUserNameOkay
+                        ? ''
+                        : 'Username already exists',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+                EditProfileTextField(
+                  controller: TextEditingController.fromValue(
+                    TextEditingValue(
+                      text: widget.firstName,
+                      selection: TextSelection.collapsed(
+                          offset: widget.firstName.length),
+                    ),
+                  ),
+                  labelText: 'First Name',
+                  onChanged: (val) {
+                    widget.firstName = val.trim();
+                  },
+                ),
+                EditProfileTextField(
+                  controller: TextEditingController.fromValue(
+                    TextEditingValue(
+                      text: widget.lastName,
+                      selection: TextSelection.collapsed(
+                          offset: widget.lastName.length),
+                    ),
+                  ),
+                  labelText: 'Last Name',
+                  onChanged: (val) {
+                    widget.lastName = val.trim();
+                  },
+                ),
+                EditProfileTextField(
+                  controller: TextEditingController.fromValue(
+                    TextEditingValue(
+                      text: widget.college,
+                      selection: TextSelection.collapsed(
+                          offset: widget.college.length),
+                    ),
+                  ),
+                  labelText: 'College',
+                  onChanged: (val) {
+                    widget.college = val.trim();
+                  },
+                ),
+                EditProfileTextField(
+                  controller: TextEditingController.fromValue(
+                    TextEditingValue(
+                      text: widget.bio,
+                      selection:
+                          TextSelection.collapsed(offset: widget.bio.length),
+                    ),
+                  ),
+                  labelText: 'Bio',
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 5,
+                  onChanged: (val) {
+                    widget.bio = val.trim();
+                  },
+                ),
               ],
             ),
-            EditProfileTextField(
-              labelText: 'Username',
-              controller: TextEditingController.fromValue(
-                TextEditingValue(
-                  text: userName,
-                  selection: TextSelection.collapsed(offset: userName.length),
-                ),
-              ),
-              onChanged: (val) async {
-                userName = val.trim();
-                userNameIsOkay =
-                    await Provider.of<UiNotifier>(context, listen: false)
-                        .getUserNameNotExist(val);
-                print(userNameIsOkay);
-              },
-            ),
             Container(
-              margin: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.screenWidth * 15 / 360),
+              height: SizeConfig.screenHeight,
               width: SizeConfig.screenWidth,
-              child: Text(
-                Provider.of<UiNotifier>(context, listen: true).isUserNameOkay
-                    ? ''
-                    : 'Username already exists',
-                style: TextStyle(color: Colors.red),
+              child: Center(
+                child: myIndicator(),
               ),
-            ),
-            EditProfileTextField(
-              controller: TextEditingController.fromValue(
-                TextEditingValue(
-                  text: firstName,
-                  selection: TextSelection.collapsed(offset: firstName.length),
-                ),
-              ),
-              labelText: 'First Name',
-              onChanged: (val) {
-                firstName = val.trim();
-              },
-            ),
-            EditProfileTextField(
-              controller: TextEditingController.fromValue(
-                TextEditingValue(
-                  text: lastName,
-                  selection: TextSelection.collapsed(offset: lastName.length),
-                ),
-              ),
-              labelText: 'Last Name',
-              onChanged: (val) {
-                lastName = val.trim();
-              },
-            ),
-            EditProfileTextField(
-              controller: TextEditingController.fromValue(
-                TextEditingValue(
-                  text: college,
-                  selection: TextSelection.collapsed(offset: college.length),
-                ),
-              ),
-              labelText: 'College',
-              onChanged: (val) {
-                college = val.trim();
-              },
-            ),
-            EditProfileTextField(
-              controller: TextEditingController.fromValue(
-                TextEditingValue(
-                  text: bio,
-                  selection: TextSelection.collapsed(offset: bio.length),
-                ),
-              ),
-              labelText: 'Bio',
-              keyboardType: TextInputType.multiline,
-              maxLines: 5,
-              onChanged: (val) {
-                bio = val.trim();
-              },
             ),
           ],
         ),
