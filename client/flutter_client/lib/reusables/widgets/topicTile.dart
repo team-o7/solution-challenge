@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
-import 'package:flutter_client/services/databaseHandler.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class TopicTile extends StatefulWidget {
   final bool isPrivate;
   final String title, description, creator, peoplesSize, dp;
   final int rating;
+  final Function onNameTap;
 
   const TopicTile(
       {Key key,
@@ -17,6 +17,7 @@ class TopicTile extends StatefulWidget {
       this.description,
       this.creator,
       this.rating,
+      this.onNameTap,
       this.peoplesSize})
       : super(key: key);
 
@@ -25,19 +26,6 @@ class TopicTile extends StatefulWidget {
 }
 
 class _TopicTileState extends State<TopicTile> {
-  static Map<String, dynamic> creatorData;
-
-  void getCreator() async {
-    creatorData = await DatabaseHandler().getUserDataByUid(widget.creator);
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    getCreator();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -93,13 +81,8 @@ class _TopicTileState extends State<TopicTile> {
               ),
               ListTile(
                 title: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/userProfile',
-                        arguments: creatorData);
-                  },
-                  child: Text(creatorData != null
-                      ? '${creatorData['firstName']} ${creatorData['lastName']}'
-                      : ''),
+                  onTap: widget.onNameTap,
+                  child: Text(widget.creator),
                 ),
                 trailing: SizedBox(
                   width: SizeConfig.screenWidth * 0.4,
