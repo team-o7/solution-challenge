@@ -5,12 +5,19 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../constants.dart';
 
 class MyTopicTile extends StatelessWidget {
-  const MyTopicTile({
-    Key key,
-    @required this.size,
-  }) : super(key: key);
+  final String title, description;
+  final int noOfPeoples;
+  final double rating;
+  final bool isPrivate;
 
-  final Size size;
+  const MyTopicTile(
+      {Key key,
+      this.title,
+      this.description,
+      this.noOfPeoples,
+      this.rating,
+      this.isPrivate})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,21 +27,20 @@ class MyTopicTile extends StatelessWidget {
         elevation: 8,
         borderRadius: BorderRadius.all(Radius.circular(12)),
         child: Container(
-          height: size.height * 0.2,
+          height: SizeConfig.screenHeight * 0.2,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ListTile(
                 title: Text(
-                  'Machine Learning',
+                  title,
                   style: TextStyle(
                       fontSize: SizeConfig.screenWidth * 30 / 360,
                       fontWeight: FontWeight.w700),
                 ),
                 subtitle: Text(
-                  'Learn and play with machine learning with me.'
-                  'my ML Models can even train a dog',
+                  description,
                 ),
                 trailing: IconButton(
                   icon: Icon(
@@ -47,11 +53,11 @@ class MyTopicTile extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 18.0),
                 child: Text(
-                  '34 peoples',
+                  '${noOfPeoples.toString()} peoples',
                 ),
               ),
               Container(
-                height: size.height * 0.04,
+                height: SizeConfig.screenHeight * 0.04,
                 color: kPrimaryColor0,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -65,12 +71,12 @@ class MyTopicTile extends StatelessWidget {
                         ),
                         itemCount: 5,
                         direction: Axis.horizontal,
-                        rating: 1,
+                        rating: rating,
                         itemSize: 18,
                         unratedColor: Colors.white,
                       ),
                       Icon(
-                        Icons.lock,
+                        isPrivate ? Icons.lock : Icons.public,
                         color: Colors.white,
                         size: 18,
                       )

@@ -99,6 +99,27 @@ class _EditProfileState extends State<EditProfile> {
                             .then((value) => Navigator.pop(context, true)));
                   }
                 });
+              } else {
+                if (userNameIsOkay &&
+                    widget.userName != '' &&
+                    widget.firstName != '' &&
+                    widget.lastName != '' &&
+                    widget.college != '') {
+                  DatabaseHandler().updateUserDatabase(data: {
+                    'userName': widget.userName,
+                    'firstName': widget.firstName,
+                    'lastName': widget.lastName,
+                    'college': widget.college,
+                    'dp': widget.dp,
+                    'bio': widget.bio
+                  }).then((value) =>
+                      Provider.of<UiNotifier>(context, listen: false)
+                          .setUserData()
+                          .then((value) => Navigator.pop(context, true)));
+                } else {
+                  Navigator.pop(context);
+                  //todo: show error msg
+                }
               }
             },
           )

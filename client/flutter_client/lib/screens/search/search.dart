@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
@@ -6,7 +5,9 @@ import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_client/reusables/widgets/mainAppBar.dart';
 import 'package:flutter_client/reusables/widgets/roundedTextField.dart';
+import 'package:flutter_client/reusables/widgets/searchFilterOption.dart';
 import 'package:flutter_client/reusables/widgets/topicTile.dart';
+import 'package:flutter_client/reusables/widgets/userListTile.dart';
 import 'package:flutter_client/services/databaseHandler.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:provider/provider.dart';
@@ -89,107 +90,6 @@ class Search extends StatelessWidget {
   }
 }
 
-class UserListTile extends StatelessWidget {
-  final String firstName, lastName, userName, dp;
-  final Function onTap, onAddFriend;
-
-  const UserListTile(
-      {Key key,
-      this.firstName,
-      this.lastName,
-      this.userName,
-      this.dp,
-      this.onTap,
-      this.onAddFriend})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    SizeConfig().init(context);
-    return Padding(
-      padding: const EdgeInsets.only(left: 12, right: 12, top: 12),
-      child: Material(
-        elevation: 2,
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-        child: ListTile(
-          onTap: onTap,
-
-          /// extract this  [circleAvatar] for displaying circular
-          /// image at other places
-          leading: CachedNetworkImage(
-            imageUrl: dp,
-            fadeInDuration: Duration(microseconds: 0),
-            fadeOutDuration: Duration(microseconds: 0),
-            imageBuilder: (context, imageProvider) => Container(
-              width: SizeConfig.screenWidth * 45 / 360,
-              height: SizeConfig.screenWidth * 45 / 360,
-              decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.circular(SizeConfig.screenWidth * 4 / 360),
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-            placeholder: (context, url) => Container(
-              width: SizeConfig.screenWidth * 45 / 360,
-              height: SizeConfig.screenWidth * 45 / 360,
-              decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.circular(SizeConfig.screenWidth * 5 / 360),
-                color: Color(0xffE5E5E5),
-              ),
-            ),
-          ),
-          title: Text('$firstName $lastName'),
-          subtitle: Text('@$userName'),
-          trailing: MaterialButton(
-            onPressed: onAddFriend,
-            child: Text('Add Friend'),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class SearchFilterOption extends StatelessWidget {
-  final int index;
-  final String label;
-  final Function onPressed;
-
-  const SearchFilterOption(
-      {Key key,
-      @required this.index,
-      @required this.label,
-      @required this.onPressed})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin:
-          EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 8 / 360),
-      width: SizeConfig.screenWidth * 1 / 2.5,
-      height: SizeConfig.screenHeight * 1 / 24,
-      child: MaterialButton(
-        elevation: 2,
-        onPressed: onPressed,
-        color: index ==
-                Provider.of<UiNotifier>(context, listen: true)
-                    .searchFilterOptionIndex
-            ? kPrimaryColorVeryLight
-            : Colors.grey[200],
-        child: Text(label),
-        shape: RoundedRectangleBorder(
-            borderRadius:
-                BorderRadius.circular(SizeConfig.screenWidth * 25 / 360)),
-      ),
-    );
-  }
-}
-
 class Users extends StatelessWidget {
   static DatabaseHandler databaseHandler = new DatabaseHandler();
   @override
@@ -221,7 +121,7 @@ class Users extends StatelessWidget {
             children: usersList,
           );
         } else
-          return Center(child: CircularProgressIndicator());
+          return Container();
       },
     );
   }
@@ -266,9 +166,7 @@ class Topics extends StatelessWidget {
             children: topicWidgets,
           );
         } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return Container();
         }
       },
     );

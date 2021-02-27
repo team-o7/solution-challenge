@@ -77,6 +77,14 @@ class DatabaseHandler {
         .snapshots();
   }
 
+  Stream<QuerySnapshot> myTopics() {
+    return firestore
+        .collection('topics')
+        .where('creator', isEqualTo: firebaseAuth.currentUser.uid)
+        .orderBy('timeStamp', descending: true)
+        .snapshots();
+  }
+
   Future<void> addUserToDatabase(DateTime dob, String college) async {
     User currentUser = firebaseAuth.currentUser;
     String deviceToken = await firebaseMessaging.getToken();
@@ -120,7 +128,8 @@ class DatabaseHandler {
       'creator': firebaseAuth.currentUser.uid,
       'description': description,
       'dp': dp,
-      'avgRating': 0,
+      'timeStamp': DateTime.now(),
+      'avgRating': 0.0,
       'title': title,
       'private': isPrivate,
       'requests': [],
@@ -129,7 +138,7 @@ class DatabaseHandler {
           'access': 'creator',
           'push notification': true,
           'uid': firebaseAuth.currentUser.uid,
-          'rating': 0
+          'rating': 0.0
         }
       ],
     }).then((value) {
