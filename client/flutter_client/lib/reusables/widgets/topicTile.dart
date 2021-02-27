@@ -77,8 +77,9 @@ class TopicTile extends StatelessWidget {
                 ListTile(
                   title: InkWell(
                     onTap: onNameTap,
-                    child:
-                        Text(snapshot.hasData ? snapshot.data['userName'] : ''),
+                    child: Text(snapshot.hasData
+                        ? '@' + snapshot.data['userName']
+                        : ''),
                   ),
                   trailing: SizedBox(
                     width: SizeConfig.screenWidth * 0.4,
