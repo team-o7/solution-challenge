@@ -27,7 +27,6 @@ class _CreateTopicState extends State<CreateTopic> {
   File imageFile;
   String imageName;
   bool isLoading = false;
-  //todo: create link for dp
 
   Widget myIndicator() {
     if (isLoading == true) {

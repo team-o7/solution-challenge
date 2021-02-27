@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
@@ -46,10 +47,25 @@ class TopicTile extends StatelessWidget {
                   subtitle: Text(
                     description,
                   ),
-                  trailing: CircleAvatar(
-                    backgroundColor: Colors.grey[400],
-                    child: Text('DP'),
-                    //todo: replace this with container to show topics dp
+                  trailing: Container(
+                    child: CachedNetworkImage(
+                      imageUrl: dp,
+                      fadeInDuration: Duration(microseconds: 0),
+                      fadeOutDuration: Duration(microseconds: 0),
+                      imageBuilder: (context, imageProvider) => Container(
+                        width: SizeConfig.screenWidth * 50 / 360,
+                        height: SizeConfig.screenWidth * 50 / 360,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              image: imageProvider, fit: BoxFit.cover),
+                        ),
+                      ),
+                      placeholder: (context, url) => Icon(
+                        Icons.account_circle,
+                        size: SizeConfig.screenWidth * 50 / 360,
+                      ),
+                    ),
                   ),
                 ),
                 Padding(
