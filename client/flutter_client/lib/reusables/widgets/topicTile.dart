@@ -8,7 +8,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 class TopicTile extends StatelessWidget {
   final bool isPrivate;
   final String title, description, creator, peoplesSize, dp;
-  final int rating;
+  final double rating;
   final Function onNameTap;
 
   const TopicTile(

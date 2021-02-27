@@ -146,7 +146,7 @@ class Topics extends StatelessWidget {
             String dp = data['dp'];
             String peoples = data['peoples'].length.toString();
             bool private = data['private'];
-            int rating = data['avgRating'];
+            double rating = data['avgRating'];
             TopicTile tile = new TopicTile(
               creator: creator,
               dp: dp,
