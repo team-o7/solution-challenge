@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/reusables/constants.dart';
@@ -6,8 +7,10 @@ import 'package:flutter_client/reusables/sizeConfig.dart';
 
 class UserProfile extends StatelessWidget {
   final Map<String, dynamic> userData;
+  static FirebaseFunctions _functions =
+      FirebaseFunctions.instanceFor(region: 'us-central1');
 
-  const UserProfile({Key key, this.userData}) : super(key: key);
+  UserProfile({Key key, this.userData}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -86,7 +89,19 @@ class UserProfile extends StatelessWidget {
               Container(
                 child: MaterialButton(
                   onPressed: () {
-                    //todo:
+                    Map<String, dynamic> params = {'otherUid': userData['uid']};
+                    var callable = _functions.httpsCallable(
+                        'onFriendRequesting',
+                        options: HttpsCallableOptions(
+                            timeout: Duration(seconds: 60)));
+                    try {
+                      callable.call(params).then((value) {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text(value.data)));
+                      });
+                    } catch (e) {
+                      print(e);
+                    }
                   },
                   height: SizeConfig.screenHeight * 30 / 640,
                   color: kPrimaryColor1,

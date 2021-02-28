@@ -28,6 +28,7 @@ class _ProfileState extends State<Profile> {
 
   void initData() {
     var data = Provider.of<UiNotifier>(context, listen: false).userData;
+    print(data);
     _firstName = data['firstName'];
     _lastName = data['lastName'];
     _userName = data['userName'];
@@ -36,9 +37,12 @@ class _ProfileState extends State<Profile> {
     _college = data['college'];
     _dob = data['dateOfBirth'];
     _friends = data['friends'];
-    _requests = data['friendRequest'];
+    _requests = data['friendRequestsReceived'];
     _topics = data['topics'];
   }
+
+  //todo: FUCKUP i have changed 'friendRequest' to 'friendRequestsReceived' in DS
+  ///update any error as you see
 
   @override
   void initState() {
@@ -161,7 +165,7 @@ class _ProfileState extends State<Profile> {
                 children: [
                   ProfileWidget0(
                     text: 'Friends',
-                    count: _friends.length.toString(),
+                    count: _friends?.length.toString(),
                     onTap: () {
                       //todo:
                       print('Clicked on Friends');
@@ -169,14 +173,14 @@ class _ProfileState extends State<Profile> {
                   ),
                   ProfileWidget0(
                     text: 'Topics',
-                    count: _topics.length.toString(),
+                    count: _topics?.length.toString(),
                     onTap: () {
                       //todo:
                     },
                   ),
                   ProfileWidget0(
                     text: 'Requests',
-                    count: _requests.length.toString(),
+                    count: _requests?.length.toString(),
                     onTap: () {
                       //todo:
                       print('Clicked on request');

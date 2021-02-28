@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 
-import 'databaseHandler.dart';
-
 class StorageHandler {
   FirebaseStorage storage = FirebaseStorage.instance;
   final storageReference = FirebaseStorage.instance.ref();

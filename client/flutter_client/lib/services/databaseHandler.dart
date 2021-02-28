@@ -102,7 +102,8 @@ class DatabaseHandler {
         'bio': '',
         'topics': [],
         'friends': [],
-        'friendRequest': [],
+        'friendRequestsReceived': [],
+        'friendRequestsSent': []
       });
     } else
       throw 'No signed in user';

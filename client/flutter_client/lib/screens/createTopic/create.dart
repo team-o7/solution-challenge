@@ -302,9 +302,13 @@ class MyTopics extends StatelessWidget {
             );
             tiles.add(widget);
           }
-          return Column(
-            children: tiles,
-          );
+          return tiles.length == 0
+              ? Center(
+                  child: Text('Create your first topic'),
+                )
+              : Column(
+                  children: tiles,
+                );
         } else {
           return Container();
         }

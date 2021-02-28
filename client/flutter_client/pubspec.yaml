@@ -21,6 +21,7 @@ dependencies:
   firebase_storage: ^7.0.0
   firebase_auth: ^0.20.0+1
   cloud_firestore: ^0.16.0
+  cloud_functions: ^0.9.0
   firebase_messaging:
   google_sign_in: ^4.5.1
 
