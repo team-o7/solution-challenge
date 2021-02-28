@@ -9,6 +9,7 @@ import 'package:flutter_client/reusables/widgets/mainAppBar.dart';
 import 'package:flutter_client/screens/profile/editProfile.dart';
 import 'package:flutter_client/services/authProvider.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
@@ -214,7 +215,7 @@ class _ProfileState extends State<Profile> {
                 color: Colors.black54,
               ),
               title: Text(
-                _dob.toDate().toString(),
+                DateFormat.yMMMd().format(_dob.toDate()).toString(),
                 style: TextStyle(
                   fontSize: SizeConfig.screenWidth * 14 / 360,
                   fontWeight: FontWeight.w500,
