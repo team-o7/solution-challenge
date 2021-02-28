@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 
 admin.initializeApp();
-admin.firestore().settings({ ignoreUndefinedProperties: true });
+admin.firestore().settings({ignoreUndefinedProperties: true});
 
 export const onTopicCreate = functions.firestore
   .document("/topics/{topicId}")
@@ -24,3 +24,66 @@ export const onTopicCreate = functions.firestore
       });
     });
   });
+
+export const onFriendRequesting = functions.https.onCall(
+  async (data, context) => {
+    const myUid = context.auth.uid;
+    const otherUid = data.otherUid;
+
+    console.log(myUid);
+    console.log(otherUid);
+
+    const me = await admin
+      .firestore()
+      .collection("users")
+      .where("uid", "==", myUid)
+      .get();
+
+    const otherGuy = await admin
+      .firestore()
+      .collection("users")
+      .where("uid", "==", otherUid)
+      .get();
+
+    let status = "None";
+    let nogo = false;
+
+    const myFriends = me.docs[0].data().friends;
+    const myFriendRequest = me.docs[0].data().friendRequestsReceived;
+    const friendRequestSent = me.docs[0].data().friendRequestsSent;
+
+    myFriends.forEach((element) => {
+      if (element === otherUid) {
+        status = "Already Friends";
+        nogo = true;
+      }
+    });
+
+    myFriendRequest.forEach((element) => {
+      if (element === otherUid) {
+        status = "You Already have his request";
+        nogo = true;
+      }
+    });
+
+    friendRequestSent.forEach((element) => {
+      if (element === otherUid) {
+        status = "You have already sent request";
+        nogo = true;
+      }
+    });
+
+    if (!nogo) {
+      await me.docs[0].ref.update({
+        friendRequestsSent: admin.firestore.FieldValue.arrayUnion(otherUid),
+      });
+
+      await otherGuy.docs[0].ref.update({
+        friendRequestsReceived: admin.firestore.FieldValue.arrayUnion(myUid),
+      });
+
+      status = "Request sent succesfully";
+      return status;
+    } else return status;
+  }
+);
