@@ -18,6 +18,7 @@ class UiNotifier extends ChangeNotifier {
   List<DmTile> dmTiles = [];
 
   Future<void> buildChats() async {
+    reqTiles = [];
     QuerySnapshot snapshot = await _databaseHandler.myChats();
     var docs = snapshot.docs;
     for (var doc in docs) {
