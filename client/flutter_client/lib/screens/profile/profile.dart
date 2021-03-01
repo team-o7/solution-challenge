@@ -29,7 +29,6 @@ class _ProfileState extends State<Profile> {
 
   void initData() {
     var data = Provider.of<UiNotifier>(context, listen: false).userData;
-    print(data);
     _firstName = data['firstName'];
     _lastName = data['lastName'];
     _userName = data['userName'];
@@ -169,7 +168,6 @@ class _ProfileState extends State<Profile> {
                     count: _friends?.length.toString(),
                     onTap: () {
                       //todo:
-                      print('Clicked on Friends');
                     },
                   ),
                   ProfileWidget0(
@@ -183,8 +181,12 @@ class _ProfileState extends State<Profile> {
                     text: 'Requests',
                     count: _requests?.length.toString(),
                     onTap: () {
-                      //todo:
-                      print('Clicked on request');
+                      Provider.of<UiNotifier>(context, listen: false)
+                          .clearReqTiles();
+                      Provider.of<UiNotifier>(context, listen: false)
+                          .saveTiles(_requests);
+                      Navigator.pushNamed(context, '/profile/requests',
+                          arguments: _requests);
                     },
                   ),
                 ],

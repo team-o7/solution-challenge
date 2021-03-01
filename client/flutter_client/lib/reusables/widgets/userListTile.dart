@@ -58,10 +58,6 @@ class UserListTile extends StatelessWidget {
           ),
           title: Text('$firstName $lastName'),
           subtitle: Text('@$userName'),
-          trailing: MaterialButton(
-            onPressed: onAddFriend,
-            child: Text('Add Friend'),
-          ),
         ),
       ),
     );

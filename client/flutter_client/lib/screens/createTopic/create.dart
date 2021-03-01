@@ -50,6 +50,7 @@ class _CreateTopicState extends State<CreateTopic> {
             )),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.create_outlined),
+          heroTag: 'create',
           tooltip: 'Create new topic',
           onPressed: () {
             showModalBottomSheet(

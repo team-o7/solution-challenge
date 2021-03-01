@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_client/screens/DMscreen/chat.dart';
 import 'package:flutter_client/screens/auth/googleLogin.dart';
 import 'package:flutter_client/screens/auth/registration1.dart';
 import 'package:flutter_client/screens/auth/registration2.dart';
 import 'package:flutter_client/screens/channelChat/channelChat.dart';
 import 'package:flutter_client/screens/mainScreen.dart';
 import 'package:flutter_client/screens/profile/editProfile.dart';
+import 'package:flutter_client/screens/profile/requests.dart';
 import 'package:flutter_client/screens/profile/userProfile.dart';
 import 'package:flutter_client/screens/welcome.dart';
 
@@ -31,13 +31,16 @@ class Routes {
       //   return MaterialPageRoute(builder: (_) => UserProfile());
       case '/editProfile':
         return MaterialPageRoute(builder: (_) => EditProfile());
+      case '/profile/requests':
+        return MaterialPageRoute(
+            builder: (_) => Requests(
+                  requests: args,
+                ));
       case '/userProfile':
         return MaterialPageRoute(
             builder: (_) => UserProfile(
                   userData: args,
                 ));
-      case '/chat':
-        return MaterialPageRoute(builder: (_) => Chat());
       case '/channelChat':
         return MaterialPageRoute(
             builder: (_) => ChannelChat(

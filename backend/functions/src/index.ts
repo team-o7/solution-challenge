@@ -87,3 +87,123 @@ export const onFriendRequesting = functions.https.onCall(
     } else return status;
   }
 );
+
+export const onFriendRequestAccept = functions.https.onCall(
+  async (data, context) => {
+    const myUid = context.auth.uid;
+    const otherUid = data.otherUid;
+
+    console.log(myUid);
+    console.log(otherUid);
+
+    const me = await admin
+      .firestore()
+      .collection("users")
+      .where("uid", "==", myUid)
+      .get();
+
+    const otherGuy = await admin
+      .firestore()
+      .collection("users")
+      .where("uid", "==", otherUid)
+      .get();
+
+    let status = "None";
+    let nogo = false;
+
+    const myFriends = me.docs[0].data().friends;
+
+    myFriends.forEach((element) => {
+      if (element === otherUid) {
+        status = "Already Friends";
+        nogo = true;
+      }
+    });
+
+    if (!nogo) {
+      await me.docs[0].ref.update({
+        friendRequestsReceived: admin.firestore.FieldValue.arrayRemove(
+          otherUid
+        ),
+        friends: admin.firestore.FieldValue.arrayUnion(otherUid),
+      });
+
+      await otherGuy.docs[0].ref.update({
+        friendRequestsSent: admin.firestore.FieldValue.arrayRemove(myUid),
+        friends: admin.firestore.FieldValue.arrayUnion(myUid),
+      });
+      status = "Added friends Succesfully";
+    }
+
+    if (!nogo) {
+      admin
+        .firestore()
+        .collection("chats")
+        .add({
+          users: [myUid, otherUid],
+          [myUid]: admin.firestore.Timestamp.now(),
+          [otherUid]: admin.firestore.Timestamp.now(),
+        })
+        .then((doc) => {
+          doc.collection("users").add({
+            uid: myUid,
+            lastActive: admin.firestore.Timestamp.now(),
+          });
+          doc.collection("users").add({
+            uid: otherUid,
+            lastActive: admin.firestore.Timestamp.now(),
+          });
+        });
+    }
+
+    return status;
+  }
+);
+
+export const onFriendRequestDecline = functions.https.onCall(
+  async (data, context) => {
+    const myUid = context.auth.uid;
+    const otherUid = data.otherUid;
+
+    console.log(myUid);
+    console.log(otherUid);
+
+    const me = await admin
+      .firestore()
+      .collection("users")
+      .where("uid", "==", myUid)
+      .get();
+
+    const otherGuy = await admin
+      .firestore()
+      .collection("users")
+      .where("uid", "==", otherUid)
+      .get();
+
+    let status = "None";
+    let nogo = false;
+
+    const myFriends = me.docs[0].data().friends;
+
+    myFriends.forEach((element) => {
+      if (element === otherUid) {
+        status = "Already Friends";
+        nogo = true;
+      }
+    });
+
+    if (!nogo) {
+      await me.docs[0].ref.update({
+        friendRequestsReceived: admin.firestore.FieldValue.arrayRemove(
+          otherUid
+        ),
+      });
+
+      await otherGuy.docs[0].ref.update({
+        friendRequestsSent: admin.firestore.FieldValue.arrayRemove(myUid),
+      });
+      status = "Deleted friend request";
+    }
+    return status;
+  }
+);

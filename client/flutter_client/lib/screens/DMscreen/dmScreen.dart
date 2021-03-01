@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_client/notifiers/uiNotifier.dart';
 import 'package:flutter_client/reusables/constants.dart';
-import 'package:flutter_client/reusables/widgets/dmtile.dart';
 import 'package:flutter_client/reusables/widgets/roundedTextField.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
+import 'package:provider/provider.dart';
 
 class DmScreen extends StatelessWidget {
   final GlobalKey<InnerDrawerState> innerDrawerKey;
@@ -29,35 +30,29 @@ class DmScreen extends StatelessWidget {
         heroTag: 'hero0',
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 12, right: 12, top: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              RoundedTextField(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            //12,12,16
+            Padding(
+              padding: const EdgeInsets.only(left: 12, right: 12, top: 16),
+              child: RoundedTextField(
                 hintText: 'search',
                 suffixIcon: Icon(
                   Icons.search_outlined,
                   color: kPrimaryColor0,
                 ),
               ),
-              DmTile(),
-              DmTile(),
-              DmTile(),
-              DmTile(),
-              DmTile(),
-              DmTile(),
-              DmTile(),
-              DmTile(),
-              DmTile(),
-              DmTile(),
-              DmTile(),
-              DmTile(),
-              DmTile(),
-              DmTile(),
-              DmTile(),
-            ],
-          ),
+            ),
+            Provider.of<UiNotifier>(context, listen: false).dmTiles.length == 0
+                ? Center(
+                    child: Text('Add friends to start chats with them'),
+                  )
+                : Column(
+                    children:
+                        Provider.of<UiNotifier>(context, listen: false).dmTiles,
+                  )
+          ],
         ),
       ),
     );

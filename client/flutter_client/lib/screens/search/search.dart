@@ -26,7 +26,7 @@ class Search extends StatelessWidget {
             innerDrawerKey: innerDrawerKey,
             title: 'Search',
           )),
-      body: ListView(
+      body: Column(
         children: [
           Padding(
             padding: EdgeInsets.symmetric(
@@ -79,6 +79,7 @@ class Search extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'search',
         child: Icon(
           Icons.search_outlined,
         ),
@@ -117,8 +118,12 @@ class Users extends StatelessWidget {
             );
             usersList.add(userListTile);
           }
-          return Column(
-            children: usersList,
+          return Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: usersList.length,
+              itemBuilder: (_, index) => usersList[index],
+            ),
           );
         } else
           return Container();
@@ -162,8 +167,11 @@ class Topics extends StatelessWidget {
             );
             topicWidgets.add(tile);
           }
-          return Column(
-            children: topicWidgets,
+          return Expanded(
+            child: ListView.builder(
+              itemCount: topicWidgets.length,
+              itemBuilder: (_, index) => topicWidgets[index],
+            ),
           );
         } else {
           return Container();

@@ -61,6 +61,13 @@ class DatabaseHandler {
       throw 'No signed in user';
   }
 
+  Future<QuerySnapshot> myChats() async {
+    return firestore
+        .collection('chats')
+        .where('users', arrayContains: firebaseAuth.currentUser.uid)
+        .get();
+  }
+
   /// currently this returns all signed un users
   /// should update with search query
   Stream<QuerySnapshot> searchedUsers() {
