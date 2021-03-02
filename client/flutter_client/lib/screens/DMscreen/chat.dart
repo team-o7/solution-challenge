@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/reusables/constants.dart';
@@ -8,8 +9,9 @@ import 'package:flutter_client/reusables/widgets/ChatTextField.dart';
 class Chat extends StatelessWidget {
   final DocumentReference reference;
   final String name;
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
-  const Chat({Key key, @required this.reference, @required this.name})
+  Chat({Key key, @required this.reference, @required this.name})
       : super(key: key);
 
   @override
@@ -30,20 +32,50 @@ class Chat extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  OneToOneMessageBox(
-                    message:
-                        'bhai mera kat gya. uske bacche mujhe mama bula rha '
-                        'lomdi sali 😒😒',
-                    isMe: false,
+                  StreamBuilder(
+                    stream: reference
+                        .collection('messages')
+                        .orderBy('timeStamp', descending: true)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(
+                          child: Text(
+                              'Your messages are secured by end to end encryption on client side.'
+                              'say Hello to start a conversation.'),
+                        );
+                      } else {
+                        var data = snapshot.data.docs;
+                        List<OneToOneMessageBox> messages = [];
+                        for (var doc in data) {
+                          String msg = doc.data()['msg'];
+                          String sender = doc.data()['sender'];
+                          bool isFile = doc.data()['isFile'];
+                          OneToOneMessageBox box = new OneToOneMessageBox(
+                            message: msg,
+                            isMe: firebaseAuth.currentUser.uid == sender,
+                            isFile: isFile,
+                          );
+                          messages.add(box);
+                        }
+                        return Expanded(
+                            child: ListView.builder(
+                          reverse: true,
+                          itemCount: messages.length,
+                          itemBuilder: (context, index) {
+                            return messages[index];
+                          },
+                        ));
+                      }
+                    },
                   ),
-                  OneToOneMessageBox(
-                    message: 'to mai kya kru bsdk 😂😂😂😂',
-                    isMe: true,
-                  )
                 ],
               )),
             ),
-            ChatTextField()
+            ChatTextField(
+              reference: reference,
+              currentUser: firebaseAuth.currentUser.uid,
+            )
           ],
         ),
       ),

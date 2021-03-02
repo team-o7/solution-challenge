@@ -44,13 +44,13 @@ class DmScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Provider.of<UiNotifier>(context, listen: false).dmTiles.length == 0
+            Provider.of<UiNotifier>(context, listen: true).dmTiles.length == 0
                 ? Center(
                     child: Text('Add friends to start chats with them'),
                   )
                 : Column(
                     children:
-                        Provider.of<UiNotifier>(context, listen: false).dmTiles,
+                        Provider.of<UiNotifier>(context, listen: true).dmTiles,
                   )
           ],
         ),

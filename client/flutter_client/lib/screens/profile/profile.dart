@@ -181,6 +181,7 @@ class _ProfileState extends State<Profile> {
                     text: 'Requests',
                     count: _requests?.length.toString(),
                     onTap: () {
+                      setState(() {});
                       Provider.of<UiNotifier>(context, listen: false)
                           .clearReqTiles();
                       Provider.of<UiNotifier>(context, listen: false)

@@ -18,7 +18,7 @@ class UiNotifier extends ChangeNotifier {
   List<DmTile> dmTiles = [];
 
   Future<void> buildChats() async {
-    reqTiles = [];
+    dmTiles = [];
     QuerySnapshot snapshot = await _databaseHandler.myChats();
     var docs = snapshot.docs;
     for (var doc in docs) {
@@ -38,6 +38,7 @@ class UiNotifier extends ChangeNotifier {
       );
       dmTiles.add(newTile);
     }
+    notifyListeners();
   }
 
   void saveTiles(List r) {

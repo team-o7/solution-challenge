@@ -7,13 +7,15 @@ class RoundedTextField extends StatelessWidget {
   final Icon suffixIcon;
   final double borderRadius;
   final TextEditingController controller;
+  final Function(String) onChanged;
 
   const RoundedTextField(
       {Key key,
       @required this.hintText,
       this.suffixIcon,
       this.borderRadius = 32,
-      this.controller})
+      this.controller,
+      this.onChanged})
       : super(key: key);
 
   @override
@@ -21,6 +23,7 @@ class RoundedTextField extends StatelessWidget {
     return TextField(
       cursorColor: kPrimaryColor0,
       controller: controller,
+      onChanged: onChanged,
       decoration: InputDecoration(
           hoverColor: kPrimaryColor0,
           hintText: hintText,

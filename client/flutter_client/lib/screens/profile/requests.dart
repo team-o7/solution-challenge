@@ -19,14 +19,20 @@ class Requests extends StatelessWidget {
           title: Text('Friend Request'),
           backgroundColor: kPrimaryColor0,
         ),
-        body: ListView.builder(
-          itemCount:
-              Provider.of<UiNotifier>(context, listen: true).reqTiles.length,
-          itemBuilder: (context, index) {
-            return Provider.of<UiNotifier>(context, listen: true)
-                .reqTiles[index];
-          },
-        ));
+        body:
+            Provider.of<UiNotifier>(context, listen: true).reqTiles.length == 0
+                ? Center(
+                    child: Text('You don\'t have any friend requests'),
+                  )
+                : ListView.builder(
+                    itemCount: Provider.of<UiNotifier>(context, listen: true)
+                        .reqTiles
+                        .length,
+                    itemBuilder: (context, index) {
+                      return Provider.of<UiNotifier>(context, listen: true)
+                          .reqTiles[index];
+                    },
+                  ));
   }
 }
 
@@ -57,14 +63,14 @@ class RequestsTile extends StatelessWidget {
                         options: HttpsCallableOptions(
                             timeout: Duration(seconds: 60)));
                     //todo: circularProgressIndicator
-                    callable.call(params).then((value) {
-                      Provider.of<UiNotifier>(context, listen: false)
-                          .removeReqTile(index);
-                      Provider.of<UiNotifier>(context, listen: false)
-                          .setUserData();
+                    callable.call(params).then((value) async {
+                      await Provider.of<UiNotifier>(context, listen: false)
+                          .buildChats();
                       //todo: remove above line and add a new fnc in uinotifier
                       ///to update the current list of chats
                       Navigator.pop(context);
+                      Provider.of<UiNotifier>(context, listen: false)
+                          .removeReqTile(index);
                       ScaffoldMessenger.of(context)
                           .showSnackBar(SnackBar(content: Text(value.data)));
                     });
@@ -74,7 +80,7 @@ class RequestsTile extends StatelessWidget {
                   onPressed: () {
                     Map<String, dynamic> params = {'otherUid': uid};
                     var callable = _functions.httpsCallable(
-                        'onFriendRequestAccept',
+                        'onFriendRequestDecline',
                         options: HttpsCallableOptions(
                             timeout: Duration(seconds: 60)));
                     //todo: circularProgressIndicator
