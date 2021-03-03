@@ -65,9 +65,7 @@ class RequestsTile extends StatelessWidget {
                     //todo: circularProgressIndicator
                     callable.call(params).then((value) async {
                       await Provider.of<UiNotifier>(context, listen: false)
-                          .buildChats();
-                      //todo: remove above line and add a new fnc in uinotifier
-                      ///to update the current list of chats
+                          .setUserData();
                       Navigator.pop(context);
                       Provider.of<UiNotifier>(context, listen: false)
                           .removeReqTile(index);
@@ -84,7 +82,9 @@ class RequestsTile extends StatelessWidget {
                         options: HttpsCallableOptions(
                             timeout: Duration(seconds: 60)));
                     //todo: circularProgressIndicator
-                    callable.call(params).then((value) {
+                    callable.call(params).then((value) async {
+                      await Provider.of<UiNotifier>(context, listen: false)
+                          .setUserData();
                       Provider.of<UiNotifier>(context, listen: false)
                           .removeReqTile(index);
                       Navigator.pop(context);

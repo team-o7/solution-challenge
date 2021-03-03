@@ -117,15 +117,6 @@ class _SearchState extends State<Search> {
                   )
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          heroTag: 'search',
-          child: Icon(
-            Icons.search_outlined,
-          ),
-          onPressed: () {
-            //TODO: should work as tapping on textField
-          },
-        ),
       ),
     );
   }
