@@ -130,6 +130,7 @@ class DatabaseHandler {
     });
   }
 
+  ///updating ds on 3 march
   Future<void> createTopic(
       String description, String title, bool isPrivate, String dp) async {
     firestore.collection('topics').add({
@@ -141,26 +142,25 @@ class DatabaseHandler {
       'title': title,
       'private': isPrivate,
       'requests': [],
-      'peoples': [
-        {
-          'access': 'creator',
-          'push notification': true,
-          'uid': firebaseAuth.currentUser.uid,
-          'rating': 0.0
-        }
-      ],
+      'peoples': [firebaseAuth.currentUser.uid],
     }).then((value) {
+      value.collection('peoples').add({
+        'access': 'creator',
+        'push notification': true,
+        'uid': firebaseAuth.currentUser.uid,
+        'rating': 0.0
+      });
       value.update({'id': value.id});
       value.collection('adminChannels').add({'title': 'Announcements'});
       value.collection('adminChannels').add({'title': 'Documents'});
       value.collection('privateChannels').add({
         'title': 'Suggestion',
-        'peoples': [
-          {
-            'uid': firebaseAuth.currentUser.uid,
-            'access': 'readwrite' //readonly
-          }
-        ]
+        'peoples': [firebaseAuth.currentUser.uid]
+      }).then((value) {
+        value.collection('peoples').add({
+          'uid': firebaseAuth.currentUser.uid,
+          'access': 'readwrite' //readonly
+        });
       });
       value.collection('publicChannels').add({'title': title});
       value.collection('publicChannels').add({'title': 'General'});
