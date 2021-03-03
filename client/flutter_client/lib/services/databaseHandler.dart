@@ -70,10 +70,11 @@ class DatabaseHandler {
 
   /// currently this returns all signed un users
   /// should update with search query
-  Stream<QuerySnapshot> searchedUsers() {
+  Stream<QuerySnapshot> searchedUsers(String key) {
     return firestore
         .collection('users')
         .where('uid', isNotEqualTo: firebaseAuth.currentUser.uid)
+        .where('searchKey', arrayContains: key)
         .snapshots();
   }
 
@@ -81,6 +82,7 @@ class DatabaseHandler {
     return firestore
         .collection('topics')
         .where('creator', isNotEqualTo: firebaseAuth.currentUser.uid)
+
         .snapshots();
   }
 
