@@ -12,18 +12,24 @@ import 'package:flutter_client/services/databaseHandler.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:provider/provider.dart';
 
-class Search extends StatelessWidget {
+class Search extends StatefulWidget {
   static TextEditingController _controller;
 
   final GlobalKey<InnerDrawerState> innerDrawerKey;
   const Search({Key key, this.innerDrawerKey}) : super(key: key);
+
+  @override
+  _SearchState createState() => _SearchState();
+}
+
+class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(56),
           child: MainAppBar(
-            innerDrawerKey: innerDrawerKey,
+            innerDrawerKey: widget.innerDrawerKey,
             title: 'Search',
           )),
       body: Column(
@@ -33,14 +39,37 @@ class Search extends StatelessWidget {
                 horizontal: SizeConfig.screenWidth * 10 / 360,
                 vertical: SizeConfig.screenHeight * 10 / 640),
             child: Material(
-              child: RoundedTextField(
-                controller: _controller,
-                hintText: 'search',
-                suffixIcon: Icon(
-                  Icons.search_outlined,
-                  color: kPrimaryColor0,
+              child: TextField(
+                cursorColor: kPrimaryColor0,
+                controller: Search._controller,
+                onChanged: (val) {
+                  Provider.of<UiNotifier>(context, listen: false)
+                      .setSearchKey(val);
+                },
+                decoration: InputDecoration(
+                  hoverColor: kPrimaryColor0,
+                  hintText: 'Search',
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(SizeConfig.screenWidth * 5 / 360)),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: kPrimaryColor0, width: 1.0),
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(SizeConfig.screenWidth * 5 / 360)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: kPrimaryColor0, width: 2.0),
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(SizeConfig.screenWidth * 5 / 360)),
+                  ),
+                  suffixIcon: Icon(
+                    Icons.search,
+                    color: kPrimaryColor1,
+                  ),
                 ),
-                borderRadius: SizeConfig.screenWidth * 5 / 360,
               ),
               shape: RoundedRectangleBorder(
                   borderRadius:
@@ -74,7 +103,9 @@ class Search extends StatelessWidget {
           Provider.of<UiNotifier>(context, listen: true)
                       .searchFilterOptionIndex ==
                   1
-              ? Users()
+              ? Users(
+                  value:
+                      Provider.of<UiNotifier>(context, listen: true).searchKey)
               : Topics()
         ],
       ),
@@ -93,10 +124,14 @@ class Search extends StatelessWidget {
 
 class Users extends StatelessWidget {
   static DatabaseHandler databaseHandler = new DatabaseHandler();
+
+  final String value;
+  Users({this.value});
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: databaseHandler.searchedUsers(),
+      stream: databaseHandler.searchedUsers(value),
       builder: (_, snapshot) {
         if (snapshot.hasData) {
           final users = snapshot.data?.docs;
