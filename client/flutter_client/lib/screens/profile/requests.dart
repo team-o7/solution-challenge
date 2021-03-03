@@ -59,7 +59,7 @@ class RequestsTile extends StatelessWidget {
                   onPressed: () {
                     Map<String, dynamic> params = {'otherUid': uid};
                     var callable = _functions.httpsCallable(
-                        'onFriendRequestAccept',
+                        'onFriendRequestDecline',
                         options: HttpsCallableOptions(
                             timeout: Duration(seconds: 60)));
                     //todo: circularProgressIndicator
@@ -80,7 +80,7 @@ class RequestsTile extends StatelessWidget {
                   onPressed: () {
                     Map<String, dynamic> params = {'otherUid': uid};
                     var callable = _functions.httpsCallable(
-                        'onFriendRequestDecline',
+                        'onFriendRequestAccept',
                         options: HttpsCallableOptions(
                             timeout: Duration(seconds: 60)));
                     //todo: circularProgressIndicator

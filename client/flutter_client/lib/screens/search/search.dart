@@ -4,7 +4,6 @@ import 'package:flutter_client/notifiers/uiNotifier.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_client/reusables/widgets/mainAppBar.dart';
-import 'package:flutter_client/reusables/widgets/roundedTextField.dart';
 import 'package:flutter_client/reusables/widgets/searchFilterOption.dart';
 import 'package:flutter_client/reusables/widgets/topicTile.dart';
 import 'package:flutter_client/reusables/widgets/userListTile.dart';
@@ -13,8 +12,6 @@ import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:provider/provider.dart';
 
 class Search extends StatefulWidget {
-  static TextEditingController _controller;
-
   final GlobalKey<InnerDrawerState> innerDrawerKey;
   const Search({Key key, this.innerDrawerKey}) : super(key: key);
 
@@ -23,115 +20,134 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
+  String searchKey;
+  TextEditingController _controller = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(56),
-          child: MainAppBar(
-            innerDrawerKey: widget.innerDrawerKey,
-            title: 'Search',
-          )),
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.screenWidth * 10 / 360,
-                vertical: SizeConfig.screenHeight * 10 / 640),
-            child: Material(
-              child: TextField(
-                cursorColor: kPrimaryColor0,
-                controller: Search._controller,
-                onChanged: (val) {
-                  Provider.of<UiNotifier>(context, listen: false)
-                      .setSearchKey(val);
-                },
-                decoration: InputDecoration(
-                  hoverColor: kPrimaryColor0,
-                  hintText: 'Search',
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(SizeConfig.screenWidth * 5 / 360)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: kPrimaryColor0, width: 1.0),
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(SizeConfig.screenWidth * 5 / 360)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: kPrimaryColor0, width: 2.0),
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(SizeConfig.screenWidth * 5 / 360)),
-                  ),
-                  suffixIcon: Icon(
-                    Icons.search,
-                    color: kPrimaryColor1,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(56),
+            child: MainAppBar(
+              innerDrawerKey: widget.innerDrawerKey,
+              title: 'Search',
+            )),
+        body: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.screenWidth * 10 / 360,
+                  vertical: SizeConfig.screenHeight * 10 / 640),
+              child: Material(
+                child: TextField(
+                  cursorColor: kPrimaryColor0,
+                  controller: _controller,
+                  onChanged: (val) {
+                    searchKey = val.trim().toLowerCase();
+                    setState(() {});
+                  },
+                  onEditingComplete: () {
+                    searchKey = null;
+                    _controller.clear();
+                  },
+                  decoration: InputDecoration(
+                    hoverColor: kPrimaryColor0,
+                    hintText: 'Search',
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(SizeConfig.screenWidth * 5 / 360)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: kPrimaryColor0, width: 1.0),
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(SizeConfig.screenWidth * 5 / 360)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: kPrimaryColor0, width: 2.0),
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(SizeConfig.screenWidth * 5 / 360)),
+                    ),
+                    suffixIcon: Icon(
+                      Icons.search,
+                      color: kPrimaryColor1,
+                    ),
                   ),
                 ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        SizeConfig.screenWidth * 5 / 360)),
               ),
-              shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(SizeConfig.screenWidth * 5 / 360)),
             ),
-          ),
-          SizedBox(
-            height: SizeConfig.screenHeight * 1 / 20,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                SearchFilterOption(
-                  label: 'Topics',
-                  index: 0,
-                  onPressed: () {
-                    Provider.of<UiNotifier>(context, listen: false)
-                        .setSearchFilterOptionIndex(0);
-                  },
-                ),
-                SearchFilterOption(
-                  label: 'Peoples',
-                  index: 1,
-                  onPressed: () {
-                    Provider.of<UiNotifier>(context, listen: false)
-                        .setSearchFilterOptionIndex(1);
-                  },
-                ),
-              ],
+            SizedBox(
+              height: SizeConfig.screenHeight * 1 / 20,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  SearchFilterOption(
+                    label: 'Topics',
+                    index: 0,
+                    onPressed: () {
+                      Provider.of<UiNotifier>(context, listen: false)
+                          .setSearchFilterOptionIndex(0);
+                    },
+                  ),
+                  SearchFilterOption(
+                    label: 'Peoples',
+                    index: 1,
+                    onPressed: () {
+                      Provider.of<UiNotifier>(context, listen: false)
+                          .setSearchFilterOptionIndex(1);
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-          Provider.of<UiNotifier>(context, listen: true)
-                      .searchFilterOptionIndex ==
-                  1
-              ? Users(
-                  value:
-                      Provider.of<UiNotifier>(context, listen: true).searchKey)
-              : Topics()
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: 'search',
-        child: Icon(
-          Icons.search_outlined,
+            Provider.of<UiNotifier>(context, listen: true)
+                        .searchFilterOptionIndex ==
+                    1
+                ? Users(searchKey: searchKey)
+                : Topics(
+                    searchKey: searchKey,
+                  )
+          ],
         ),
-        onPressed: () {
-          //TODO: should work as tapping on textField
-        },
+        floatingActionButton: FloatingActionButton(
+          heroTag: 'search',
+          child: Icon(
+            Icons.search_outlined,
+          ),
+          onPressed: () {
+            //TODO: should work as tapping on textField
+          },
+        ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    searchKey = null;
+    _controller.dispose();
+    super.dispose();
   }
 }
 
 class Users extends StatelessWidget {
   static DatabaseHandler databaseHandler = new DatabaseHandler();
 
-  final String value;
-  Users({this.value});
+  final String searchKey;
+  Users({this.searchKey = ' '});
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: databaseHandler.searchedUsers(value),
+      stream: databaseHandler.searchedUsers(searchKey),
       builder: (_, snapshot) {
         if (snapshot.hasData) {
           final users = snapshot.data?.docs;
@@ -169,11 +185,14 @@ class Users extends StatelessWidget {
 
 class Topics extends StatelessWidget {
   static DatabaseHandler databaseHandler = new DatabaseHandler();
+  final String searchKey;
+
+  const Topics({Key key, this.searchKey = ' '}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: databaseHandler.searchedTopics(),
+      stream: databaseHandler.searchedTopics(searchKey),
       builder: (_, snapshot) {
         if (snapshot.hasData) {
           var topics = snapshot.data.docs;

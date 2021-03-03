@@ -15,3 +15,13 @@ const kBottomNavLabelTextStyle = TextStyle(
 
 RoundedRectangleBorder kRoundedRectangleShape = RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(SizeConfig.screenWidth * 5 / 360));
+
+const List<String> titleColors = [
+  "0xffef5350",
+  "0xffec407a",
+  "0xffab47bc",
+  "0xff039be5",
+  "0xff43a047",
+  "0xffc0ca33",
+  "0xffff8f00",
+];

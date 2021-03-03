@@ -4,6 +4,61 @@ import * as admin from "firebase-admin";
 admin.initializeApp();
 admin.firestore().settings({ignoreUndefinedProperties: true});
 
+const titleColors = [
+  "0xffef5350",
+  "0xffec407a",
+  "0xffab47bc",
+  "0xff039be5",
+  "0xff43a047",
+  "0xffc0ca33",
+  "0xffff8f00",
+];
+
+/** 
+* max excluded
+*/
+function getRndInteger(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+/**
+ * substrings
+ */
+function getAllSubstrings(str : string) {
+  const allSubstrings = [];
+  const start = 0;
+  const val = str.toLowerCase();
+  for (let i = 0; i <= str.length; i++) {
+    allSubstrings.push(val.substring(start, i));
+  }
+  return allSubstrings;
+}
+
+export const onUserCreate = functions.firestore
+  .document("/users/{userId}")
+  .onCreate(async (snapshot, context) => {
+    const data = snapshot.data();
+    const firstName = data.firstName;
+    const lastName = data.lastName;
+    const userName = data.userName;
+
+    const subStrings = getAllSubstrings(firstName);
+    const lastNamess = getAllSubstrings(lastName);
+    const userNamess = getAllSubstrings(userName);
+
+    lastNamess.forEach((element) => {
+      subStrings.push(element);
+    });
+
+    userNamess.forEach((element) => {
+      subStrings.push(element);
+    });
+
+    snapshot.ref.update({
+      searchKey: subStrings,
+    });
+  });
+
 export const onTopicCreate = functions.firestore
   .document("/topics/{topicId}")
   .onCreate(async (snap, context) => {
@@ -17,6 +72,12 @@ export const onTopicCreate = functions.firestore
       .where("uid", "==", creator)
       .get();
     // const s = original.id;
+
+    const title = snap.data().title;
+
+    snap.ref.update({
+      searchKey: getAllSubstrings(title),
+    });
 
     d.forEach((doc) => {
       doc.ref.update({
@@ -238,23 +299,24 @@ export const onPublicTopicJoinRequest = functions.https.onCall(
       topic.ref.collection("users").add({
         "uid": uid,
         "access": "general",
-        "rating": 0,
+        "rating": 0.0,
         "push notification": true,
+        "color": titleColors[getRndInteger(0, 7)],
       });
 
       topic.ref
-      .collection("privateChanneels")
-      .where("title", "==", "Suggestion")
-      .get()
-      .then((data) => {
-        data.docs[0].ref.update({
-          peoples: admin.firestore.FieldValue.arrayUnion(uid),
+        .collection("privateChanneels")
+        .where("title", "==", "Suggestion")
+        .get()
+        .then((data) => {
+          data.docs[0].ref.update({
+            peoples: admin.firestore.FieldValue.arrayUnion(uid),
+          });
+          data.docs[0].ref.collection("peoples").add({
+            uid: uid,
+            access: "readwrite",
+          });
         });
-        data.docs[0].ref.collection("peoples").add({
-          uid: uid,
-          access: "readwrite",
-        });
-      });
 
       user.docs[0].ref.update({
         topics: admin.firestore.FieldValue.arrayUnion(topicId),
@@ -346,8 +408,9 @@ export const onRequestAccept = functions.https.onCall(async (data, contex) => {
     topic.ref.collection("peoples").add({
       "uid": useruid,
       "access": "general",
-      "rating": 0,
+      "rating": 0.0,
       "push notification": true,
+      "color": titleColors[getRndInteger(0, 7)],
     });
 
     topic.ref
@@ -366,7 +429,6 @@ export const onRequestAccept = functions.https.onCall(async (data, contex) => {
 
     user.docs[0].ref.update({
       topics: admin.firestore.FieldValue.arrayUnion(topicId),
-
     });
     status = "Request accepted succesfully";
   }

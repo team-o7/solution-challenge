@@ -16,7 +16,6 @@ class UiNotifier extends ChangeNotifier {
   DatabaseHandler _databaseHandler = new DatabaseHandler();
   List<RequestsTile> reqTiles = [];
   List<DmTile> dmTiles = [];
-  String searchKey;
 
   Future<void> buildChats() async {
     dmTiles = [];
@@ -91,10 +90,5 @@ class UiNotifier extends ChangeNotifier {
 
   void setDob(DateTime val) {
     dob = val;
-  }
-
-  void setSearchKey(String val) {
-    searchKey = val;
-    notifyListeners();
   }
 }

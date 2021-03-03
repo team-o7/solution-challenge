@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
+import 'package:flutter_client/reusables/constants.dart';
 
 class DatabaseHandler {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -71,19 +74,32 @@ class DatabaseHandler {
   /// currently this returns all signed un users
   /// should update with search query
   Stream<QuerySnapshot> searchedUsers(String key) {
-    return firestore
-        .collection('users')
-        .where('uid', isNotEqualTo: firebaseAuth.currentUser.uid)
-        .where('searchKey', arrayContains: key)
-        .snapshots();
+    if (key != null && key != '') {
+      return firestore
+          .collection('users')
+          .where('uid', isNotEqualTo: firebaseAuth.currentUser.uid)
+          .where('searchKey', arrayContains: key)
+          .snapshots();
+    } else
+      return firestore
+          .collection('users')
+          .where('uid', isNotEqualTo: firebaseAuth.currentUser.uid)
+          .snapshots();
   }
 
-  Stream<QuerySnapshot> searchedTopics() {
-    return firestore
-        .collection('topics')
-        .where('creator', isNotEqualTo: firebaseAuth.currentUser.uid)
-
-        .snapshots();
+  Stream<QuerySnapshot> searchedTopics(String key) {
+    if (key != null && key != '') {
+      return firestore
+          .collection('topics')
+          .where('creator', isNotEqualTo: firebaseAuth.currentUser.uid)
+          .where('searchKey', arrayContains: key)
+          .snapshots();
+    } else {
+      return firestore
+          .collection('topics')
+          .where('creator', isNotEqualTo: firebaseAuth.currentUser.uid)
+          .snapshots();
+    }
   }
 
   Stream<QuerySnapshot> myTopics() {
@@ -135,6 +151,7 @@ class DatabaseHandler {
   ///updating ds on 3 march
   Future<void> createTopic(
       String description, String title, bool isPrivate, String dp) async {
+    String myColor = titleColors[Random().nextInt(7)];
     firestore.collection('topics').add({
       'creator': firebaseAuth.currentUser.uid,
       'description': description,
@@ -148,6 +165,7 @@ class DatabaseHandler {
     }).then((value) {
       value.collection('peoples').add({
         'access': 'creator',
+        'color': myColor,
         'push notification': true,
         'uid': firebaseAuth.currentUser.uid,
         'rating': 0.0
