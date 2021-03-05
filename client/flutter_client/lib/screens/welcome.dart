@@ -19,6 +19,8 @@ class _WelcomeState extends State<Welcome> {
       // if user signed in but quit app without filling rest of the information
       await Navigator.pushNamed(context, '/registration1');
     } else {
+      await Provider.of<UiNotifier>(context, listen: false)
+          .setSelectedTopicDataFromCache();
       Provider.of<UiNotifier>(context, listen: false).setUserData().then(
             (value) => Navigator.pushNamed(context, '/drawerHolder'),
           );

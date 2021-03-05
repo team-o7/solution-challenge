@@ -285,7 +285,7 @@ export const onPublicTopicJoinRequest = functions.https.onCall(
       .get();
     const peoples = topic.data().peoples;
 
-    peoples.array.forEach((element) => {
+    peoples.forEach((element) => {
       if (element === uid) {
         status = "You are already in the topic";
         nogo = true;
@@ -293,10 +293,10 @@ export const onPublicTopicJoinRequest = functions.https.onCall(
     });
 
     if (!nogo) {
-      topic.ref.update({
+      await topic.ref.update({
         peoples: admin.firestore.FieldValue.arrayUnion(uid),
       });
-      topic.ref.collection("users").add({
+      await topic.ref.collection("peoples").add({
         "uid": uid,
         "access": "general",
         "rating": 0.0,
@@ -304,21 +304,22 @@ export const onPublicTopicJoinRequest = functions.https.onCall(
         "color": titleColors[getRndInteger(0, 7)],
       });
 
-      topic.ref
-        .collection("privateChanneels")
+      const suggestionhannel = await topic.ref
+        .collection("privateChannels")
         .where("title", "==", "Suggestion")
-        .get()
-        .then((data) => {
-          data.docs[0].ref.update({
+        .get();
+
+
+          await  suggestionhannel.docs[0].ref.update({
             peoples: admin.firestore.FieldValue.arrayUnion(uid),
           });
-          data.docs[0].ref.collection("peoples").add({
+
+          await  suggestionhannel.docs[0].ref.collection("peoples").add({
             uid: uid,
             access: "readwrite",
-          });
         });
 
-      user.docs[0].ref.update({
+      await user.docs[0].ref.update({
         topics: admin.firestore.FieldValue.arrayUnion(topicId),
       });
       status = "Added topic succesfully";
@@ -341,14 +342,14 @@ export const onPrivateTopicJoinRequest = functions.https.onCall(
     const peoples = topic.data().peoples;
     const requests = topic.data().requests;
 
-    requests.array.forEach((element) => {
+    requests.forEach((element) => {
       if (element === uid) {
         status = "You have already requested";
         nogo = true;
       }
     });
 
-    peoples.array.forEach((element) => {
+    peoples.forEach((element) => {
       if (element === uid) {
         status = "You are already in the topic";
         nogo = true;
@@ -383,14 +384,14 @@ export const onRequestAccept = functions.https.onCall(async (data, contex) => {
 
   const peoples = topic.data().peoples;
 
-  peoples.array.forEach((element) => {
+  peoples.forEach((element) => {
     if (element === useruid) {
       status = "He is already in the topic";
       nogo = true;
     }
   });
 
-  const acceptor = await (
+  const acceptor = (
     await topic.ref.collection("peoples").where("uid", "==", Acceptoruid).get()
   ).docs[0].data();
 
@@ -400,12 +401,12 @@ export const onRequestAccept = functions.https.onCall(async (data, contex) => {
   }
 
   if (!nogo) {
-    topic.ref.update({
+    await topic.ref.update({
       requests: admin.firestore.FieldValue.arrayRemove(useruid),
       peoples: admin.firestore.FieldValue.arrayUnion(useruid),
     });
 
-    topic.ref.collection("peoples").add({
+    await topic.ref.collection("peoples").add({
       "uid": useruid,
       "access": "general",
       "rating": 0.0,
@@ -413,8 +414,8 @@ export const onRequestAccept = functions.https.onCall(async (data, contex) => {
       "color": titleColors[getRndInteger(0, 7)],
     });
 
-    topic.ref
-      .collection("privateChanneels")
+    await topic.ref
+      .collection("privateChannels")
       .where("title", "==", "Suggestion")
       .get()
       .then((data) => {
@@ -427,7 +428,7 @@ export const onRequestAccept = functions.https.onCall(async (data, contex) => {
         });
       });
 
-    user.docs[0].ref.update({
+    await user.docs[0].ref.update({
       topics: admin.firestore.FieldValue.arrayUnion(topicId),
     });
     status = "Request accepted succesfully";

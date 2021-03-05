@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_client/reusables/widgets/dmtile.dart';
 import 'package:flutter_client/screens/profile/requests.dart';
 import 'package:flutter_client/services/databaseHandler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UiNotifier extends ChangeNotifier {
-  int leftNavIndex = 0;
+  String leftNavIndex = '';
+  String selectedTopicTitle = '';
   static String userName, firstName, lastName;
   DateTime dob;
   Map<String, dynamic> userData;
@@ -72,9 +74,29 @@ class UiNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setLeftNavIndex(int index) {
-    leftNavIndex = index;
+  void setLeftNavIndex(Map<String, dynamic> data) {
+    leftNavIndex = data['id'];
+    selectedTopicTitle = data['title'];
+    _cacheSelectedTopicData(data);
     notifyListeners();
+  }
+
+  void _cacheSelectedTopicData(Map<String, dynamic> data) {
+    SharedPreferences.getInstance().then((value) {
+      value.setString('id', data['id']);
+      value.setString('title', data['title']);
+    });
+  }
+
+  Future<void> setSelectedTopicDataFromCache() async {
+    try {
+      SharedPreferences.getInstance().then((value) {
+        leftNavIndex = value.getString('id');
+        selectedTopicTitle = value.getString('title');
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   void setSearchFilterOptionIndex(int index) {

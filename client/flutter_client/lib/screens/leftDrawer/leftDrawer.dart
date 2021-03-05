@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
-import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
+import 'package:flutter_client/reusables/widgets/topicChannelTile.dart';
 import 'package:flutter_client/services/authProvider.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class LeftDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -27,19 +28,35 @@ class LeftDrawer extends StatelessWidget {
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        TopicChannelTile(
-                          topicAcronym: 'T7',
-                          index: 0,
-                        ),
-                        TopicChannelTile(
-                          topicAcronym: 'ML',
-                          index: 1,
-                        ),
-                        TopicChannelTile(
-                          topicAcronym: 'AI',
-                          index: 2,
-                        ),
+                        TopicsStream(),
+                        GestureDetector(
+                          onTap: () {},
+                          child: Container(
+                            margin: EdgeInsets.only(left: 8, right: 8, top: 8),
+                            height: SizeConfig.screenHeight * 0.1,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey, width: 1),
+                              borderRadius: BorderRadius.circular(
+                                  SizeConfig.screenWidth * 10 / 360),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[300],
+                                    borderRadius: BorderRadius.circular(
+                                        SizeConfig.screenWidth * 10 / 360),
+                                  ),
+                                  child: Icon(
+                                    Icons.add,
+                                    size: SizeConfig.screenHeight * 0.1,
+                                    color: Colors.black26,
+                                  )),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   )),
@@ -50,19 +67,36 @@ class LeftDrawer extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(
                       top: SizeConfig.screenHeight * 1 / 10, left: 8),
-                  child: Text(
-                    'Machine learning',
-                    style: TextStyle(
-                        fontSize: SizeConfig.screenWidth * 1 / 16,
-                        fontWeight: FontWeight.w800),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        Provider.of<UiNotifier>(context, listen: true)
+                            .selectedTopicTitle,
+                        style: TextStyle(
+                            fontSize: SizeConfig.screenWidth * 1 / 16,
+                            fontWeight: FontWeight.w800),
+                      ),
+                      SizedBox(
+                        height: 4,
+                      ),
+                      Text(
+                        Provider.of<UiNotifier>(context, listen: true)
+                            .leftNavIndex,
+                        style: TextStyle(
+                            fontSize: SizeConfig.screenWidth * 1 / 32,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(
-                  height: SizeConfig.screenHeight * 1 / 5.35,
+                  height: SizeConfig.screenHeight * 1 / 5.5,
                 ),
                 TopicOptionTile(
-                  title: 'People',
+                  title: 'Peoples',
                   icon: Icons.perm_contact_cal_outlined,
+                  onPressed: () {},
                 ),
                 SizedBox(
                   height: SizeConfig.screenHeight * 1 / 40,
@@ -72,50 +106,11 @@ class LeftDrawer extends StatelessWidget {
                 SizedBox(
                   height: SizeConfig.screenHeight * 1 / 40,
                 ),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Icon(Icons.notifications_off_outlined),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Text(
-                      'Mute notification',
-                      style: TextStyle(
-                          fontSize: SizeConfig.screenWidth * 1 / 25,
-                          fontWeight: FontWeight.w600),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.screenWidth * 1 / 60,
-                    ),
-                    Switch(value: true, onChanged: (val) {})
-                  ],
-                ),
-                // Row(
-                //   children: [
-                //     SizedBox(
-                //       width: 8,
-                //     ),
-                //     Icon(Icons.nights_stay_outlined),
-                //     SizedBox(
-                //       width: 8,
-                //     ),
-                //     Text(
-                //       'Dark mode',
-                //       style: TextStyle(
-                //           fontSize: SizeConfig.screenWidth * 1 / 25,
-                //           fontWeight: FontWeight.w600),
-                //     ),
-                //     SizedBox(
-                //       width: SizeConfig.screenWidth * 1 / 7.8,
-                //     ),
-                //     Switch(value: false, onChanged: (val) {})
-                //   ],
-                // ),
+                TopicOptionTile(
+                    title: 'Mute notification',
+                    icon: Icons.notifications_off_outlined),
                 SizedBox(
-                  height: SizeConfig.screenHeight * 1 / 120,
+                  height: SizeConfig.screenHeight * 1 / 40,
                 ),
                 TopicOptionTile(title: 'Requests', icon: CupertinoIcons.bell),
                 SizedBox(
@@ -185,9 +180,10 @@ class TopicOptionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return GestureDetector(
+    return InkWell(
       onTap: onPressed,
       child: Row(
+        mainAxisSize: MainAxisSize.max,
         children: [
           SizedBox(
             width: 8,
@@ -203,65 +199,6 @@ class TopicOptionTile extends StatelessWidget {
                 fontWeight: FontWeight.w600),
           )
         ],
-      ),
-    );
-  }
-}
-
-class TopicChannelTile extends StatelessWidget {
-  final String topicAcronym;
-  final int index;
-
-  const TopicChannelTile({
-    Key key,
-    @required this.topicAcronym,
-    this.index,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    SizeConfig().init(context);
-    return GestureDetector(
-      onTap: () {
-        Provider.of<UiNotifier>(context, listen: false).setLeftNavIndex(index);
-      },
-      child: Container(
-        margin: EdgeInsets.only(left: 8, right: 8, top: 8),
-        height: SizeConfig.screenHeight * 0.1,
-        decoration: BoxDecoration(
-          border: Border.all(
-              color:
-                  Provider.of<UiNotifier>(context, listen: true).leftNavIndex ==
-                          index
-                      ? kPrimaryColor0
-                      : Colors.grey,
-              width:
-                  Provider.of<UiNotifier>(context, listen: true).leftNavIndex ==
-                          index
-                      ? 2
-                      : 1),
-          borderRadius:
-              BorderRadius.circular(SizeConfig.screenWidth * 10 / 360),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(2.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.grey[400],
-              borderRadius:
-                  BorderRadius.circular(SizeConfig.screenWidth * 10 / 360),
-            ),
-            child: Center(
-              child: Text(
-                topicAcronym,
-                style: TextStyle(
-                    fontSize: SizeConfig.screenHeight * 0.05,
-                    fontWeight: FontWeight.w700,
-                    color: kPrimaryColor0),
-              ),
-            ),
-          ),
-        ),
       ),
     );
   }

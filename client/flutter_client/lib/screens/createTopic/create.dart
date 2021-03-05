@@ -307,7 +307,7 @@ class MyTopics extends StatelessWidget {
               ? Center(
                   child: Text('Create your first topic'),
                 )
-              : Column(
+              : ListView(
                   children: tiles,
                 );
         } else {
