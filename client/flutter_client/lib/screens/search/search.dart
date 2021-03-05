@@ -205,6 +205,7 @@ class Topics extends StatelessWidget {
               peoplesSize: peoples,
               isPrivate: private,
               rating: rating,
+              reference: topic.reference,
               onNameTap: () async {
                 Navigator.pushNamed(context, '/userProfile',
                     arguments: await databaseHandler.getUserDataByUid(creator));

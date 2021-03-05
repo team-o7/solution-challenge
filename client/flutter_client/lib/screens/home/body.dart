@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_client/reusables/widgets/mainAppBar.dart';
 import 'package:flutter_client/reusables/widgets/roundedTextField.dart';
+import 'package:flutter_client/screens/channelChat/channelChat.dart';
+import 'package:flutter_client/services/databaseHandler.dart';
 
 class Body extends StatelessWidget {
   final innerDrawerKey;
@@ -15,10 +18,8 @@ class Body extends StatelessWidget {
           preferredSize: const Size.fromHeight(56),
           child: MainAppBar(
             innerDrawerKey: innerDrawerKey,
-            title: 'Team 7',
+            title: 'sensei',
           )),
-      //todo: Admin channels:- documents, announcements
-      //todo: Public channels:- general, random, topic_name
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(left: 6, right: 6),
@@ -47,14 +48,7 @@ class Body extends StatelessWidget {
                       fontWeight: FontWeight.w600),
                 ),
               ),
-              ChannelTile(
-                channel: Channel.admin,
-                title: 'documents',
-              ),
-              ChannelTile(
-                channel: Channel.admin,
-                title: 'announcements',
-              ),
+              ChannelsStream(channel: Channel.adminChannels),
               SizedBox(
                 height: 24,
               ),
@@ -67,9 +61,8 @@ class Body extends StatelessWidget {
                       fontWeight: FontWeight.w600),
                 ),
               ),
-              ChannelTile(
-                channel: Channel.private,
-                title: 'Suggestion',
+              ChannelsStream(
+                channel: Channel.privateChannels,
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 6, top: 8),
@@ -102,18 +95,7 @@ class Body extends StatelessWidget {
                       fontWeight: FontWeight.w600),
                 ),
               ),
-              ChannelTile(
-                channel: Channel.public,
-                title: 'general',
-              ),
-              ChannelTile(
-                channel: Channel.public,
-                title: 'random',
-              ),
-              ChannelTile(
-                channel: Channel.public,
-                title: 'team 7',
-              ),
+              ChannelsStream(channel: Channel.publicChannels),
               Padding(
                 padding: const EdgeInsets.only(left: 6, top: 8),
                 child: Row(
@@ -144,8 +126,13 @@ class Body extends StatelessWidget {
 class ChannelTile extends StatelessWidget {
   final Channel channel;
   final String title;
+  final DocumentReference reference;
 
-  const ChannelTile({Key key, @required this.channel, @required this.title})
+  const ChannelTile(
+      {Key key,
+      @required this.channel,
+      @required this.title,
+      @required this.reference})
       : super(key: key);
 
   @override
@@ -154,7 +141,14 @@ class ChannelTile extends StatelessWidget {
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       padding: EdgeInsets.all(0),
       onPressed: () {
-        Navigator.pushNamed(context, '/channelChat', arguments: title);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (_) => ChannelChat(
+                      reference: reference,
+                      title: title,
+                      channel: channel,
+                    )));
       },
       child: Row(
         children: [
@@ -169,7 +163,7 @@ class ChannelTile extends StatelessWidget {
             '# $title',
             style: TextStyle(
                 fontSize: SizeConfig.screenWidth * 16 / 360,
-                fontWeight: FontWeight.w500),
+                fontWeight: FontWeight.w400),
           ),
         ],
       ),
@@ -178,19 +172,19 @@ class ChannelTile extends StatelessWidget {
 
   Icon iconType(Channel channel) {
     switch (channel) {
-      case Channel.admin:
+      case Channel.adminChannels:
         return Icon(
           CupertinoIcons.circle,
           color: Colors.redAccent,
           size: 8,
         );
-      case Channel.private:
+      case Channel.privateChannels:
         return Icon(
           CupertinoIcons.circle,
           color: Colors.yellow,
           size: 8,
         );
-      case Channel.public:
+      case Channel.publicChannels:
         return Icon(
           CupertinoIcons.circle,
           color: Colors.green,
@@ -206,4 +200,44 @@ class ChannelTile extends StatelessWidget {
   }
 }
 
-enum Channel { public, private, admin }
+enum Channel { publicChannels, privateChannels, adminChannels }
+
+extension ParseToString on Channel {
+  String toShortString() {
+    return this.toString().split('.').last;
+  }
+}
+
+class ChannelsStream extends StatelessWidget {
+  final Channel channel;
+
+  const ChannelsStream({Key key, @required this.channel}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: DatabaseHandler().channels(context, channel.toShortString()),
+      builder: (context, snapshot) {
+        double l = 0;
+        if (snapshot.hasData) {
+          var docs = snapshot.data.docs;
+          l = docs.length.toDouble();
+          List<ChannelTile> tiles = [];
+          for (var doc in docs) {
+            String title = doc.data()['title'];
+            DocumentReference ref = doc.reference;
+            ChannelTile tile =
+                new ChannelTile(channel: channel, title: title, reference: ref);
+            tiles.add(tile);
+          }
+          return Column(
+            children: tiles,
+          );
+        } else
+          return SizedBox(
+            height: l * SizeConfig.screenHeight * 1 / 10,
+          );
+      },
+    );
+  }
+}

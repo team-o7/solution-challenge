@@ -33,6 +33,7 @@ dependencies:
   flutter_rating_bar: ^3.2.0+1
   flutter_inner_drawer: ^0.5.7+2
   cached_network_image: ^2.5.0
+  shared_preferences:
 
 dev_dependencies:
   flutter_test:

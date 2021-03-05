@@ -3,8 +3,10 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
 import 'package:flutter_client/reusables/constants.dart';
+import 'package:provider/provider.dart';
 
 class DatabaseHandler {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -110,8 +112,33 @@ class DatabaseHandler {
         .snapshots();
   }
 
+  Stream<QuerySnapshot> joinedTopics() {
+    return firestore
+        .collection('topics')
+        .where('peoples', arrayContains: firebaseAuth.currentUser.uid)
+        .orderBy('timeStamp', descending: true)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> channels(BuildContext context, String channel) {
+    if (channel == 'privateChannels') {
+      return firestore
+          .collection('topics')
+          .doc(Provider.of<UiNotifier>(context, listen: true).leftNavIndex)
+          .collection(channel)
+          .where('peoples', arrayContains: firebaseAuth.currentUser.uid)
+          .snapshots();
+    } else
+      return firestore
+          .collection('topics')
+          .doc(Provider.of<UiNotifier>(context, listen: true).leftNavIndex)
+          .collection(channel)
+          .snapshots();
+  }
+
   Future<void> addUserToDatabase(DateTime dob, String college) async {
     User currentUser = firebaseAuth.currentUser;
+    String myColor = titleColors[Random().nextInt(7)];
     String deviceToken = await firebaseMessaging.getToken();
     if (currentUser != null) {
       firestore.collection('users').add({
@@ -124,6 +151,7 @@ class DatabaseHandler {
         'email': currentUser.email,
         'dateOfBirth': dob,
         'college': college,
+        'color': myColor,
         'bio': '',
         'topics': [],
         'friends': [],

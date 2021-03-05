@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
@@ -10,6 +12,10 @@ class TopicTile extends StatelessWidget {
   final String title, description, creator, peoplesSize, dp;
   final double rating;
   final Function onNameTap;
+  final DocumentReference reference;
+
+  static FirebaseFunctions _functions =
+      FirebaseFunctions.instanceFor(region: 'us-central1');
 
   const TopicTile(
       {Key key,
@@ -20,7 +26,8 @@ class TopicTile extends StatelessWidget {
       this.creator,
       this.rating,
       this.onNameTap,
-      this.peoplesSize})
+      this.peoplesSize,
+      this.reference})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -115,7 +122,24 @@ class TopicTile extends StatelessWidget {
                                 fontWeight: FontWeight.w400),
                           ),
                           minWidth: 40,
-                          onPressed: () {},
+                          onPressed: () {
+                            Map<String, dynamic> params = {'id': reference.id};
+                            isPrivate
+                                ? _functions
+                                    .httpsCallable('onPrivateTopicJoinRequest')
+                                    .call(params)
+                                    .then((value) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text(value.data)));
+                                  })
+                                : _functions
+                                    .httpsCallable('onPublicTopicJoinRequest')
+                                    .call(params)
+                                    .then((value) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text(value.data)));
+                                  });
+                          },
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
                                   SizeConfig.screenWidth * 35 / 360)),
