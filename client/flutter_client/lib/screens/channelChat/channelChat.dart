@@ -136,7 +136,9 @@ class _ChannelMessageBoxState extends State<ChannelMessageBox> {
           radius: 12,
         ),
         title: Text(
-          snapshot.hasData ? snapshot.data['firstName'] : '',
+          snapshot.hasData
+              ? snapshot.data['firstName'] + ' ' + snapshot.data['lastName']
+              : '',
           style: TextStyle(fontSize: 12),
         ),
         subtitle: Text(widget.msg, style: TextStyle(fontSize: 15)),

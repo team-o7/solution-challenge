@@ -120,6 +120,13 @@ class DatabaseHandler {
         .snapshots();
   }
 
+  Stream<QuerySnapshot> topicJoinRequests(List<dynamic> reqs) {
+    return firestore
+        .collection('users')
+        .where('uid', whereIn: reqs)
+        .snapshots();
+  }
+
   Stream<QuerySnapshot> channels(BuildContext context, String channel) {
     if (channel == 'privateChannels') {
       return firestore

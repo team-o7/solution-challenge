@@ -5,6 +5,7 @@ import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_client/reusables/widgets/mainAppBar.dart';
 import 'package:flutter_client/reusables/widgets/roundedTextField.dart';
 import 'package:flutter_client/screens/channelChat/channelChat.dart';
+import 'package:flutter_client/screens/home/createChannelBottomSheet.dart';
 import 'package:flutter_client/services/databaseHandler.dart';
 
 class Body extends StatelessWidget {
@@ -64,8 +65,8 @@ class Body extends StatelessWidget {
               ChannelsStream(
                 channel: Channel.privateChannels,
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 6, top: 8),
+              MaterialButton(
+                onPressed: () {},
                 child: Row(
                   children: [
                     Icon(
@@ -96,8 +97,10 @@ class Body extends StatelessWidget {
                 ),
               ),
               ChannelsStream(channel: Channel.publicChannels),
-              Padding(
-                padding: const EdgeInsets.only(left: 6, top: 8),
+              MaterialButton(
+                onPressed: () {
+                  bottomSheetForChannelCreate(context);
+                },
                 child: Row(
                   children: [
                     Icon(

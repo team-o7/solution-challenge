@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
+import 'package:flutter_client/reusables/widgets/customCachedNetworkImage.dart';
 import 'package:flutter_client/services/databaseHandler.dart';
 import 'package:provider/provider.dart';
 
@@ -108,31 +108,8 @@ class RequestsTile extends StatelessWidget {
           elevation: 2,
           borderRadius: BorderRadius.all(Radius.circular(12)),
           child: ListTile(
-            leading: CachedNetworkImage(
-              imageUrl: snapshot.hasData ? snapshot.data['dp'] : '',
-              fadeInDuration: Duration(microseconds: 0),
-              fadeOutDuration: Duration(microseconds: 0),
-              imageBuilder: (context, imageProvider) => Container(
-                width: SizeConfig.screenWidth * 45 / 360,
-                height: SizeConfig.screenWidth * 45 / 360,
-                decoration: BoxDecoration(
-                  borderRadius:
-                      BorderRadius.circular(SizeConfig.screenWidth * 4 / 360),
-                  image: DecorationImage(
-                    image: imageProvider,
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              ),
-              placeholder: (context, url) => Container(
-                width: SizeConfig.screenWidth * 45 / 360,
-                height: SizeConfig.screenWidth * 45 / 360,
-                decoration: BoxDecoration(
-                  borderRadius:
-                      BorderRadius.circular(SizeConfig.screenWidth * 5 / 360),
-                  color: Color(0xffE5E5E5),
-                ),
-              ),
+            leading: CustomCachedNetworkImage(
+              dp: snapshot.hasData ? snapshot.data['dp'] : '',
             ),
             title: snapshot.hasData
                 ? Text(snapshot.data['firstName'] +

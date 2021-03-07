@@ -1,14 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_client/reusables/widgets/topicChannelTile.dart';
+import 'package:flutter_client/screens/leftDrawer/peoples.dart';
+import 'package:flutter_client/screens/leftDrawer/requests.dart';
 import 'package:flutter_client/services/authProvider.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class LeftDrawer extends StatelessWidget {
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -96,7 +101,12 @@ class LeftDrawer extends StatelessWidget {
                 TopicOptionTile(
                   title: 'Peoples',
                   icon: Icons.perm_contact_cal_outlined,
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => PeoplesInTopicStream()));
+                  },
                 ),
                 SizedBox(
                   height: SizeConfig.screenHeight * 1 / 40,
@@ -112,7 +122,27 @@ class LeftDrawer extends StatelessWidget {
                 SizedBox(
                   height: SizeConfig.screenHeight * 1 / 40,
                 ),
-                TopicOptionTile(title: 'Requests', icon: CupertinoIcons.bell),
+                TopicOptionTile(
+                  title: 'Requests',
+                  icon: CupertinoIcons.bell,
+                  onPressed: () async {
+                    _firestore
+                        .collection('topics')
+                        .doc(Provider.of<UiNotifier>(context, listen: false)
+                            .leftNavIndex)
+                        .get()
+                        .then((value) {
+                      var data = value.data();
+                      List<dynamic> requests = data['requests'];
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => TopicRequestsStream(
+                                    reqs: requests,
+                                  )));
+                    });
+                  },
+                ),
                 SizedBox(
                   height: SizeConfig.screenHeight * 1 / 40,
                 ),

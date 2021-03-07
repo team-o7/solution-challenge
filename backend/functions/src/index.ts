@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 
 admin.initializeApp();
-admin.firestore().settings({ignoreUndefinedProperties: true});
+admin.firestore().settings({ ignoreUndefinedProperties: true });
 
 const titleColors = [
   "0xffef5350",
@@ -14,9 +14,9 @@ const titleColors = [
   "0xffff8f00",
 ];
 
-/** 
-* max excluded
-*/
+/**
+ * max excluded
+ */
 function getRndInteger(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
@@ -24,7 +24,7 @@ function getRndInteger(min, max) {
 /**
  * substrings
  */
-function getAllSubstrings(str : string) {
+function getAllSubstrings(str: string) {
   const allSubstrings = [];
   const start = 0;
   const val = str.toLowerCase();
@@ -91,9 +91,6 @@ export const onFriendRequesting = functions.https.onCall(
     const myUid = context.auth.uid;
     const otherUid = data.otherUid;
 
-    console.log(myUid);
-    console.log(otherUid);
-
     const me = await admin
       .firestore()
       .collection("users")
@@ -113,23 +110,28 @@ export const onFriendRequesting = functions.https.onCall(
     const myFriendRequest = me.docs[0].data().friendRequestsReceived;
     const friendRequestSent = me.docs[0].data().friendRequestsSent;
 
+    if(myUid === otherUid){
+      nogo = true;
+      status = "You can't add yourself as your friend 🤷‍♀️"
+    }
+
     myFriends.forEach((element) => {
       if (element === otherUid) {
-        status = "Already Friends";
+        status = "Already Friends ✌";
         nogo = true;
       }
     });
 
     myFriendRequest.forEach((element) => {
       if (element === otherUid) {
-        status = "You Already have his request";
+        status = "You Already have his request 😎";
         nogo = true;
       }
     });
 
     friendRequestSent.forEach((element) => {
       if (element === otherUid) {
-        status = "You have already sent request";
+        status = "You have already sent request 😁";
         nogo = true;
       }
     });
@@ -143,7 +145,7 @@ export const onFriendRequesting = functions.https.onCall(
         friendRequestsReceived: admin.firestore.FieldValue.arrayUnion(myUid),
       });
 
-      status = "Request sent succesfully";
+      status = "Request sent succesfully 😍";
       return status;
     } else return status;
   }
@@ -176,7 +178,7 @@ export const onFriendRequestAccept = functions.https.onCall(
 
     myFriends.forEach((element) => {
       if (element === otherUid) {
-        status = "Already Friends";
+        status = "Already Friends 🤷‍♀️";
         nogo = true;
       }
     });
@@ -193,7 +195,7 @@ export const onFriendRequestAccept = functions.https.onCall(
         friendRequestsSent: admin.firestore.FieldValue.arrayRemove(myUid),
         friends: admin.firestore.FieldValue.arrayUnion(myUid),
       });
-      status = "Added friends Succesfully";
+      status = "Added friends Succesfully 😍";
     }
 
     if (!nogo) {
@@ -248,7 +250,7 @@ export const onFriendRequestDecline = functions.https.onCall(
 
     myFriends.forEach((element) => {
       if (element === otherUid) {
-        status = "Already Friends";
+        status = "Already Friends 🤷‍♀️";
         nogo = true;
       }
     });
@@ -263,7 +265,7 @@ export const onFriendRequestDecline = functions.https.onCall(
       await otherGuy.docs[0].ref.update({
         friendRequestsSent: admin.firestore.FieldValue.arrayRemove(myUid),
       });
-      status = "Deleted friend request";
+      status = "Deleted friend request 🤣";
     }
     return status;
   }
@@ -279,15 +281,11 @@ export const onPublicTopicJoinRequest = functions.https.onCall(
     let nogo = false;
 
     const topic = await firestore.collection("topics").doc(topicId).get();
-    const user = await firestore
-      .collection("users")
-      .where("uid", "==", uid)
-      .get();
     const peoples = topic.data().peoples;
 
     peoples.forEach((element) => {
       if (element === uid) {
-        status = "You are already in the topic";
+        status = "You are already in the topic 🤷‍♀️";
         nogo = true;
       }
     });
@@ -297,11 +295,11 @@ export const onPublicTopicJoinRequest = functions.https.onCall(
         peoples: admin.firestore.FieldValue.arrayUnion(uid),
       });
       await topic.ref.collection("peoples").add({
-        "uid": uid,
-        "access": "general",
-        "rating": 0.0,
+        uid: uid,
+        access: "general",
+        rating: 0.0,
         "push notification": true,
-        "color": titleColors[getRndInteger(0, 7)],
+        color: titleColors[getRndInteger(0, 7)],
       });
 
       const suggestionhannel = await topic.ref
@@ -309,20 +307,16 @@ export const onPublicTopicJoinRequest = functions.https.onCall(
         .where("title", "==", "Suggestion")
         .get();
 
-
-          await  suggestionhannel.docs[0].ref.update({
-            peoples: admin.firestore.FieldValue.arrayUnion(uid),
-          });
-
-          await  suggestionhannel.docs[0].ref.collection("peoples").add({
-            uid: uid,
-            access: "readwrite",
-        });
-
-      await user.docs[0].ref.update({
-        topics: admin.firestore.FieldValue.arrayUnion(topicId),
+      await suggestionhannel.docs[0].ref.update({
+        peoples: admin.firestore.FieldValue.arrayUnion(uid),
       });
-      status = "Added topic succesfully";
+
+      await suggestionhannel.docs[0].ref.collection("peoples").add({
+        uid: uid,
+        access: "readwrite",
+      });
+
+      status = "Added topic succesfully 😍";
     }
 
     return status;
@@ -344,14 +338,14 @@ export const onPrivateTopicJoinRequest = functions.https.onCall(
 
     requests.forEach((element) => {
       if (element === uid) {
-        status = "You have already requested";
+        status = "You have already requested 👀";
         nogo = true;
       }
     });
 
     peoples.forEach((element) => {
       if (element === uid) {
-        status = "You are already in the topic";
+        status = "You are already in the topic 🤦‍♀️";
         nogo = true;
       }
     });
@@ -360,7 +354,7 @@ export const onPrivateTopicJoinRequest = functions.https.onCall(
       await topic.ref.update({
         requests: admin.firestore.FieldValue.arrayUnion(uid),
       });
-      status = "Request sent succesfully";
+      status = "Request sent succesfully 😍";
     }
     return status;
   }
@@ -377,16 +371,11 @@ export const onRequestAccept = functions.https.onCall(async (data, contex) => {
 
   const topic = await firestore.collection("topics").doc(topicId).get();
 
-  const user = await firestore
-    .collection("users")
-    .where("uid", "==", useruid)
-    .get();
-
   const peoples = topic.data().peoples;
 
   peoples.forEach((element) => {
     if (element === useruid) {
-      status = "He is already in the topic";
+      status = "He is already in the topic 🤷‍♀️";
       nogo = true;
     }
   });
@@ -395,8 +384,8 @@ export const onRequestAccept = functions.https.onCall(async (data, contex) => {
     await topic.ref.collection("peoples").where("uid", "==", Acceptoruid).get()
   ).docs[0].data();
 
-  if (acceptor.access !== "creator" || acceptor.access !== "admin") {
-    status = "You don't have access";
+  if (acceptor.access !== "creator" && acceptor.access !== "admin") {
+    status = "You don't have access 🤣";
     nogo = true;
   }
 
@@ -407,11 +396,11 @@ export const onRequestAccept = functions.https.onCall(async (data, contex) => {
     });
 
     await topic.ref.collection("peoples").add({
-      "uid": useruid,
-      "access": "general",
-      "rating": 0.0,
+      uid: useruid,
+      access: "general",
+      rating: 0.0,
       "push notification": true,
-      "color": titleColors[getRndInteger(0, 7)],
+      color: titleColors[getRndInteger(0, 7)],
     });
 
     await topic.ref
@@ -428,11 +417,55 @@ export const onRequestAccept = functions.https.onCall(async (data, contex) => {
         });
       });
 
-    await user.docs[0].ref.update({
-      topics: admin.firestore.FieldValue.arrayUnion(topicId),
-    });
-    status = "Request accepted succesfully";
+    status = "Request accepted succesfully 😍";
   }
 
   return status;
 });
+
+export const createPublicChannel = functions.https.onCall(
+  async (data, context) => {
+    const topicId = data.id;
+    const topicTitle = data.title;
+    const user = context.auth.uid;
+    const firestore = admin.firestore();
+
+    let nogo = false;
+    let status = "None";
+
+    const topic = await firestore.collection("topics").doc(topicId).get();
+
+    await topic.ref
+      .collection("peoples")
+      .where("uid", "==", user)
+      .get()
+      .then((value) => {
+        const usersAccess = value.docs[0].data();
+        if (
+          usersAccess.access !== "creator" &&
+          usersAccess.access !== "admin"
+        ) {
+          status = "You don't have access 🤣";
+          nogo = true;
+        }
+      });
+
+    (await topic.ref.collection("publicChannels").get()).docs.forEach(
+      (element) => {
+        if (element.data().title == topicTitle) {
+          status = "Title already exists 🤦‍♀️";
+          nogo = true;
+        }
+      }
+    );
+
+    if (!nogo) {
+      await topic.ref.collection("publicChannels").add({
+        title: topicTitle,
+      });
+      status = "Created channel succesfully 😍";
+    }
+
+    return status;
+  }
+);
