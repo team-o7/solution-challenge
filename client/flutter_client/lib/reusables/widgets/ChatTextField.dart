@@ -9,15 +9,18 @@ import '../sizeConfig.dart';
 class ChatTextField extends StatelessWidget {
   final DocumentReference reference;
   final String currentUser;
+  final Function onPressedAttach;
   TextEditingController controller = new TextEditingController();
   String msg;
 
-  ChatTextField({Key key, this.reference, this.currentUser}) : super(key: key);
+  ChatTextField(
+      {Key key, this.reference, this.currentUser, this.onPressedAttach})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeConfig.screenHeight * 0.055,
+      height: SizeConfig.screenHeight * 0.085,
       // color: kPrimaryColorVeryLight,
       child: Row(
         children: [
@@ -29,11 +32,11 @@ class ChatTextField extends StatelessWidget {
                 Icons.attach_file_outlined,
                 color: Colors.white,
               ),
-              minWidth: 20,
-              onPressed: () {},
+              minWidth: SizeConfig.screenWidth * 10 / 360,
+              onPressed: onPressedAttach,
               shape: RoundedRectangleBorder(
                   borderRadius:
-                      BorderRadius.circular(SizeConfig.screenWidth * 35 / 360)),
+                      BorderRadius.circular(SizeConfig.screenWidth * 5 / 360)),
             ),
           ),
           Expanded(
@@ -42,6 +45,7 @@ class ChatTextField extends StatelessWidget {
             child: RoundedTextField(
               hintText: 'write your message',
               controller: controller,
+              borderRadius: SizeConfig.screenWidth * 5 / 360,
               onChanged: (val) {
                 val.trim();
                 msg = val;
@@ -53,10 +57,10 @@ class ChatTextField extends StatelessWidget {
             child: MaterialButton(
               color: kPrimaryColor0,
               child: Icon(
-                Icons.send_outlined,
+                Icons.send_rounded,
                 color: Colors.white,
               ),
-              minWidth: 20,
+              minWidth: SizeConfig.screenWidth * 10 / 360,
               onPressed: () {
                 if (msg != null && msg != '') {
                   reference.collection('messages').add({
@@ -70,7 +74,7 @@ class ChatTextField extends StatelessWidget {
               },
               shape: RoundedRectangleBorder(
                   borderRadius:
-                      BorderRadius.circular(SizeConfig.screenWidth * 35 / 360)),
+                      BorderRadius.circular(SizeConfig.screenWidth * 5 / 360)),
             ),
           ),
         ],
