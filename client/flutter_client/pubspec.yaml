@@ -28,7 +28,14 @@ dependencies:
   google_sign_in: ^4.5.1
 
   #Other Tools
-
+  downloads_path_provider:
+  url_launcher:
+  flutter_linkify:
+  open_file:
+  permission_handler:
+  flutter_downloader:
+  path_provider:
+  file_picker:
   image_picker: ^0.6.7+22
   flutter_rating_bar: ^3.2.0+1
   flutter_inner_drawer: ^0.5.7+2
