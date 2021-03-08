@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
@@ -14,13 +15,16 @@ import 'package:provider/provider.dart';
 class LeftDrawer extends StatelessWidget {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  FirebaseFunctions _functions =
+      FirebaseFunctions.instanceFor(region: 'us-central1');
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     //todo: mute notification, dark mode, notifications, peoples, rate, leave, invite
     //todo: ADMIN remove people,
-    return Drawer(
-      child: SafeArea(
+    return Scaffold(
+      body: SafeArea(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -158,37 +162,88 @@ class LeftDrawer extends StatelessWidget {
                   height: SizeConfig.screenHeight * 1 / 40,
                 ),
                 TopicOptionTile(
-                    title: 'Leave topic',
-                    icon: CupertinoIcons.arrow_left_circle),
+                  title: 'Leave topic',
+                  icon: CupertinoIcons.arrow_left_circle,
+                  onPressed: () {
+                    var callable = _functions.httpsCallable('leaveTopic',
+                        options: HttpsCallableOptions(
+                            timeout: Duration(seconds: 60)));
+                    var params = {
+                      'topic': Provider.of<UiNotifier>(context, listen: false)
+                          .leftNavIndex,
+                    };
+                    callable.call(params).then((value) {
+                      Provider.of<UiNotifier>(context, listen: false)
+                          .onTopicleave();
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(value.data)));
+                    });
+                  },
+                ),
                 SizedBox(
-                  height: SizeConfig.screenHeight * 1 / 4.5,
+                  height: SizeConfig.screenHeight * 1 / 4.0,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8),
-                  child: Text(
-                    'Rate this topic',
-                    style: TextStyle(
-                        fontSize: SizeConfig.screenWidth * 1 / 25,
-                        fontWeight: FontWeight.w600),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 4, top: 8),
-                  child: RatingBar.builder(
-                    itemBuilder: (_, index) => Icon(
-                      Icons.star,
-                      color: Colors.amber,
+                InkWell(
+                  onTap: () async {
+                    double newRating = 0.0;
+                    await showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                              title: Text('Rate this topic'),
+                              content: RatingBar.builder(
+                                itemBuilder: (_, index) => Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                ),
+                                onRatingUpdate: (rating) {
+                                  newRating = rating;
+                                },
+                                itemCount: 5,
+                                direction: Axis.horizontal,
+                                initialRating: 0,
+                                itemSize: 26,
+                                unratedColor: Colors.grey,
+                              ),
+                              actions: [
+                                MaterialButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text('Cancel')),
+                                MaterialButton(
+                                    onPressed: () {
+                                      var callable = _functions.httpsCallable(
+                                          'rate',
+                                          options: HttpsCallableOptions(
+                                              timeout: Duration(seconds: 60)));
+                                      var params = {
+                                        'topic': Provider.of<UiNotifier>(
+                                                context,
+                                                listen: false)
+                                            .leftNavIndex,
+                                        'rating': newRating,
+                                      };
+                                      callable.call(params).then((value) {
+                                        Navigator.pop(context);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content: Text(value.data)));
+                                      });
+                                    },
+                                    child: Text('Submit')),
+                              ],
+                            ));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Text(
+                      'Rate this topic',
+                      style: TextStyle(
+                          fontSize: SizeConfig.screenWidth * 1 / 25,
+                          fontWeight: FontWeight.w600),
                     ),
-                    onRatingUpdate: (rating) {
-                      print(rating);
-                    },
-                    itemCount: 5,
-                    direction: Axis.horizontal,
-                    initialRating: 0,
-                    itemSize: 26,
-                    unratedColor: Colors.grey,
                   ),
-                )
+                ),
               ],
             )
           ],

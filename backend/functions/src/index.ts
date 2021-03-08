@@ -110,9 +110,9 @@ export const onFriendRequesting = functions.https.onCall(
     const myFriendRequest = me.docs[0].data().friendRequestsReceived;
     const friendRequestSent = me.docs[0].data().friendRequestsSent;
 
-    if(myUid === otherUid){
+    if (myUid === otherUid) {
       nogo = true;
-      status = "You can't add yourself as your friend 🤷‍♀️"
+      status = "You can't add yourself as your friend 🤷‍♀️";
     }
 
     myFriends.forEach((element) => {
@@ -469,3 +469,211 @@ export const createPublicChannel = functions.https.onCall(
     return status;
   }
 );
+
+export const makeAdmin = functions.https.onCall(async (data, context) => {
+  const otherGuy = data.uid;
+  const topicid = data.topic;
+  const me = context.auth.uid;
+  const firestore = admin.firestore();
+
+  let nogo = false;
+  let status = "None";
+
+  const topic = await firestore.collection("topics").doc(topicid).get();
+
+  await topic.ref
+    .collection("peoples")
+    .where("uid", "==", me)
+    .get()
+    .then((value) => {
+      const usersAccess = value.docs[0].data();
+      if (usersAccess.access !== "creator" && usersAccess.access !== "admin") {
+        status = "You don't have access 🤣";
+        nogo = true;
+      }
+    });
+
+  if (!nogo) {
+    await topic.ref
+      .collection("peoples")
+      .where("uid", "==", otherGuy)
+      .get()
+      .then((value) => {
+        const usersAccess = value.docs[0].data();
+        if (
+          usersAccess.access === "creator" ||
+          usersAccess.access === "admin"
+        ) {
+          status = "Already admin";
+        } else {
+          value.docs[0].ref.update({
+            access: "admin",
+          });
+          status = "Update succesfull";
+        }
+      });
+  }
+
+  return status;
+});
+
+export const kickFromTopic = functions.https.onCall(async (data, context) => {
+  const otherGuy = data.uid;
+  const topicid = data.topic;
+  const me = context.auth.uid;
+  const firestore = admin.firestore();
+
+  let nogo = false;
+  let status = "None";
+
+  const topic = await firestore.collection("topics").doc(topicid).get();
+
+  await topic.ref
+    .collection("peoples")
+    .where("uid", "==", me)
+    .get()
+    .then((value) => {
+      const usersAccess = value.docs[0].data();
+      if (usersAccess.access !== "creator" && usersAccess.access !== "admin") {
+        status = "You don't have access 🤣";
+        nogo = true;
+      }
+    });
+
+  if(me === otherGuy){
+    nogo = true;
+    status = "You can't remove yourself bro 🤦‍♀️"
+  }
+
+  if (!nogo) {
+    await topic.ref.update({
+      peoples: admin.firestore.FieldValue.arrayRemove(otherGuy),
+    });
+    await topic.ref
+      .collection("peoples")
+      .where("uid", "==", otherGuy)
+      .get()
+      .then((value) => {
+        value.docs[0].ref.delete();
+      });
+
+    await topic.ref
+      .collection("privatechannels")
+      .where("peoples", "array-contains", otherGuy)
+      .get()
+      .then((value) => {
+        value.docs.forEach((element) => {
+          element.ref.update({
+            peoples: admin.firestore.FieldValue.arrayRemove(otherGuy),
+          });
+          element.ref
+            .collection("peoples")
+            .where("uid", "==", otherGuy)
+            .get()
+            .then((value) => {
+              value.docs[0].ref.delete();
+            });
+        });
+      });
+
+    status = "Removed succesfully";
+  }
+
+  return status;
+});
+
+export const leaveTopic = functions.https.onCall(async (data, context) => {
+  const topicid = data.topic;
+  const me = context.auth.uid;
+  const firestore = admin.firestore();
+
+  let nogo = false;
+  let status = "None";
+
+  const topic = await firestore.collection("topics").doc(topicid).get();
+
+  await topic.ref
+    .collection("peoples")
+    .where("uid", "==", me)
+    .get()
+    .then((value) => {
+      const usersAccess = value.docs[0].data();
+      if (usersAccess.access === "creator") {
+        status = "Creator can't leave 🤔";
+        nogo = true;
+      }
+    });
+
+  if (!nogo) {
+    await topic.ref.update({
+      peoples: admin.firestore.FieldValue.arrayRemove(me),
+    });
+    await topic.ref
+      .collection("peoples")
+      .where("uid", "==", me)
+      .get()
+      .then((value) => {
+        value.docs[0].ref.delete();
+      });
+
+    await topic.ref
+      .collection("privatechannels")
+      .where("peoples", "array-contains", me)
+      .get()
+      .then((value) => {
+        value.docs.forEach((element) => {
+          element.ref.update({
+            peoples: admin.firestore.FieldValue.arrayRemove(me),
+          });
+          element.ref
+            .collection("peoples")
+            .where("uid", "==", me)
+            .get()
+            .then((value) => {
+              value.docs[0].ref.delete();
+            });
+        });
+      });
+
+    status = "Left topic succesfully 🤔";
+  }
+
+  return status;
+});
+
+export const rate = functions.https.onCall(async (data, context) => {
+  const topicid = data.topic;
+  const rating = data.rating;
+  const me = context.auth.uid;
+  const firestore = admin.firestore();
+
+  const topic = await firestore.collection("topics").doc(topicid).get();
+
+  await topic.ref
+    .collection("peoples")
+    .where("uid", "==", me)
+    .get()
+    .then((value) => {
+      value.docs[0].ref.update({
+        rating: rating,
+      });
+    });
+
+  let newRating = 0.0;
+
+  await topic.ref
+    .collection("peoples")
+    .get()
+    .then((value) => {
+      value.docs.forEach((element) => {
+        newRating += element.data().rating;
+      });
+      newRating = newRating / value.docs.length;
+    });
+
+  await topic.ref.update({
+    avgRating: newRating,
+  });
+
+  return "Rated succesfully";
+});
