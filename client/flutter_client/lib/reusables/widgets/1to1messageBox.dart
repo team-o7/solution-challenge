@@ -2,11 +2,9 @@ import 'dart:io';
 
 import 'package:downloads_path_provider/downloads_path_provider.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_client/services/storageHandler.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:open_file/open_file.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 

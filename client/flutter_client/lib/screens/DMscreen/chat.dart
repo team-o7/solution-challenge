@@ -5,7 +5,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/widgets/1to1messageBox.dart';
 import 'package:flutter_client/reusables/widgets/ChatTextField.dart';
@@ -50,11 +49,7 @@ class Chat extends StatelessWidget {
                           .snapshots(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
-                          return Center(
-                            child: Text(
-                                'Your messages are secured by end to end encryption on client side.'
-                                'say Hello to start a conversation.'),
-                          );
+                          return Container();
                         } else {
                           var data = snapshot.data.docs;
                           List<OneToOneMessageBox> messages = [];
@@ -102,7 +97,7 @@ class Chat extends StatelessWidget {
                         builder: (context) => AlertDialog(
                           title: Text('ooPs!!!'),
                           content:
-                              Text('You can not send file greater than 10 mb'),
+                              Text('You can not send file greater than 10 MB'),
                           actions: <Widget>[
                             MaterialButton(
                               onPressed: () {

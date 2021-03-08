@@ -1,3 +1,4 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
 import 'package:flutter_client/reusables/constants.dart';
@@ -80,8 +81,7 @@ class PeoplesInTopicStream extends StatelessWidget {
                 userName: newData['userName'],
                 trailing: access == 'general' ? '' : access,
                 onPressed: () {
-                  Navigator.pushNamed(context, '/userProfile',
-                      arguments: newData);
+                  bottomSheetForPeoples(context, newData);
                 },
               );
             },
@@ -104,4 +104,64 @@ class PeoplesInTopicStream extends StatelessWidget {
       },
     );
   }
+}
+
+void bottomSheetForPeoples(BuildContext context, Map<String, dynamic> data) {
+  FirebaseFunctions _functions =
+      FirebaseFunctions.instanceFor(region: 'us-central1');
+  var callable1 = _functions.httpsCallable('makeAdmin',
+      options: HttpsCallableOptions(timeout: Duration(seconds: 60)));
+  var callable2 = _functions.httpsCallable('kickFromTopic',
+      options: HttpsCallableOptions(timeout: Duration(seconds: 60)));
+
+  showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: Icon(Icons.account_circle_outlined),
+              title: Text('View profile'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/userProfile', arguments: data);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.admin_panel_settings_outlined),
+              title: Text('Make admin'),
+              onTap: () {
+                var params = {
+                  'topic': Provider.of<UiNotifier>(context, listen: false)
+                      .leftNavIndex,
+                  'uid': data['uid']
+                };
+                callable1.call(params).then((value) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text(value.data)));
+                });
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.remove_circle_outline),
+              title: Text('Remove'),
+              onTap: () {
+                var params = {
+                  'topic': Provider.of<UiNotifier>(context, listen: false)
+                      .leftNavIndex,
+                  'uid': data['uid']
+                };
+                callable2.call(params).then((value) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text(value.data)));
+                });
+              },
+            ),
+          ],
+        );
+      });
 }
