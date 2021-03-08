@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/reusables/widgets/roundedTextField.dart';
+import 'package:flutter_client/services/databaseHandler.dart';
+import 'package:flutter_client/services/storageHandler.dart';
 
 import '../constants.dart';
 import '../sizeConfig.dart';
@@ -9,13 +13,11 @@ import '../sizeConfig.dart';
 class ChatTextField extends StatelessWidget {
   final DocumentReference reference;
   final String currentUser;
-  final Function onPressedAttach;
+  File attachedFile;
   TextEditingController controller = new TextEditingController();
   String msg;
 
-  ChatTextField(
-      {Key key, this.reference, this.currentUser, this.onPressedAttach})
-      : super(key: key);
+  ChatTextField({Key key, this.reference, this.currentUser}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,10 @@ class ChatTextField extends StatelessWidget {
                 color: Colors.white,
               ),
               minWidth: SizeConfig.screenWidth * 10 / 360,
-              onPressed: onPressedAttach,
+              onPressed: () {
+                StorageHandler().chatFileUpload(attachedFile, context,
+                    reference, DatabaseHandler().firebaseAuth);
+              },
               shape: RoundedRectangleBorder(
                   borderRadius:
                       BorderRadius.circular(SizeConfig.screenWidth * 5 / 360)),
