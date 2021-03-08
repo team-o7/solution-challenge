@@ -88,10 +88,6 @@ class Chat extends StatelessWidget {
               ChatTextField(
                 reference: reference,
                 currentUser: firebaseAuth.currentUser.uid,
-                onPressedAttach: () {
-                  StorageHandler().chatFileUpload(
-                      attachedFile, context, reference, firebaseAuth);
-                },
               )
             ],
           ),
