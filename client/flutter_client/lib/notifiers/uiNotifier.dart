@@ -7,7 +7,9 @@ import 'package:flutter_client/services/databaseHandler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UiNotifier extends ChangeNotifier {
-  String leftNavIndex = '';
+  String leftNavIndex = '.';
+  List _indexHistory = [];
+  List _titleHistory = [];
   String selectedTopicTitle = '';
   static String userName, firstName, lastName;
   DateTime dob;
@@ -77,7 +79,28 @@ class UiNotifier extends ChangeNotifier {
   void setLeftNavIndex(Map<String, dynamic> data) {
     leftNavIndex = data['id'];
     selectedTopicTitle = data['title'];
+    _indexHistory.add(leftNavIndex);
+    _titleHistory.add(selectedTopicTitle);
     _cacheSelectedTopicData(data);
+    notifyListeners();
+  }
+
+  void onTopicleave() {
+    if (_indexHistory.length >= 2) {
+      leftNavIndex = _indexHistory[_indexHistory.length - 2];
+      selectedTopicTitle = _titleHistory[_titleHistory.length - 2];
+      SharedPreferences.getInstance().then((value) {
+        value.setString('id', leftNavIndex);
+        value.setString('title', selectedTopicTitle);
+      });
+    } else {
+      leftNavIndex = '.';
+      selectedTopicTitle = '';
+      SharedPreferences.getInstance().then((value) {
+        value.setString('id', leftNavIndex);
+        value.setString('title', selectedTopicTitle);
+      });
+    }
     notifyListeners();
   }
 
