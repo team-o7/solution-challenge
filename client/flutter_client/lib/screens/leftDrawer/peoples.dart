@@ -81,7 +81,7 @@ class PeoplesInTopicStream extends StatelessWidget {
                 userName: newData['userName'],
                 trailing: access == 'general' ? '' : access,
                 onPressed: () {
-                  bottomSheetForPeoples(context, newData);
+                  bottomSheetForPeoples(context, newData, access);
                 },
               );
             },
@@ -106,12 +106,15 @@ class PeoplesInTopicStream extends StatelessWidget {
   }
 }
 
-void bottomSheetForPeoples(BuildContext context, Map<String, dynamic> data) {
+void bottomSheetForPeoples(
+    BuildContext context, Map<String, dynamic> data, String access) {
   FirebaseFunctions _functions =
       FirebaseFunctions.instanceFor(region: 'us-central1');
   var callable1 = _functions.httpsCallable('makeAdmin',
       options: HttpsCallableOptions(timeout: Duration(seconds: 60)));
   var callable2 = _functions.httpsCallable('kickFromTopic',
+      options: HttpsCallableOptions(timeout: Duration(seconds: 60)));
+  var callable3 = _functions.httpsCallable('removeFromAdmin',
       options: HttpsCallableOptions(timeout: Duration(seconds: 60)));
 
   showModalBottomSheet(
@@ -131,18 +134,26 @@ void bottomSheetForPeoples(BuildContext context, Map<String, dynamic> data) {
             ),
             ListTile(
               leading: Icon(Icons.admin_panel_settings_outlined),
-              title: Text('Make admin'),
+              title: access == 'general'
+                  ? Text('Make admin')
+                  : Text('Remove from admin'),
               onTap: () {
                 var params = {
                   'topic': Provider.of<UiNotifier>(context, listen: false)
                       .leftNavIndex,
                   'uid': data['uid']
                 };
-                callable1.call(params).then((value) {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text(value.data)));
-                });
+                access == 'general'
+                    ? callable1.call(params).then((value) {
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text(value.data)));
+                      })
+                    : callable3.call(params).then((value) {
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text(value.data)));
+                      });
               },
             ),
             ListTile(

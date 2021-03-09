@@ -385,7 +385,7 @@ export const onRequestAccept = functions.https.onCall(async (data, contex) => {
   ).docs[0].data();
 
   if (acceptor.access !== "creator" && acceptor.access !== "admin") {
-    status = "You don't have access 🤣";
+    status = "You don't have access";
     nogo = true;
   }
 
@@ -445,7 +445,7 @@ export const createPublicChannel = functions.https.onCall(
           usersAccess.access !== "creator" &&
           usersAccess.access !== "admin"
         ) {
-          status = "You don't have access 🤣";
+          status = "You don't have access";
           nogo = true;
         }
       });
@@ -488,7 +488,7 @@ export const makeAdmin = functions.https.onCall(async (data, context) => {
     .then((value) => {
       const usersAccess = value.docs[0].data();
       if (usersAccess.access !== "creator" && usersAccess.access !== "admin") {
-        status = "You don't have access 🤣";
+        status = "You don't have access";
         nogo = true;
       }
     });
@@ -517,7 +517,7 @@ export const makeAdmin = functions.https.onCall(async (data, context) => {
   return status;
 });
 
-export const kickFromTopic = functions.https.onCall(async (data, context) => {
+export const removeFromAdmin = functions.https.onCall(async (data, context) => {
   const otherGuy = data.uid;
   const topicid = data.topic;
   const me = context.auth.uid;
@@ -535,14 +535,57 @@ export const kickFromTopic = functions.https.onCall(async (data, context) => {
     .then((value) => {
       const usersAccess = value.docs[0].data();
       if (usersAccess.access !== "creator" && usersAccess.access !== "admin") {
-        status = "You don't have access 🤣";
+        status = "You don't have access";
         nogo = true;
       }
     });
 
-  if(me === otherGuy){
+  if (!nogo) {
+    await topic.ref
+      .collection("peoples")
+      .where("uid", "==", otherGuy)
+      .get()
+      .then((value) => {
+        if (value.docs[0].data().access === "creator") {
+          status = "You can't remove creator";
+        } else {
+          value.docs[0].ref.update({
+            access: "general",
+          });
+          status = "Update succesfull";
+        }
+      });
+  }
+
+  return status;
+});
+
+export const kickFromTopic = functions.https.onCall(async (data, context) => {
+  const otherGuy = data.uid;
+  const topicid = data.topic;
+  const me = context.auth.uid;
+  const firestore = admin.firestore();
+
+  let nogo = false;
+  let status = "None";
+
+  const topic = await firestore.collection("topics").doc(topicid).get();
+
+  await topic.ref
+    .collection("peoples")
+    .where("uid", "==", me)
+    .get()
+    .then((value) => {
+      const usersAccess = value.docs[0].data();
+      if (usersAccess.access !== "creator") {
+        status = "You don't have access";
+        nogo = true;
+      }
+    });
+
+  if (me === otherGuy) {
     nogo = true;
-    status = "You can't remove yourself bro 🤦‍♀️"
+    status = "You can't remove yourself 🤦‍♀️";
   }
 
   if (!nogo) {
@@ -558,7 +601,7 @@ export const kickFromTopic = functions.https.onCall(async (data, context) => {
       });
 
     await topic.ref
-      .collection("privatechannels")
+      .collection("privateChannels")
       .where("peoples", "array-contains", otherGuy)
       .get()
       .then((value) => {
@@ -617,7 +660,7 @@ export const leaveTopic = functions.https.onCall(async (data, context) => {
       });
 
     await topic.ref
-      .collection("privatechannels")
+      .collection("privateChannels")
       .where("peoples", "array-contains", me)
       .get()
       .then((value) => {
@@ -677,3 +720,238 @@ export const rate = functions.https.onCall(async (data, context) => {
 
   return "Rated succesfully";
 });
+
+export const createPrivateChannel = functions.https.onCall(
+  async (data, context) => {
+    const topicId = data.id;
+    const topicTitle = data.title;
+    const user = context.auth.uid;
+    const firestore = admin.firestore();
+
+    let nogo = false;
+    let status = "None";
+
+    const topic = await firestore.collection("topics").doc(topicId).get();
+
+    await topic.ref
+      .collection("peoples")
+      .where("uid", "==", user)
+      .get()
+      .then((value) => {
+        const usersAccess = value.docs[0].data();
+        if (
+          usersAccess.access !== "creator" &&
+          usersAccess.access !== "admin"
+        ) {
+          status = "You don't have access";
+          nogo = true;
+        }
+      });
+
+    (await topic.ref.collection("privateChannels").get()).docs.forEach(
+      (element) => {
+        if (element.data().title == topicTitle) {
+          status = "Title already exists 🤦‍♀️";
+          nogo = true;
+        }
+      }
+    );
+
+    if (!nogo) {
+      await topic.ref
+        .collection("privateChannels")
+        .add({
+          title: topicTitle,
+          peoples: [user],
+        })
+        .then((newDoc) => {
+          newDoc.collection("peoples").add({
+            access: "readwrite",
+            uid: user,
+          });
+        });
+      status = "Created channel succesfully 😍";
+    }
+
+    return status;
+  }
+);
+
+export const addInPrivaateChannel = functions.https.onCall(
+  async (data, context) => {
+    const topicId = data.topic;
+    const channelId = data.channel;
+    const person: string = data.person;
+    const access: string = data.access;
+    const user = context.auth.uid;
+    const firestore = admin.firestore();
+
+    let nogo = false;
+    let status = "None";
+
+    const topic = await firestore.collection("topics").doc(topicId).get();
+
+    await topic.ref
+      .collection("peoples")
+      .where("uid", "==", user)
+      .get()
+      .then((value) => {
+        const usersAccess = value.docs[0].data();
+        if (
+          usersAccess.access !== "creator" &&
+          usersAccess.access !== "admin"
+        ) {
+          status = "You don't have access";
+          nogo = true;
+        }
+      });
+
+    const channel = await firestore
+      .collection("topics")
+      .doc(topicId)
+      .collection("privateChannels")
+      .doc(channelId)
+      .get();
+    const ps: Array<string> = channel.data().peoples;
+    ps.forEach((element) => {
+      if (element === person) {
+        status = "Already exists";
+        nogo = true;
+      }
+    });
+
+    if (!nogo) {
+      await channel.ref.update({
+        peoples: admin.firestore.FieldValue.arrayUnion(person),
+      });
+      await channel.ref.collection("peoples").add({
+        access: access,
+        uid: person,
+      });
+
+      status = "Added succesfully 😍";
+    }
+
+    return status;
+  }
+);
+
+export const removeFromPrivaateChannel = functions.https.onCall(
+  async (data, context) => {
+    const topicId = data.topic;
+    const channelId = data.channel;
+    const person: string = data.person;
+    const user = context.auth.uid;
+    const firestore = admin.firestore();
+
+    let nogo = false;
+    let status = "None";
+
+    const topic = await firestore.collection("topics").doc(topicId).get();
+
+    await topic.ref
+      .collection("peoples")
+      .where("uid", "==", user)
+      .get()
+      .then((value) => {
+        const usersAccess = value.docs[0].data();
+        if (
+          usersAccess.access !== "creator" &&
+          usersAccess.access !== "admin"
+        ) {
+          status = "You don't have access";
+          nogo = true;
+        }
+      });
+
+    await topic.ref
+      .collection("peoples")
+      .where("uid", "==", person)
+      .get()
+      .then((value) => {
+        const usersAccess = value.docs[0].data();
+        if (usersAccess.access === "creator") {
+          status = "You can't remove creator";
+          nogo = true;
+        }
+      });
+
+    if (!nogo) {
+      const channel = await firestore
+        .collection("topics")
+        .doc(topicId)
+        .collection("privateChannels")
+        .doc(channelId)
+        .get();
+
+      await channel.ref.update({
+        peoples: admin.firestore.FieldValue.arrayRemove(person),
+      });
+      await channel.ref
+        .collection("peoples")
+        .where("uid", "==", person)
+        .get()
+        .then((elements) => {
+          elements.docs[0].ref.delete();
+        });
+
+      status = "Removed succesfully 😂";
+    }
+
+    return status;
+  }
+);
+
+export const updateAccessInPrivaateChannel = functions.https.onCall(
+  async (data, context) => {
+    const topicId = data.topic;
+    const channelId = data.channel;
+    const access = data.access;
+    const person: string = data.person;
+    const user = context.auth.uid;
+    const firestore = admin.firestore();
+
+    let nogo = false;
+    let status = "None";
+
+    const topic = await firestore.collection("topics").doc(topicId).get();
+
+    await topic.ref
+      .collection("peoples")
+      .where("uid", "==", user)
+      .get()
+      .then((value) => {
+        const usersAccess = value.docs[0].data();
+        if (
+          usersAccess.access !== "creator" &&
+          usersAccess.access !== "admin"
+        ) {
+          status = "You don't have access";
+          nogo = true;
+        }
+      });
+
+    if (!nogo) {
+      const channel = await firestore
+        .collection("topics")
+        .doc(topicId)
+        .collection("privateChannels")
+        .doc(channelId)
+        .get();
+
+      await channel.ref
+        .collection("peoples")
+        .where("uid", "==", person)
+        .get()
+        .then((elements) => {
+          elements.docs[0].ref.update({
+            access: access === "readwrite" ? "readonly" : "readwrite",
+          });
+        });
+
+      status = "Updated succesfully";
+    }
+
+    return status;
+  }
+);

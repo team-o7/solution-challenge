@@ -73,8 +73,6 @@ class DatabaseHandler {
         .get();
   }
 
-  /// currently this returns all signed un users
-  /// should update with search query
   Stream<QuerySnapshot> searchedUsers(String key) {
     if (key != null && key != '') {
       return firestore
@@ -124,6 +122,16 @@ class DatabaseHandler {
     return firestore
         .collection('users')
         .where('uid', whereIn: reqs)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> toAddPeoplesInPrivateChannel(
+      BuildContext context, List<dynamic> peoples) {
+    return firestore
+        .collection('topics')
+        .doc(Provider.of<UiNotifier>(context, listen: false).leftNavIndex)
+        .collection('peoples')
+        .where('uid', whereNotIn: peoples)
         .snapshots();
   }
 

@@ -6,6 +6,7 @@ import 'package:flutter_client/reusables/widgets/mainAppBar.dart';
 import 'package:flutter_client/reusables/widgets/roundedTextField.dart';
 import 'package:flutter_client/screens/channelChat/channelChat.dart';
 import 'package:flutter_client/screens/home/createChannelBottomSheet.dart';
+import 'package:flutter_client/screens/home/peoplesInPrivateChannel.dart';
 import 'package:flutter_client/services/databaseHandler.dart';
 
 class Body extends StatelessWidget {
@@ -66,7 +67,9 @@ class Body extends StatelessWidget {
                 channel: Channel.privateChannels,
               ),
               MaterialButton(
-                onPressed: () {},
+                onPressed: () {
+                  bottomSheetForChannelCreate(context, Channel.privateChannels);
+                },
                 child: Row(
                   children: [
                     Icon(
@@ -99,7 +102,7 @@ class Body extends StatelessWidget {
               ChannelsStream(channel: Channel.publicChannels),
               MaterialButton(
                 onPressed: () {
-                  bottomSheetForChannelCreate(context);
+                  bottomSheetForChannelCreate(context, Channel.publicChannels);
                 },
                 child: Row(
                   children: [
@@ -140,10 +143,34 @@ class ChannelTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialButton(
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      padding: EdgeInsets.all(0),
-      onPressed: () {
+    return ListTile(
+      dense: true,
+      minLeadingWidth: 18,
+      leading: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          iconType(channel),
+        ],
+      ),
+      trailing: channel == Channel.privateChannels
+          ? IconButton(
+              icon: Icon(Icons.perm_contact_cal_outlined),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => PeoplesInPrivateChannel(
+                              reference: reference,
+                              title: title,
+                            )));
+              })
+          : null,
+      title: Text(
+        '# ' + title,
+        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+      ),
+      horizontalTitleGap: 0,
+      onTap: () {
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -153,23 +180,6 @@ class ChannelTile extends StatelessWidget {
                       channel: channel,
                     )));
       },
-      child: Row(
-        children: [
-          SizedBox(
-            width: 12,
-          ),
-          iconType(channel),
-          SizedBox(
-            width: SizeConfig.screenWidth * 8 / 360,
-          ),
-          Text(
-            '# $title',
-            style: TextStyle(
-                fontSize: SizeConfig.screenWidth * 16 / 360,
-                fontWeight: FontWeight.w400),
-          ),
-        ],
-      ),
     );
   }
 

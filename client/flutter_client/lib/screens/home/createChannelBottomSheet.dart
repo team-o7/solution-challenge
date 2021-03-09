@@ -6,10 +6,14 @@ import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_client/reusables/widgets/createTopicTextField.dart';
 import 'package:provider/provider.dart';
 
-void bottomSheetForChannelCreate(BuildContext context) {
+import 'body.dart';
+
+void bottomSheetForChannelCreate(BuildContext context, Channel channel) {
   FirebaseFunctions _functions =
       FirebaseFunctions.instanceFor(region: 'us-central1');
-  var callable = _functions.httpsCallable('createPublicChannel',
+  var callable1 = _functions.httpsCallable('createPublicChannel',
+      options: HttpsCallableOptions(timeout: Duration(seconds: 60)));
+  var callable2 = _functions.httpsCallable('createPrivateChannel',
       options: HttpsCallableOptions(timeout: Duration(seconds: 60)));
 
   String title;
@@ -51,21 +55,34 @@ void bottomSheetForChannelCreate(BuildContext context) {
                                   .leftNavIndex,
                               'title': title
                             };
-                            callable.call(params).then((value) {
-                              Navigator.pop(context);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(value.data)));
-                            });
+                            if (channel == Channel.publicChannels) {
+                              callable1.call(params).then((value) {
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(value.data)));
+                              });
+                            } else {
+                              callable2.call(params).then((value) {
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(value.data)));
+                              });
+                            }
                           }
                         })),
                 Padding(
                   padding: EdgeInsets.only(
                       left: SizeConfig.screenWidth * 15 / 360,
                       top: SizeConfig.screenHeight * 5 / 640),
-                  child: Text(
-                    'Everyone in the topic will have access to public channels',
-                    style: TextStyle(color: Colors.black45),
-                  ),
+                  child: channel == Channel.publicChannels
+                      ? Text(
+                          'Everyone in the topic will have access to public channels.',
+                          style: TextStyle(color: Colors.black45),
+                        )
+                      : Text(
+                          'You can add peoples in private channel after creating.',
+                          style: TextStyle(color: Colors.black45),
+                        ),
                 )
               ],
             ),
