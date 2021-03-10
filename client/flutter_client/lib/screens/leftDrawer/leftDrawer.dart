@@ -81,7 +81,11 @@ class LeftDrawer extends StatelessWidget {
                     children: [
                       Text(
                         Provider.of<UiNotifier>(context, listen: true)
-                            .selectedTopicTitle,
+                                    .selectedTopicTitle ==
+                                null
+                            ? ''
+                            : Provider.of<UiNotifier>(context, listen: true)
+                                .selectedTopicTitle,
                         style: TextStyle(
                             fontSize: SizeConfig.screenWidth * 1 / 16,
                             fontWeight: FontWeight.w800),
@@ -91,7 +95,11 @@ class LeftDrawer extends StatelessWidget {
                       ),
                       Text(
                         Provider.of<UiNotifier>(context, listen: true)
-                            .leftNavIndex,
+                                    .leftNavIndex ==
+                                null
+                            ? ''
+                            : Provider.of<UiNotifier>(context, listen: true)
+                                .leftNavIndex,
                         style: TextStyle(
                             fontSize: SizeConfig.screenWidth * 1 / 32,
                             fontWeight: FontWeight.w400),

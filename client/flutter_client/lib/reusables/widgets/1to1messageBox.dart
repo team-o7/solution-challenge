@@ -1,7 +1,8 @@
 import 'dart:io';
 
-import 'package:downloads_path_provider/downloads_path_provider.dart';
+import 'package:ext_storage/ext_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_client/services/storageHandler.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:open_file/open_file.dart';
@@ -66,25 +67,15 @@ class OneToOneMessageBox extends StatelessWidget {
                             children: [
                               GestureDetector(
                                 onTap: () async {
-                                  String path;
-                                  var externalDir = await DownloadsPathProvider
-                                      .downloadsDirectory
-                                      .then((value) => path = value.toString());
+                                  var path = await ExtStorage
+                                      .getExternalStoragePublicDirectory(
+                                          ExtStorage.DIRECTORY_DOWNLOADS);
 
-                                  print('!!!!!!!!!!!!!!!!!!!!!!!!!');
-                                  print('$path/$message/');
-                                  print('!!!!!!!!!!!!!!!!!!!!!!!!!');
-
-                                  if (await File('$path/$message/').exists()) {
-                                    print('!!!!!!!!!!!!!!!!!!!!!!!!!');
-                                    print("File is going to open");
-                                    print('!!!!!!!!!!!!!!!!!!!!!!!!!');
-                                    await OpenFile.open(
-                                        '$externalDir/$message');
+                                  if (await FileSystemEntity.isFile(
+                                      path + '/' + message)) {
+                                    await OpenFile.open(path + '/' + message);
                                   } else {
-                                    print('!!!!!!!!!!!!!!!!!!!!!!!!!');
-                                    print("error....");
-                                    print('!!!!!!!!!!!!!!!!!!!!!!!!!');
+                                    //abc
                                   }
                                 },
                                 child: Text(
@@ -100,10 +91,11 @@ class OneToOneMessageBox extends StatelessWidget {
                                   final status =
                                       await Permission.storage.request();
                                   if (status.isGranted) {
-                                    final dir = await DownloadsPathProvider
-                                        .downloadsDirectory;
+                                    final dir = await ExtStorage
+                                        .getExternalStoragePublicDirectory(
+                                            ExtStorage.DIRECTORY_DOWNLOADS);
                                     StorageHandler().downloadFile(
-                                        message, dir.path, downloadUrl);
+                                        message, dir, downloadUrl);
                                   } else {
                                     print('!!!!!!!!!!!!!!!!!!!!!!!!!');
                                     print("Permission deined");
@@ -133,20 +125,33 @@ class OneToOneMessageBox extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
-                    child: Linkify(
-                      onOpen: (link) async {
-                        if (await canLaunch(link.url)) {
-                          await launch(
-                            link.url,
-                            enableJavaScript: true,
+                    child: GestureDetector(
+                      onLongPress: () {
+                        Clipboard.setData(
+                          new ClipboardData(text: message),
+                        ).then((_) {
+                          Scaffold.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("copied to clipboard"),
+                            ),
                           );
-                        } else {
-                          throw 'Could not launch $link';
-                        }
+                        });
                       },
-                      text: message,
-                      style: TextStyle(color: Colors.black87),
-                      linkStyle: TextStyle(color: Colors.blue),
+                      child: Linkify(
+                        onOpen: (link) async {
+                          if (await canLaunch(link.url)) {
+                            await launch(
+                              link.url,
+                              enableJavaScript: true,
+                            );
+                          } else {
+                            throw 'Could not launch $link';
+                          }
+                        },
+                        text: message,
+                        style: TextStyle(color: Colors.black87),
+                        linkStyle: TextStyle(color: Colors.blue),
+                      ),
                     ),
                   ),
                 ),
