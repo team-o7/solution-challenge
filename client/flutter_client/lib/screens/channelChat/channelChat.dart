@@ -6,12 +6,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/widgets/ChatTextField.dart';
+import 'package:flutter_client/reusables/widgets/customCachedNetworkImage.dart';
 import 'package:flutter_client/screens/home/body.dart';
 import 'package:flutter_client/services/databaseHandler.dart';
 import 'package:flutter_client/services/storageHandler.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:string_to_hex/string_to_hex.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ChannelChat extends StatefulWidget {
@@ -129,76 +131,97 @@ class ChannelMessageBox extends StatefulWidget {
 class _ChannelMessageBoxState extends State<ChannelMessageBox> {
   DatabaseHandler _databaseHandler = new DatabaseHandler();
 
+  Color strToHex(String c) {
+    try {
+      return Color(StringToHex.toColor(c));
+    } catch (e) {
+      return Color(0xff000000);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _databaseHandler.getUserDataByUid(widget.sender),
-      builder: (context, snapshot) => ListTile(
-        onLongPress: () {
-          Clipboard.setData(
-            new ClipboardData(text: widget.msg),
-          ).then((_) {
-            Scaffold.of(context).showSnackBar(
-              SnackBar(
-                content: Text("copied to clipboard"),
+      builder: (context, snapshot) => !snapshot.hasData
+          ? Container()
+          : ListTile(
+              onLongPress: () {
+                Clipboard.setData(
+                  new ClipboardData(text: widget.msg),
+                ).then((_) {
+                  Scaffold.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("copied to clipboard"),
+                    ),
+                  );
+                });
+              },
+              leading: CircleAvatar(
+                backgroundColor: kPrimaryColor0,
+                child: snapshot.hasData
+                    ? CustomCachedNetworkImage(dp: snapshot.data['dp'])
+                    : Text(
+                        '',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                radius: 12,
               ),
-            );
-          });
-        },
-        leading: CircleAvatar(
-          backgroundColor: kPrimaryColor0,
-          child: Text(
-            snapshot.hasData ? snapshot.data['firstName'][0] : '',
-            style: TextStyle(fontSize: 12),
-          ),
-          radius: 12,
-        ),
-        title: Text(
-          snapshot.hasData
-              ? snapshot.data['firstName'] + ' ' + snapshot.data['lastName']
-              : '',
-          style: TextStyle(fontSize: 12),
-        ),
-        subtitle: Linkify(
-          onOpen: (link) async {
-            if (await canLaunch(link.url)) {
-              await launch(
-                link.url,
-                enableJavaScript: true,
-              );
-            } else {
-              throw 'Could not launch $link';
-            }
-          },
-          text: widget.msg,
-          style: TextStyle(color: Colors.black87, fontSize: 15),
-          linkStyle: TextStyle(color: Colors.blue, fontSize: 15),
-        ),
-        trailing: widget.isFile
-            ? IconButton(
-                icon: Icon(Icons.cloud_download),
-                onPressed: () async {
-                  final status = await Permission.storage.request();
-                  if (status.isGranted) {
-                    final dir =
-                        await ExtStorage.getExternalStoragePublicDirectory(
-                            ExtStorage.DIRECTORY_DOWNLOADS);
-                    StorageHandler()
-                        .downloadFile(widget.msg, dir, widget.downloadUrl);
+              title: Text(
+                snapshot.hasData
+                    ? snapshot.data['firstName'] +
+                        ' ' +
+                        snapshot.data['lastName']
+                    : '',
+                style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: strToHex(snapshot.data['color'])),
+              ),
+              subtitle: Linkify(
+                onOpen: (link) async {
+                  if (await canLaunch(link.url)) {
+                    await launch(
+                      link.url,
+                      enableJavaScript: true,
+                    );
                   } else {
-                    print('!!!!!!!!!!!!!!!!!!!!!!!!!');
-                    print("Permission deined");
-                    print('!!!!!!!!!!!!!!!!!!!!!!!!!');
+                    throw 'Could not launch $link';
                   }
                 },
-              )
-            : SizedBox(
-                width: 0,
+                text: widget.msg,
+                style: TextStyle(color: Colors.black87, fontSize: 15),
+                linkStyle: TextStyle(color: Colors.blue, fontSize: 15),
               ),
-        dense: true,
-        minLeadingWidth: 13,
-        horizontalTitleGap: 8,
-      ),
+              trailing: widget.isFile
+                  ? IconButton(
+                      icon: Icon(
+                        Icons.arrow_circle_down_outlined,
+                        color: Colors.black87,
+                        size: 32,
+                      ),
+                      onPressed: () async {
+                        final status = await Permission.storage.request();
+                        if (status.isGranted) {
+                          final dir = await ExtStorage
+                              .getExternalStoragePublicDirectory(
+                                  ExtStorage.DIRECTORY_DOWNLOADS);
+                          StorageHandler().downloadFile(
+                              widget.msg, dir, widget.downloadUrl);
+                        } else {
+                          print('!!!!!!!!!!!!!!!!!!!!!!!!!');
+                          print("Permission deined");
+                          print('!!!!!!!!!!!!!!!!!!!!!!!!!');
+                        }
+                      },
+                    )
+                  : SizedBox(
+                      width: 0,
+                    ),
+              dense: true,
+              minLeadingWidth: 13,
+              horizontalTitleGap: 8,
+            ),
     );
   }
 }

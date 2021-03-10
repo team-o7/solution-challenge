@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         onGenerateRoute: Routes.generateRoute,
         theme: ThemeData(
-            brightness: Brightness.dark,
+            brightness: Brightness.light,
             accentColor: kPrimaryColor1,
             splashColor: kPrimaryColor0),
       ),

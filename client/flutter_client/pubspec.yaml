@@ -37,6 +37,7 @@ dependencies:
   path_provider:
   file_picker:
   image_picker: ^0.6.7+22
+  string_to_hex: ^0.2.1+30
   flutter_rating_bar: ^3.2.0+1
   flutter_inner_drawer: ^0.5.7+2
   cached_network_image: ^2.5.0
