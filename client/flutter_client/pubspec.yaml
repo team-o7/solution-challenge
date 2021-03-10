@@ -28,7 +28,7 @@ dependencies:
   google_sign_in: ^4.5.1
 
   #Other Tools
-  downloads_path_provider:
+  ext_storage:
   url_launcher:
   flutter_linkify:
   open_file:

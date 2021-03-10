@@ -1,12 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ext_storage/ext_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/widgets/ChatTextField.dart';
 import 'package:flutter_client/screens/home/body.dart';
 import 'package:flutter_client/services/databaseHandler.dart';
+import 'package:flutter_client/services/storageHandler.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ChannelChat extends StatefulWidget {
   final String title;
@@ -109,10 +115,11 @@ class _ChannelChatState extends State<ChannelChat> {
 }
 
 class ChannelMessageBox extends StatefulWidget {
-  final String sender, msg;
+  final String sender, msg, downloadUrl;
   final bool isFile;
 
-  const ChannelMessageBox({Key key, this.sender, this.isFile, this.msg})
+  const ChannelMessageBox(
+      {Key key, this.sender, this.isFile, this.msg, this.downloadUrl})
       : super(key: key);
 
   @override
@@ -127,6 +134,17 @@ class _ChannelMessageBoxState extends State<ChannelMessageBox> {
     return FutureBuilder(
       future: _databaseHandler.getUserDataByUid(widget.sender),
       builder: (context, snapshot) => ListTile(
+        onLongPress: () {
+          Clipboard.setData(
+            new ClipboardData(text: widget.msg),
+          ).then((_) {
+            Scaffold.of(context).showSnackBar(
+              SnackBar(
+                content: Text("copied to clipboard"),
+              ),
+            );
+          });
+        },
         leading: CircleAvatar(
           backgroundColor: kPrimaryColor0,
           child: Text(
@@ -141,7 +159,42 @@ class _ChannelMessageBoxState extends State<ChannelMessageBox> {
               : '',
           style: TextStyle(fontSize: 12),
         ),
-        subtitle: Text(widget.msg, style: TextStyle(fontSize: 15)),
+        subtitle: Linkify(
+          onOpen: (link) async {
+            if (await canLaunch(link.url)) {
+              await launch(
+                link.url,
+                enableJavaScript: true,
+              );
+            } else {
+              throw 'Could not launch $link';
+            }
+          },
+          text: widget.msg,
+          style: TextStyle(color: Colors.black87, fontSize: 15),
+          linkStyle: TextStyle(color: Colors.blue, fontSize: 15),
+        ),
+        trailing: widget.isFile
+            ? IconButton(
+                icon: Icon(Icons.cloud_download),
+                onPressed: () async {
+                  final status = await Permission.storage.request();
+                  if (status.isGranted) {
+                    final dir =
+                        await ExtStorage.getExternalStoragePublicDirectory(
+                            ExtStorage.DIRECTORY_DOWNLOADS);
+                    StorageHandler()
+                        .downloadFile(widget.msg, dir, widget.downloadUrl);
+                  } else {
+                    print('!!!!!!!!!!!!!!!!!!!!!!!!!');
+                    print("Permission deined");
+                    print('!!!!!!!!!!!!!!!!!!!!!!!!!');
+                  }
+                },
+              )
+            : SizedBox(
+                width: 0,
+              ),
         dense: true,
         minLeadingWidth: 13,
         horizontalTitleGap: 8,
@@ -175,10 +228,12 @@ class ChannelChatStream extends StatelessWidget {
             String msg = data['msg'];
             String sender = data['sender'];
             bool isFile = data['isFile'];
+            String downloadUrl = data['fileLink'];
             ChannelMessageBox tile = new ChannelMessageBox(
               msg: msg,
               sender: sender,
               isFile: isFile,
+              downloadUrl: downloadUrl,
             );
             tiles.add(tile);
           }
