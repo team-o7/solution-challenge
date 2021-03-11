@@ -1,14 +1,12 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/widgets/1to1messageBox.dart';
 import 'package:flutter_client/reusables/widgets/ChatTextField.dart';
-import 'package:flutter_client/services/storageHandler.dart';
 
 // ignore: must_be_immutable
 class Chat extends StatelessWidget {

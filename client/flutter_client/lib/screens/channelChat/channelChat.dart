@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ext_storage/ext_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +13,7 @@ import 'package:flutter_client/screens/home/body.dart';
 import 'package:flutter_client/services/databaseHandler.dart';
 import 'package:flutter_client/services/storageHandler.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:string_to_hex/string_to_hex.dart';
@@ -201,17 +204,26 @@ class _ChannelMessageBoxState extends State<ChannelMessageBox> {
                         size: 32,
                       ),
                       onPressed: () async {
-                        final status = await Permission.storage.request();
-                        if (status.isGranted) {
-                          final dir = await ExtStorage
-                              .getExternalStoragePublicDirectory(
-                                  ExtStorage.DIRECTORY_DOWNLOADS);
-                          StorageHandler().downloadFile(
-                              widget.msg, dir, widget.downloadUrl);
+                        var path =
+                            await ExtStorage.getExternalStoragePublicDirectory(
+                                ExtStorage.DIRECTORY_DOWNLOADS);
+
+                        if (await FileSystemEntity.isFile(
+                            path + '/' + widget.msg)) {
+                          await OpenFile.open(path + '/' + widget.msg);
                         } else {
-                          print('!!!!!!!!!!!!!!!!!!!!!!!!!');
-                          print("Permission deined");
-                          print('!!!!!!!!!!!!!!!!!!!!!!!!!');
+                          final status = await Permission.storage.request();
+                          if (status.isGranted) {
+                            final dir = await ExtStorage
+                                .getExternalStoragePublicDirectory(
+                                    ExtStorage.DIRECTORY_DOWNLOADS);
+                            StorageHandler().downloadFile(
+                                widget.msg, dir, widget.downloadUrl);
+                          } else {
+                            print('!!!!!!!!!!!!!!!!!!!!!!!!!');
+                            print("Permission deined");
+                            print('!!!!!!!!!!!!!!!!!!!!!!!!!');
+                          }
                         }
                       },
                     )
