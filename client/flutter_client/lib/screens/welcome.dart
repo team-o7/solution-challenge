@@ -38,7 +38,7 @@ class _WelcomeState extends State<Welcome> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text('welcome'),
+        child: Text(' '),
       ),
     );
   }
