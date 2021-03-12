@@ -21,6 +21,15 @@ function getRndInteger(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+async function getUserDataByUid(uid) {
+  const ss = await admin
+    .firestore()
+    .collection("users")
+    .where("uid", "==", uid)
+    .get();
+  return ss.docs[0].data();
+}
+
 /**
  * substrings
  */
@@ -86,6 +95,389 @@ export const onTopicCreate = functions.firestore
     });
   });
 
+/** onnewfrinendrequest
+ * onfriendrequestaccept
+ * onnewtopicjoinrequest
+ * onnewtopinjoinpublic
+ * onnewtopicacceptprivate
+ * onnewdm
+ * onnewmsgchannel
+ */
+
+export const onUserUpdate = functions.firestore
+  .document("users/{userId}")
+  .onUpdate(async (change, context) => {
+    const before = change.before.data();
+    const after = change.after.data();
+
+    if (before == after) {
+      console.log("No recursive issue");
+      return null;
+    }
+
+    if (before.userName != after.userName) {
+      const subStrings = getAllSubstrings(after.userName);
+      console.log("Might be recursive");
+      change.after.ref.update({
+        searchKey: subStrings,
+      });
+    }
+
+    if (before.firstName != after.firstName) {
+      const subStrings = getAllSubstrings(after.firstName);
+      console.log("Might be recursive");
+      change.after.ref.update({
+        searchKey: subStrings,
+      });
+    }
+
+    if (before.lastName != after.lastName) {
+      const subStrings = getAllSubstrings(after.lastName);
+      console.log("Might be recursive");
+      change.after.ref.update({
+        searchKey: subStrings,
+      });
+    }
+
+    if (
+      before.friendRequestsReceived.length < after.friendRequestsReceived.length
+    ) {
+      const deviceToken = after.deviceToken;
+      const requester = await getUserDataByUid(
+        after.friendRequestsReceived[after.friendRequestsReceived.length - 1]
+      );
+
+      const payload = {
+        notification: {
+          title: "sensei",
+          body:
+            "New friend request from " +
+            requester.firstName +
+            " " +
+            requester.lastName,
+          sound: "default",
+        },
+        data: {
+          sendername: requester.firstName + " " + requester.lastName,
+          message: "sensei",
+        },
+      };
+      return admin
+        .messaging()
+        .sendToDevice(deviceToken, payload)
+        .then((response) => {
+          console.log("sent succesfully");
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+
+    if (
+      before.friendRequestsReceived.length > after.friendRequestsReceived.length
+    ) {
+      const jiskaAcceptHua = await getUserDataByUid(
+        after.friends[after.friends.length - 1]
+      );
+      const deviceToken = jiskaAcceptHua.deviceToken;
+
+      const payload = {
+        notification: {
+          title: "sensei",
+          body:
+            "Friend request accepted by " +
+            before.firstName +
+            " " +
+            before.lastName +
+            " 😍",
+          sound: "default",
+        },
+        data: {
+          sendername: before.firstName + " " + before.lastName,
+          message: "sensei",
+        },
+      };
+      return admin
+        .messaging()
+        .sendToDevice(deviceToken, payload)
+        .then((response) => {
+          console.log("sent succesfully");
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+  });
+
+export const onTopicUpdate = functions.firestore
+  .document("topics/{topicId}")
+  .onUpdate(async (change, context) => {
+    const before = change.before.data();
+    const after = change.after.data();
+
+    if (before == after) {
+      return null;
+    }
+
+    if (after.requests.length > before.requests.length) {
+      const joRequestKia = await getUserDataByUid(
+        after.requests[after.requests.length - 1]
+      );
+      const name = joRequestKia.firstName + " " + joRequestKia.lastName;
+
+      const receiver = await getUserDataByUid(after.creator);
+      const deviceToken = receiver.deviceToken;
+
+      const payload = {
+        notification: {
+          title: "sensei",
+          body: name + " requested to join " + after.title,
+          sound: "default",
+        },
+        data: {
+          sendername: name,
+          message: "sensei",
+        },
+      };
+      return admin
+        .messaging()
+        .sendToDevice(deviceToken, payload)
+        .then((response) => {
+          console.log("sent succesfully");
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+
+    if (after.requests.length < before.requests.length) {
+      const jiskaAcceptHua = await getUserDataByUid(
+        after.peoples[after.peoples.length - 1]
+      );
+      const deviceToken = jiskaAcceptHua.deviceToken;
+
+      const payload = {
+        notification: {
+          title: "sensei",
+          body: "Your request was accepted to join " + after.title,
+          sound: "default",
+        },
+        data: {
+          sendername: after.title,
+          message: "sensei",
+        },
+      };
+
+      return admin
+        .messaging()
+        .sendToDevice(deviceToken, payload)
+        .then((response) => {
+          console.log("sent succesfully");
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+
+    if (after.peoples.length > before.peoples.length && !after.private) {
+      const joJoinKia = await getUserDataByUid(
+        after.peoples[after.peoples.length - 1]
+      );
+
+      const name = joJoinKia.firstName + " " + joJoinKia.lastName;
+      const receiver = await getUserDataByUid(after.creator);
+      const deviceToken = receiver.deviceToken;
+
+      const payload = {
+        notification: {
+          title: "sensei",
+          body: name + " joined " + after.title,
+          sound: "default",
+        },
+        data: {
+          sendername: name,
+          message: "sensei",
+        },
+      };
+      return admin
+        .messaging()
+        .sendToDevice(deviceToken, payload)
+        .then((response) => {
+          console.log("sent succesfully");
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+  });
+
+export const onNewDm = functions.firestore
+  .document("chats/{chatId}/messages/{messageId}")
+  .onCreate(async (snapshot, context) => {
+    const msg = snapshot.data();
+    const chatId = context.params.chatId;
+
+    const chat = await admin.firestore().collection("chats").doc(chatId).get();
+    const peoples = chat.data().users;
+    let receiver = peoples[0];
+
+    if (peoples[0] == msg.sender) {
+      receiver = peoples[1];
+    }
+
+    const receiverData = await getUserDataByUid(receiver);
+    const senderData = await getUserDataByUid(msg.sender);
+    const deviceToken = receiverData.deviceToken;
+
+    const payload = {
+      notification: {
+        title: "Message from : " + senderData.firstName,
+        body: msg.msg,
+        sound: "default",
+      },
+      data: {
+        sendername: senderData.firstName + " " + senderData.lastName,
+        message: "sensei",
+      },
+    };
+    return admin
+      .messaging()
+      .sendToDevice(deviceToken, payload)
+      .then((response) => {
+        console.log("sent succesfully");
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  });
+
+export const onNewMsgInPublicChannel = functions.firestore
+  .document("topics/{topicId}/publicChannels/{channelId}/messages/{messageId}")
+  .onCreate(async (snapshot, context) => {
+    const topic = await admin
+      .firestore()
+      .collection("topics")
+      .doc(context.params.topicId)
+      .get();
+    const receivers: Array<string> = topic.data().peoples;
+    let deviceToken = [];
+    receivers.forEach(async (element) => {
+      const user = await getUserDataByUid(element);
+      const token = user.deviceToken;
+      deviceToken.push(token);
+    });
+
+    const msg = snapshot.data();
+    const sender = await getUserDataByUid(msg.sender);
+
+    const payload = {
+      notification: {
+        title: "Message from : " + sender.firstName,
+        body: msg.msg,
+        sound: "default",
+      },
+      data: {
+        sendername: sender.firstName + " " + sender.lastName,
+        message: "sensei",
+      },
+    };
+    return admin
+      .messaging()
+      .sendToDevice(deviceToken, payload)
+      .then((response) => {
+        console.log("sent succesfully");
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  });
+
+export const onNewMsgInAdminChannel = functions.firestore
+  .document("topics/{topicId}/adminChannels/{channelId}/messages/{messageId}")
+  .onCreate(async (snapshot, context) => {
+    const topic = await admin
+      .firestore()
+      .collection("topics")
+      .doc(context.params.topicId)
+      .get();
+    const receivers: Array<string> = topic.data().peoples;
+    let deviceToken = [];
+    receivers.forEach(async (element) => {
+      const user = await getUserDataByUid(element);
+      const token = user.deviceToken;
+      deviceToken.push(token);
+    });
+
+    const msg = snapshot.data();
+    const sender = await getUserDataByUid(msg.sender);
+
+    const payload = {
+      notification: {
+        title: "Message from : " + sender.firstName,
+        body: msg.msg,
+        sound: "default",
+      },
+      data: {
+        sendername: sender.firstName + " " + sender.lastName,
+        message: "sensei",
+      },
+    };
+    return admin
+      .messaging()
+      .sendToDevice(deviceToken, payload)
+      .then((response) => {
+        console.log("sent succesfully");
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  });
+
+export const onNewMsgInPrivateChannel = functions.firestore
+  .document("topics/{topicId}/privateChannels/{channelId}/messages/{messageId}")
+  .onCreate(async (snapshot, context) => {
+    const channel = await admin
+      .firestore()
+      .collection("topics")
+      .doc(context.params.topicId)
+      .collection("privateChannels")
+      .doc(context.params.channelId)
+      .get();
+    const receivers = await channel.data().peoples;
+    console.log(receivers);
+    let deviceToken = [];
+    receivers.forEach(async (element) => {
+      const user = await getUserDataByUid(element);
+      const token = user.deviceToken;
+      deviceToken.push(token);
+    });
+
+    console.log(deviceToken);
+
+    const msg = snapshot.data();
+    const sender = await getUserDataByUid(msg.sender);
+
+    const payload = {
+      notification: {
+        title: "Message from : " + sender.firstName,
+        body: msg.msg,
+        sound: "default",
+      },
+      data: {
+        sendername: sender.firstName + " " + sender.lastName,
+        message: "sensei",
+      },
+    };
+    return admin
+      .messaging()
+      .sendToDevice(deviceToken, payload)
+      .then((response) => {
+        console.log("sent succesfully");
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  });
 export const onFriendRequesting = functions.https.onCall(
   async (data, context) => {
     const myUid = context.auth.uid;
@@ -155,9 +547,6 @@ export const onFriendRequestAccept = functions.https.onCall(
   async (data, context) => {
     const myUid = context.auth.uid;
     const otherUid = data.otherUid;
-
-    console.log(myUid);
-    console.log(otherUid);
 
     const me = await admin
       .firestore()
