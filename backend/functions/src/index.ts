@@ -118,7 +118,7 @@ export const onUserUpdate = functions.firestore
     if (before.userName != after.userName) {
       const subStrings = getAllSubstrings(after.userName);
       console.log("Might be recursive");
-      change.after.ref.update({
+      await change.after.ref.update({
         searchKey: subStrings,
       });
     }
@@ -126,7 +126,7 @@ export const onUserUpdate = functions.firestore
     if (before.firstName != after.firstName) {
       const subStrings = getAllSubstrings(after.firstName);
       console.log("Might be recursive");
-      change.after.ref.update({
+      await change.after.ref.update({
         searchKey: subStrings,
       });
     }
@@ -134,7 +134,7 @@ export const onUserUpdate = functions.firestore
     if (before.lastName != after.lastName) {
       const subStrings = getAllSubstrings(after.lastName);
       console.log("Might be recursive");
-      change.after.ref.update({
+      await change.after.ref.update({
         searchKey: subStrings,
       });
     }
@@ -331,7 +331,7 @@ export const onNewDm = functions.firestore
 
     const payload = {
       notification: {
-        title: "Message from : " + senderData.firstName,
+        title: "Message from " + senderData.firstName,
         body: msg.msg,
         sound: "default",
       },
@@ -359,6 +359,7 @@ export const onNewMsgInPublicChannel = functions.firestore
       .collection("topics")
       .doc(context.params.topicId)
       .get();
+    const topicData = topic.data();
     const receivers: Array<string> = topic.data().peoples;
     let deviceToken = [];
     receivers.forEach(async (element) => {
@@ -372,8 +373,8 @@ export const onNewMsgInPublicChannel = functions.firestore
 
     const payload = {
       notification: {
-        title: "Message from : " + sender.firstName,
-        body: msg.msg,
+        title: topicData.title,
+        body: sender.firstName + ": " +  msg.msg,
         sound: "default",
       },
       data: {
@@ -400,6 +401,7 @@ export const onNewMsgInAdminChannel = functions.firestore
       .collection("topics")
       .doc(context.params.topicId)
       .get();
+    const topicData = topic.data();
     const receivers: Array<string> = topic.data().peoples;
     let deviceToken = [];
     receivers.forEach(async (element) => {
@@ -413,8 +415,8 @@ export const onNewMsgInAdminChannel = functions.firestore
 
     const payload = {
       notification: {
-        title: "Message from : " + sender.firstName,
-        body: msg.msg,
+        title: topicData.title,
+        body: sender.firstName + ": " + msg.msg,
         sound: "default",
       },
       data: {
@@ -443,6 +445,7 @@ export const onNewMsgInPrivateChannel = functions.firestore
       .collection("privateChannels")
       .doc(context.params.channelId)
       .get();
+    const channelData = channel.data();
     const receivers = await channel.data().peoples;
     console.log(receivers);
     let deviceToken = [];
@@ -459,8 +462,8 @@ export const onNewMsgInPrivateChannel = functions.firestore
 
     const payload = {
       notification: {
-        title: "Message from : " + sender.firstName,
-        body: msg.msg,
+        title: channelData.title,
+        body: sender.firstName + ": " + msg.msg,
         sound: "default",
       },
       data: {

@@ -86,8 +86,7 @@ class _SearchState extends State<Search> {
             ),
             SizedBox(
               height: SizeConfig.screenHeight * 1 / 20,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
+              child: Row(
                 children: [
                   SearchFilterOption(
                     label: 'Topics',
