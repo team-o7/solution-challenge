@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_client/reusables/widgets/mainAppBar.dart';
+import 'package:flutter_client/reusables/widgets/myIcon.dart';
 import 'package:flutter_client/reusables/widgets/roundedTextField.dart';
 import 'package:flutter_client/screens/channelChat/channelChat.dart';
 import 'package:flutter_client/screens/home/createChannelBottomSheet.dart';
@@ -17,112 +18,123 @@ class Body extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(56),
-          child: MainAppBar(
-            innerDrawerKey: innerDrawerKey,
-            title: 'sensei',
-          )),
+        preferredSize: const Size.fromHeight(56),
+        child: MainAppBar(
+          innerDrawerKey: innerDrawerKey,
+          title: 'Sensei',
+        ),
+      ),
+      backgroundColor: Colors.blue[50],
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 6, right: 6),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 12,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Card(
+              margin: EdgeInsets.zero,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 child: RoundedTextField(
                   hintText: 'Jump to...',
                   borderRadius: 5,
                 ),
               ),
-              SizedBox(
-                height: SizeConfig.screenHeight * 0.02,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
+            ),
+            SizedBox(
+              height: SizeConfig.screenHeight * 0.02,
+            ),
+            Card(
+              margin: EdgeInsets.zero,
+              child: ListTile(
+                leading: MyIcon(
+                  iconData: Icons.person_pin_circle_sharp,
+                  color: Colors.orangeAccent,
+                ),
+                title: Text(
                   'Admin channels',
                   style: TextStyle(
-                      fontSize: SizeConfig.screenWidth * 18 / 360,
+                      fontSize: SizeConfig.screenWidth * 16 / 360,
                       fontWeight: FontWeight.w600),
                 ),
               ),
-              ChannelsStream(channel: Channel.adminChannels),
-              SizedBox(
-                height: 24,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
+            ),
+            ChannelsStream(channel: Channel.adminChannels),
+            SizedBox(
+              height: SizeConfig.screenHeight * 0.02,
+            ),
+            Card(
+              margin: EdgeInsets.zero,
+              child: ListTile(
+                leading: MyIcon(
+                  iconData: Icons.lock_rounded,
+                  color: Colors.deepPurple,
+                ),
+                title: Text(
                   'Private channels',
                   style: TextStyle(
-                      fontSize: SizeConfig.screenWidth * 18 / 360,
+                      fontSize: SizeConfig.screenWidth * 16 / 360,
                       fontWeight: FontWeight.w600),
                 ),
               ),
-              ChannelsStream(
-                channel: Channel.privateChannels,
-              ),
-              MaterialButton(
-                onPressed: () {
+            ),
+            ChannelsStream(
+              channel: Channel.privateChannels,
+            ),
+            Card(
+              margin: EdgeInsets.zero,
+              child: ListTile(
+                onTap: () {
                   bottomSheetForChannelCreate(context, Channel.privateChannels);
                 },
-                child: Row(
-                  children: [
-                    Icon(
-                      CupertinoIcons.add_circled_solid,
-                    ),
-                    SizedBox(
-                      width: SizeConfig.screenWidth * 8 / 360,
-                    ),
-                    Text(
-                      'Add Channel',
-                      style: TextStyle(
-                          fontSize: SizeConfig.screenWidth * 15 / 360,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ],
+                leading: Icon(
+                  CupertinoIcons.add_circled_solid,
+                  color: Colors.deepPurple,
+                ),
+                title: Text(
+                  'Add Channel',
+                  style: TextStyle(
+                      fontSize: SizeConfig.screenWidth * 15 / 360,
+                      fontWeight: FontWeight.w400),
                 ),
               ),
-              SizedBox(
-                height: 24,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
+            ),
+            SizedBox(
+              height: SizeConfig.screenHeight * 0.02,
+            ),
+            Card(
+              margin: EdgeInsets.zero,
+              child: ListTile(
+                leading: MyIcon(
+                  iconData: Icons.person_pin_circle_sharp,
+                  color: Colors.green,
+                ),
+                title: Text(
                   'Public channels',
                   style: TextStyle(
-                      fontSize: SizeConfig.screenWidth * 18 / 360,
+                      fontSize: SizeConfig.screenWidth * 16 / 360,
                       fontWeight: FontWeight.w600),
                 ),
               ),
-              ChannelsStream(channel: Channel.publicChannels),
-              MaterialButton(
-                onPressed: () {
+            ),
+            ChannelsStream(channel: Channel.publicChannels),
+            Card(
+              margin: EdgeInsets.zero,
+              child: ListTile(
+                onTap: () {
                   bottomSheetForChannelCreate(context, Channel.publicChannels);
                 },
-                child: Row(
-                  children: [
-                    Icon(
-                      CupertinoIcons.add_circled_solid,
-                    ),
-                    SizedBox(
-                      width: SizeConfig.screenWidth * 8 / 360,
-                    ),
-                    Text(
-                      'Add Channel',
-                      style: TextStyle(
-                          fontSize: SizeConfig.screenWidth * 15 / 360,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ],
+                leading: Icon(
+                  CupertinoIcons.add_circled_solid,
+                  color: Colors.green,
+                ),
+                title: Text(
+                  'Add Channel',
+                  style: TextStyle(
+                      fontSize: SizeConfig.screenWidth * 15 / 360,
+                      fontWeight: FontWeight.w400),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -143,43 +155,46 @@ class ChannelTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      dense: true,
-      minLeadingWidth: 18,
-      leading: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          iconType(channel),
-        ],
+    return Card(
+      margin: EdgeInsets.zero,
+      child: ListTile(
+        dense: true,
+        minLeadingWidth: 18,
+        leading: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            iconType(channel),
+          ],
+        ),
+        trailing: channel == Channel.privateChannels
+            ? IconButton(
+                icon: Icon(Icons.perm_contact_cal_outlined),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => PeoplesInPrivateChannel(
+                                reference: reference,
+                                title: title,
+                              )));
+                })
+            : null,
+        title: Text(
+          '# ' + title,
+          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+        ),
+        horizontalTitleGap: 0,
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => ChannelChat(
+                        reference: reference,
+                        title: title,
+                        channel: channel,
+                      )));
+        },
       ),
-      trailing: channel == Channel.privateChannels
-          ? IconButton(
-              icon: Icon(Icons.perm_contact_cal_outlined),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => PeoplesInPrivateChannel(
-                              reference: reference,
-                              title: title,
-                            )));
-              })
-          : null,
-      title: Text(
-        '# ' + title,
-        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
-      ),
-      horizontalTitleGap: 0,
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (_) => ChannelChat(
-                      reference: reference,
-                      title: title,
-                      channel: channel,
-                    )));
-      },
     );
   }
 
@@ -188,13 +203,13 @@ class ChannelTile extends StatelessWidget {
       case Channel.adminChannels:
         return Icon(
           CupertinoIcons.circle,
-          color: Colors.redAccent,
+          color: Colors.orangeAccent,
           size: 8,
         );
       case Channel.privateChannels:
         return Icon(
           CupertinoIcons.circle,
-          color: Colors.yellow,
+          color: Colors.deepPurple,
           size: 8,
         );
       case Channel.publicChannels:

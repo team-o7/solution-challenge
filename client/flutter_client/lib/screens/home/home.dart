@@ -47,16 +47,16 @@ class _HomeState extends State<Home> {
         bottomNavigationBar: SizedBox(
           height: size.height * 0.07,
           child: BottomNavigationBar(
-            elevation: 12.0,
-            selectedItemColor: Colors.white,
+            elevation: 18.0,
+            selectedItemColor: Colors.blueAccent,
             unselectedItemColor: Colors.grey[400],
             type: BottomNavigationBarType.fixed,
-            selectedLabelStyle: kBottomNavLabelTextStyle,
+            selectedLabelStyle: kBottomNavLabelSelectedTextStyle,
             unselectedLabelStyle: kBottomNavLabelTextStyle,
             currentIndex: _selectedIndex,
             selectedFontSize: 14,
             unselectedFontSize: 14,
-            backgroundColor: kPrimaryColor1,
+            backgroundColor: Colors.white,
             onTap: (_index) {
               _selectedIndex = _index;
               // context.read()<UiNotifier>().setBottomNavIndex(_index);
@@ -64,18 +64,17 @@ class _HomeState extends State<Home> {
             },
             items: [
               BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.home_outlined,
-                  ),
+                  icon: Icon(Icons.home_outlined),
+                  activeIcon: Icon(Icons.home_rounded),
                   label: 'Home'),
               BottomNavigationBarItem(
-                icon: Icon(Icons.search_outlined),
+                icon: Icon(Icons.search),
                 label: 'Search',
               ),
               BottomNavigationBarItem(
                   icon: Icon(Icons.create_outlined), label: 'Create'),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.account_circle_outlined), label: 'Profile'),
+                  icon: Icon(Icons.account_circle_rounded), label: 'Profile'),
             ],
           ),
         ),

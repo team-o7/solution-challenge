@@ -17,37 +17,7 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  // This widget is the root of your application.
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  void nextPage() async {
-    var user = FirebaseAuth.instance.currentUser;
-    bool registered = await DatabaseHandler().userHasDataBase();
-    if (user == null) {
-      Navigator.pushNamed(context, '/logIn');
-    } else if (user != null && !registered) {
-      // if user signed in but quit app without filling rest of the information
-      await Navigator.pushNamed(context, '/registration1');
-    } else {
-      await Provider.of<UiNotifier>(context, listen: false)
-          .setSelectedTopicDataFromCache();
-      Provider.of<UiNotifier>(context, listen: false).setUserData().then(
-            (value) => Navigator.pushNamed(context, '/drawerHolder'),
-          );
-    }
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    nextPage();
-    super.initState();
-  }
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -56,11 +26,12 @@ class _MyAppState extends State<MyApp> {
       ],
       child: MaterialApp(
         title: 'sensei',
+        initialRoute: '/',
         debugShowCheckedModeBanner: false,
         onGenerateRoute: Routes.generateRoute,
         theme: ThemeData(
             brightness: Brightness.light,
-            accentColor: kPrimaryColor1,
+            accentColor: Colors.white,
             splashColor: kPrimaryColor0),
       ),
     );

@@ -102,6 +102,13 @@ class DatabaseHandler {
     }
   }
 
+  Stream<QuerySnapshot> userFriends(List<dynamic> friends) {
+    return firestore
+        .collection('users')
+        .where('uid', whereIn: friends)
+        .snapshots();
+  }
+
   Stream<QuerySnapshot> myTopics() {
     return firestore
         .collection('topics')

@@ -5,24 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_client/reusables/widgets/createTopicTextField.dart';
-import 'package:flutter_client/reusables/widgets/mainAppBar.dart';
 import 'package:flutter_client/reusables/widgets/myTopicTile.dart';
 import 'package:flutter_client/services/databaseHandler.dart';
-import 'package:flutter_inner_drawer/inner_drawer.dart';
+import 'package:flutter_client/services/storageHandler.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../services/storageHandler.dart';
-
-class CreateTopic extends StatefulWidget {
-  final GlobalKey<InnerDrawerState> innerDrawerKey;
-
-  const CreateTopic({Key key, @required this.innerDrawerKey}) : super(key: key);
-
+class YourTopics extends StatefulWidget {
   @override
-  _CreateTopicState createState() => _CreateTopicState();
+  _YourTopicsState createState() => _YourTopicsState();
 }
 
-class _CreateTopicState extends State<CreateTopic> {
+class _YourTopicsState extends State<YourTopics> {
   static bool _isPrivate = false;
   String _title, _description, _dp;
   File imageFile;
@@ -42,13 +35,10 @@ class _CreateTopicState extends State<CreateTopic> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-        backgroundColor: Colors.blue[50],
-        appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(56),
-            child: MainAppBar(
-              innerDrawerKey: widget.innerDrawerKey,
-              title: 'Your topics',
-            )),
+        appBar: AppBar(
+          title: Text('Your Topics'),
+          backgroundColor: kPrimaryColor1,
+        ),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.create_outlined),
           heroTag: 'create',

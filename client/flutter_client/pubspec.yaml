@@ -50,8 +50,15 @@ dev_dependencies:
     sdk: flutter
 
 
+
+
 flutter:
 
   uses-material-design: true
   assets:
     - images/
+
+  fonts:
+    - family: PatrickHand
+      fonts:
+        - asset: fonts/PatrickHand-Regular.ttf

@@ -24,7 +24,7 @@ class MyTopicTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 12, right: 12, top: 12),
       child: Material(
-        elevation: 8,
+        elevation: 1,
         borderRadius: BorderRadius.all(Radius.circular(12)),
         child: Container(
           height: SizeConfig.screenHeight * 0.2,
@@ -36,7 +36,7 @@ class MyTopicTile extends StatelessWidget {
                 title: Text(
                   title,
                   style: TextStyle(
-                      fontSize: SizeConfig.screenWidth * 30 / 360,
+                      fontSize: SizeConfig.screenWidth * 24 / 360,
                       fontWeight: FontWeight.w700),
                 ),
                 subtitle: Text(
@@ -45,7 +45,8 @@ class MyTopicTile extends StatelessWidget {
                 trailing: IconButton(
                   icon: Icon(
                     Icons.share_outlined,
-                    size: 34,
+                    color: Colors.blueAccent,
+                    size: 30,
                   ),
                   onPressed: () {},
                 ),
@@ -58,7 +59,7 @@ class MyTopicTile extends StatelessWidget {
               ),
               Container(
                 height: SizeConfig.screenHeight * 0.04,
-                color: kPrimaryColor0,
+                color: Colors.blueAccent,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Row(

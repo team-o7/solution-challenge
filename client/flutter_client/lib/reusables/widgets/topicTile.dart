@@ -34,9 +34,9 @@ class TopicTile extends StatelessWidget {
     return FutureBuilder(
       future: DatabaseHandler().getUserDataByUid(creator),
       builder: (context, snapshot) => Padding(
-        padding: const EdgeInsets.only(left: 12, right: 12, top: 12),
+        padding: const EdgeInsets.only(left: 4, right: 4, top: 6),
         child: Material(
-          elevation: 4,
+          elevation: 2,
           borderRadius: BorderRadius.all(Radius.circular(12)),
           child: Container(
             height: SizeConfig.screenHeight * 1 / 4.5,
@@ -48,11 +48,14 @@ class TopicTile extends StatelessWidget {
                   title: Text(
                     title,
                     style: TextStyle(
-                        fontSize: SizeConfig.screenWidth * 30 / 360,
+                        fontSize: SizeConfig.screenWidth * 20 / 360,
                         fontWeight: FontWeight.w700),
                   ),
                   subtitle: Text(
                     description,
+                    style: TextStyle(
+                        fontSize: SizeConfig.screenWidth * 12 / 360,
+                        fontWeight: FontWeight.w400),
                   ),
                   trailing: Container(
                     child: CachedNetworkImage(

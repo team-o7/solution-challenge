@@ -3,11 +3,15 @@ import 'package:flutter_client/screens/auth/googleLogin.dart';
 import 'package:flutter_client/screens/auth/registration1.dart';
 import 'package:flutter_client/screens/auth/registration2.dart';
 import 'package:flutter_client/screens/channelChat/channelChat.dart';
+import 'package:flutter_client/screens/createTopic/create.dart';
 import 'package:flutter_client/screens/mainScreen.dart';
 import 'package:flutter_client/screens/profile/editProfile.dart';
 import 'package:flutter_client/screens/profile/requests.dart';
 import 'package:flutter_client/screens/profile/userProfile.dart';
+import 'package:flutter_client/screens/profile/yourTopics.dart';
 import 'package:flutter_client/screens/welcome.dart';
+import 'package:flutter_client/screens/profile/friends.dart';
+import 'package:flutter_inner_drawer/inner_drawer.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -31,6 +35,8 @@ class Routes {
       //   return MaterialPageRoute(builder: (_) => UserProfile());
       case '/editProfile':
         return MaterialPageRoute(builder: (_) => EditProfile());
+      case '/yourTopics':
+        return MaterialPageRoute(builder: (_) => YourTopics());
       case '/profile/requests':
         return MaterialPageRoute(
             builder: (_) => Requests(
@@ -46,6 +52,8 @@ class Routes {
             builder: (_) => ChannelChat(
                   title: args,
                 ));
+      case '/friends':
+        return MaterialPageRoute(builder: (_) => Friends());
       default:
         // If there is no such named route in the switch statement, e.g. /third
         return _errorRoute();

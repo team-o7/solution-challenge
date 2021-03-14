@@ -13,6 +13,10 @@ const kBottomNavLabelTextStyle = TextStyle(
   fontWeight: FontWeight.w400,
 );
 
+const kBottomNavLabelSelectedTextStyle = TextStyle(
+  fontWeight: FontWeight.w600,
+);
+
 RoundedRectangleBorder kRoundedRectangleShape = RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(SizeConfig.screenWidth * 5 / 360));
 

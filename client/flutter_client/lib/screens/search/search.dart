@@ -36,77 +36,82 @@ class _SearchState extends State<Search> {
               innerDrawerKey: widget.innerDrawerKey,
               title: 'Search',
             )),
+        backgroundColor: Colors.blue[50],
         body: Column(
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.screenWidth * 10 / 360,
-                  vertical: SizeConfig.screenHeight * 10 / 640),
-              child: Material(
-                child: TextField(
-                  cursorColor: kPrimaryColor0,
-                  controller: _controller,
-                  onChanged: (val) {
-                    searchKey = val.trim().toLowerCase();
-                    setState(() {});
-                  },
-                  onEditingComplete: () {
-                    searchKey = null;
-                    _controller.clear();
-                  },
-                  decoration: InputDecoration(
-                    hoverColor: kPrimaryColor0,
-                    hintText: 'Search',
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(SizeConfig.screenWidth * 5 / 360)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: kPrimaryColor0, width: 1.0),
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(SizeConfig.screenWidth * 5 / 360)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: kPrimaryColor0, width: 2.0),
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(SizeConfig.screenWidth * 5 / 360)),
-                    ),
-                    suffixIcon: Icon(
-                      Icons.search,
-                      color: kPrimaryColor1,
+            Card(
+              margin: EdgeInsets.zero,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.screenWidth * 10 / 360,
+                    vertical: SizeConfig.screenHeight * 10 / 640),
+                child: Material(
+                  child: TextField(
+                    cursorColor: kPrimaryColor0,
+                    controller: _controller,
+                    onChanged: (val) {
+                      searchKey = val.trim().toLowerCase();
+                      setState(() {});
+                    },
+                    onEditingComplete: () {
+                      searchKey = null;
+                      _controller.clear();
+                    },
+                    decoration: InputDecoration(
+                      hoverColor: kPrimaryColor0,
+                      hintText: 'Search',
+                      contentPadding: EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 20.0),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(SizeConfig.screenWidth * 5 / 360)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: kPrimaryColor1, width: 1.0),
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(SizeConfig.screenWidth * 5 / 360)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Colors.blueAccent, width: 2.0),
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(SizeConfig.screenWidth * 5 / 360)),
+                      ),
+                      suffixIcon: Icon(
+                        Icons.search,
+                        color: Colors.blueAccent,
+                      ),
                     ),
                   ),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          SizeConfig.screenWidth * 5 / 360)),
                 ),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                        SizeConfig.screenWidth * 5 / 360)),
               ),
             ),
+            Row(
+              children: [
+                SearchFilterOption(
+                  label: 'Topics',
+                  index: 0,
+                  onPressed: () {
+                    Provider.of<UiNotifier>(context, listen: false)
+                        .setSearchFilterOptionIndex(0);
+                  },
+                ),
+                SearchFilterOption(
+                  label: 'Peoples',
+                  index: 1,
+                  onPressed: () {
+                    Provider.of<UiNotifier>(context, listen: false)
+                        .setSearchFilterOptionIndex(1);
+                  },
+                ),
+              ],
+            ),
             SizedBox(
-              height: SizeConfig.screenHeight * 1 / 20,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  SearchFilterOption(
-                    label: 'Topics',
-                    index: 0,
-                    onPressed: () {
-                      Provider.of<UiNotifier>(context, listen: false)
-                          .setSearchFilterOptionIndex(0);
-                    },
-                  ),
-                  SearchFilterOption(
-                    label: 'Peoples',
-                    index: 1,
-                    onPressed: () {
-                      Provider.of<UiNotifier>(context, listen: false)
-                          .setSearchFilterOptionIndex(1);
-                    },
-                  ),
-                ],
-              ),
+              height: 10,
             ),
             Provider.of<UiNotifier>(context, listen: true)
                         .searchFilterOptionIndex ==

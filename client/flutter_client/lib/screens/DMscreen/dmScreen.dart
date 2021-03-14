@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
+import 'package:flutter_client/reusables/widgets/mainAppBar.dart';
 import 'package:flutter_client/reusables/widgets/roundedTextField.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:provider/provider.dart';
@@ -17,17 +18,12 @@ class DmScreen extends StatelessWidget {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: kPrimaryColor0,
-          title: Text('DMs'),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              innerDrawerKey.currentState
-                  .close(direction: InnerDrawerDirection.end);
-            },
-          ),
-        ),
+        appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(56),
+            child: MainAppBar(
+              innerDrawerKey: innerDrawerKey,
+              title: 'DMs',
+            )),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,

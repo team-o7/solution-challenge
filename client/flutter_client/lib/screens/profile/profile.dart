@@ -6,6 +6,7 @@ import 'package:flutter_client/notifiers/uiNotifier.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_client/reusables/widgets/mainAppBar.dart';
+import 'package:flutter_client/reusables/widgets/myIcon.dart';
 import 'package:flutter_client/screens/profile/editProfile.dart';
 import 'package:flutter_client/services/authProvider.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
@@ -60,121 +61,100 @@ class _ProfileState extends State<Profile> {
             innerDrawerKey: widget.innerDrawerKey,
             title: 'Profile',
           )),
+      backgroundColor: Colors.blue[50],
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: SizeConfig.screenHeight * 5 / 640),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.edit_outlined,
-                    color: kPrimaryColor1,
-                  ),
-                  onPressed: () async {
-                    refresh = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => EditProfile(
-                          dp: _dp,
-                          userName: _userName,
-                          firstName: _firstName,
-                          lastName: _lastName,
-                          bio: _bio,
-                          college: _college,
+            Card(
+              margin: EdgeInsets.zero,
+              elevation: 1,
+              child: SizedBox(
+                child: ListTile(
+                  contentPadding: EdgeInsets.only(top: 20, bottom: 20, left: 5),
+                  leading: Container(
+                    child: CachedNetworkImage(
+                      imageUrl: _dp,
+                      fadeInDuration: Duration(microseconds: 0),
+                      fadeOutDuration: Duration(microseconds: 0),
+                      imageBuilder: (context, imageProvider) => Container(
+                        width: 80.0,
+                        height: 80.0,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              image: imageProvider, fit: BoxFit.cover),
                         ),
                       ),
-                    );
-                  },
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  child: CachedNetworkImage(
-                    imageUrl: _dp,
-                    fadeInDuration: Duration(microseconds: 0),
-                    fadeOutDuration: Duration(microseconds: 0),
-                    imageBuilder: (context, imageProvider) => Container(
-                      width: 120.0,
-                      height: 120.0,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            image: imageProvider, fit: BoxFit.cover),
+                      placeholder: (context, url) => Icon(
+                        Icons.account_circle,
+                        size: SizeConfig.screenWidth * 80 / 360,
                       ),
                     ),
-                    placeholder: (context, url) => Icon(
-                      Icons.account_circle,
-                      size: SizeConfig.screenWidth * 120 / 360,
+                  ),
+                  title: Text(
+                    '$_firstName $_lastName',
+                    style: TextStyle(
+                      fontSize: SizeConfig.screenWidth * 22 / 360,
+                      fontWeight: FontWeight.w700,
+                      color: kPrimaryColor1,
                     ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: SizeConfig.screenHeight * 10 / 640,
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.screenWidth * 15 / 360),
-              child: Center(
-                child: Text(
-                  '$_firstName $_lastName',
-                  style: TextStyle(
-                    fontSize: SizeConfig.screenWidth * 22 / 360,
-                    fontWeight: FontWeight.w700,
-                    color: kPrimaryColor1,
+                  subtitle: Text(
+                    '@$_userName',
+                    style: TextStyle(
+                      fontSize: SizeConfig.screenWidth * 12 / 360,
+                      fontWeight: FontWeight.w400,
+                      color: kPrimaryColor1,
+                    ),
+                  ),
+                  trailing: IconButton(
+                    icon: Icon(
+                      Icons.edit_outlined,
+                      color: kPrimaryColor1,
+                    ),
+                    onPressed: () async {
+                      refresh = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => EditProfile(
+                            dp: _dp,
+                            userName: _userName,
+                            firstName: _firstName,
+                            lastName: _lastName,
+                            bio: _bio,
+                            college: _college,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
             ),
-            SizedBox(
-              height: SizeConfig.screenHeight * 5 / 640,
-            ),
-            Container(
-              child: Text(
-                '@$_userName',
-                style: TextStyle(
-                  fontSize: SizeConfig.screenWidth * 12 / 360,
-                  fontWeight: FontWeight.w400,
-                  color: kPrimaryColor1,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: SizeConfig.screenHeight * 20 / 640,
-            ),
-            Container(
-              height: SizeConfig.screenHeight * 40 / 640,
-              margin: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.screenWidth * 10 / 360),
-              decoration: BoxDecoration(
-                color: Color(0x80F5F5F5),
-                borderRadius:
-                    BorderRadius.circular(SizeConfig.screenWidth * 10 / 360),
-                border: Border.all(
-                    color: kPrimaryColor1,
-                    width: SizeConfig.screenHeight * 0.2 / 640),
-              ),
+            Card(
+              margin: EdgeInsets.zero,
+              elevation: 1,
               child: Row(
                 children: [
                   ProfileWidget0(
                     text: 'Friends',
                     count: _friends?.length.toString(),
                     onTap: () {
-                      //todo:
+                      Navigator.pushNamed(
+                        context,
+                        '/friends',
+                      );
                     },
                   ),
                   ProfileWidget0(
                     text: 'Topics',
                     count: _topics?.length.toString(),
                     onTap: () {
-                      //todo:
+                      Navigator.pushNamed(
+                        context,
+                        '/yourTopics',
+                      );
                     },
                   ),
                   ProfileWidget0(
@@ -196,90 +176,107 @@ class _ProfileState extends State<Profile> {
             SizedBox(
               height: SizeConfig.screenHeight * 20 / 640,
             ),
-            ListTile(
-              leading: Icon(
-                Icons.school,
-                size: SizeConfig.screenWidth * 25 / 360,
-                color: Colors.black54,
-              ),
-              title: Text(
-                _college,
-                style: TextStyle(
-                  fontSize: SizeConfig.screenWidth * 14 / 360,
-                  fontWeight: FontWeight.w500,
-                  color: kPrimaryColor1,
+            Card(
+              margin: EdgeInsets.zero,
+              elevation: 1,
+              child: Container(
+                height: SizeConfig.screenHeight * 80 / 640,
+                width: SizeConfig.screenWidth,
+                padding: EdgeInsets.all(SizeConfig.screenWidth * 10 / 360),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: Text(
+                  _bio == '' ? 'Bio' : _bio,
+                  style: TextStyle(
+                    fontSize: SizeConfig.screenWidth * 14 / 360,
+                    fontWeight: FontWeight.w300,
+                    color: kPrimaryColor1,
+                  ),
                 ),
               ),
             ),
-            ListTile(
-              leading: Icon(
-                Icons.celebration,
-                size: SizeConfig.screenWidth * 25 / 360,
-                color: Colors.black54,
-              ),
-              title: Text(
-                DateFormat.yMMMd().format(_dob.toDate()).toString(),
-                style: TextStyle(
-                  fontSize: SizeConfig.screenWidth * 14 / 360,
-                  fontWeight: FontWeight.w500,
-                  color: kPrimaryColor1,
+            SizedBox(
+              height: SizeConfig.screenHeight * 20 / 640,
+            ),
+            Card(
+              margin: EdgeInsets.zero,
+              elevation: 1,
+              child: ListTile(
+                tileColor: Colors.white,
+                leading: MyIcon(
+                  iconData: Icons.school,
+                  color: Colors.deepPurpleAccent,
+                ),
+                title: Text(
+                  _college,
+                  style: TextStyle(
+                    fontSize: SizeConfig.screenWidth * 14 / 360,
+                    fontWeight: FontWeight.w500,
+                    color: kPrimaryColor1,
+                  ),
                 ),
               ),
             ),
-            Container(
-              height: SizeConfig.screenHeight * 80 / 640,
-              width: SizeConfig.screenWidth,
-              padding: EdgeInsets.all(SizeConfig.screenWidth * 10 / 360),
-              margin: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.screenWidth * 10 / 360),
-              decoration: BoxDecoration(
-                  color: Color(0xffF5F5F5),
-                  borderRadius:
-                      BorderRadius.circular(SizeConfig.screenWidth * 10 / 360),
-                  border: Border.all(
-                      color: kPrimaryColor1,
-                      width: SizeConfig.screenHeight * 0.2 / 640)),
-              child: Text(
-                _bio == '' ? 'Bio' : _bio,
-                style: TextStyle(
-                  fontSize: SizeConfig.screenWidth * 14 / 360,
-                  fontWeight: FontWeight.w300,
-                  color: kPrimaryColor1,
+            Card(
+              margin: EdgeInsets.zero,
+              elevation: 1,
+              child: ListTile(
+                leading: MyIcon(
+                  iconData: Icons.celebration,
+                  color: Colors.orange,
+                ),
+                tileColor: Colors.white,
+                title: Text(
+                  DateFormat.yMMMd().format(_dob.toDate()).toString(),
+                  style: TextStyle(
+                    fontSize: SizeConfig.screenWidth * 14 / 360,
+                    fontWeight: FontWeight.w500,
+                    color: kPrimaryColor1,
+                  ),
                 ),
               ),
             ),
-            ListTile(
-              onTap: () {},
-              leading: Icon(
-                Icons.nights_stay_outlined,
-                size: SizeConfig.screenWidth * 25 / 360,
-                color: Colors.black54,
-              ),
-              title: Text(
-                'Night mode',
-                style: TextStyle(
-                  fontSize: SizeConfig.screenWidth * 14 / 360,
-                  fontWeight: FontWeight.w500,
-                  color: kPrimaryColor1,
+            Card(
+              margin: EdgeInsets.zero,
+              elevation: 1,
+              child: ListTile(
+                onTap: () {},
+                leading: MyIcon(
+                  iconData: Icons.nights_stay_outlined,
+                  color: Colors.green,
+                ),
+                tileColor: Colors.white,
+                title: Text(
+                  'Night mode',
+                  style: TextStyle(
+                    fontSize: SizeConfig.screenWidth * 14 / 360,
+                    fontWeight: FontWeight.w500,
+                    color: kPrimaryColor1,
+                  ),
                 ),
               ),
             ),
-            ListTile(
-              onTap: () async {
-                await AuthProvider().signOut();
-                Navigator.pushNamed(context, '/logIn');
-              },
-              leading: Icon(
-                Icons.logout,
-                size: SizeConfig.screenWidth * 25 / 360,
-                color: Colors.black54,
-              ),
-              title: Text(
-                'Logout',
-                style: TextStyle(
-                  fontSize: SizeConfig.screenWidth * 14 / 360,
-                  fontWeight: FontWeight.w500,
-                  color: kPrimaryColor1,
+            Card(
+              margin: EdgeInsets.zero,
+              elevation: 1,
+              child: ListTile(
+                onTap: () async {
+                  await AuthProvider().signOut();
+                  Navigator.pushNamed(context, '/logIn');
+                },
+                tileColor: Colors.white,
+                leading: MyIcon(
+                  iconData: Icons.logout,
+                  color: Colors.blueAccent,
+                ),
+                title: Text(
+                  'Logout',
+                  style: TextStyle(
+                    fontSize: SizeConfig.screenWidth * 14 / 360,
+                    fontWeight: FontWeight.w500,
+                    color: kPrimaryColor1,
+                  ),
                 ),
               ),
             ),
@@ -311,6 +308,7 @@ class ProfileWidget0 extends StatelessWidget {
         customBorder: CircleBorder(),
         onTap: onTap,
         child: Container(
+          height: SizeConfig.screenHeight * 50 / 640,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

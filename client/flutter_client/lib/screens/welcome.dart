@@ -27,6 +27,10 @@ class _WelcomeState extends State<Welcome> {
     }
   }
 
+  final Shader linearGradient = LinearGradient(
+    colors: <Color>[Color(0xff350D36), Color(0xffAE5389)],
+  ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
+
   @override
   void initState() {
     // TODO: implement initState
@@ -38,7 +42,14 @@ class _WelcomeState extends State<Welcome> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text(' '),
+        child: Text(
+          'SENSEI',
+          style: new TextStyle(
+              fontSize: 60.0,
+              fontFamily: 'PatrickHand',
+              fontWeight: FontWeight.bold,
+              foreground: Paint()..shader = linearGradient),
+        ),
       ),
     );
   }

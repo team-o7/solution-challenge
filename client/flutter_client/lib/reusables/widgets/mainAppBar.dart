@@ -15,20 +15,24 @@ class MainAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+        elevation: 0,
         bottom: bottom,
         automaticallyImplyLeading: false,
-        title: Text(title),
+        title: Text(
+          title,
+          style: TextStyle(color: kPrimaryColor1),
+        ),
         leading: IconButton(
-          icon: Icon(Icons.menu),
+          icon: Icon(Icons.menu, color: Colors.blueAccent),
           onPressed: () {
             innerDrawerKey.currentState
                 .open(direction: InnerDrawerDirection.start);
           },
         ),
-        backgroundColor: kPrimaryColor0,
+        backgroundColor: Colors.white,
         actions: [
           IconButton(
-              icon: Icon(Icons.messenger_outline_sharp),
+              icon: Icon(Icons.message_rounded, color: Colors.blueAccent),
               onPressed: () {
                 innerDrawerKey.currentState
                     .open(direction: InnerDrawerDirection.end);
