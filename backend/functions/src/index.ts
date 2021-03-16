@@ -360,13 +360,20 @@ export const onNewMsgInPublicChannel = functions.firestore
       .doc(context.params.topicId)
       .get();
     const topicData = topic.data();
-    const receivers: Array<string> = topic.data().peoples;
+
     let deviceToken = [];
-    receivers.forEach(async (element) => {
-      const user = await getUserDataByUid(element);
-      const token = user.deviceToken;
-      deviceToken.push(token);
-    });
+    await topic.ref
+      .collection("peoples")
+      .where("push notification", "==", true)
+      .get()
+      .then((docs) => {
+        docs.forEach(async (element) => {
+          const data = element.data();
+          const user = await getUserDataByUid(data.uid);
+          const token = user.deviceToken;
+          deviceToken.push(token);
+        });
+      });
 
     const msg = snapshot.data();
     const sender = await getUserDataByUid(msg.sender);
@@ -374,7 +381,7 @@ export const onNewMsgInPublicChannel = functions.firestore
     const payload = {
       notification: {
         title: topicData.title,
-        body: sender.firstName + ": " +  msg.msg,
+        body: sender.firstName + ": " + msg.msg,
         sound: "default",
       },
       data: {
@@ -859,6 +866,32 @@ export const createPublicChannel = functions.https.onCall(
     }
 
     return status;
+  }
+);
+
+export const toggleNotification = functions.https.onCall(
+  async (data, context) => {
+    const topicId = data.topic;
+    const me = context.auth.uid;
+    const newVal = data.newVal;
+
+    const topic = await admin
+      .firestore()
+      .collection("topics")
+      .doc(topicId)
+      .get();
+
+    await topic.ref
+      .collection("peoples")
+      .where("uid", "==", me)
+      .get()
+      .then((value) => {
+        value.docs[0].ref.update({
+          "push notification": newVal,
+        });
+      });
+
+    return "Update Succesfull";
   }
 );
 

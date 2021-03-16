@@ -86,25 +86,35 @@ class _SearchState extends State<Search> {
             ),
             SizedBox(
               height: SizeConfig.screenHeight * 1 / 20,
-              child: Row(
-                children: [
-                  SearchFilterOption(
-                    label: 'Topics',
-                    index: 0,
-                    onPressed: () {
-                      Provider.of<UiNotifier>(context, listen: false)
-                          .setSearchFilterOptionIndex(0);
-                    },
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.screenWidth * 10 / 360,
+                ),
+                child: Material(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          SizeConfig.screenWidth * 5 / 360)),
+                  child: Row(
+                    children: [
+                      SearchFilterOption(
+                        label: 'Topics',
+                        index: 0,
+                        onPressed: () {
+                          Provider.of<UiNotifier>(context, listen: false)
+                              .setSearchFilterOptionIndex(0);
+                        },
+                      ),
+                      SearchFilterOption(
+                        label: 'Peoples',
+                        index: 1,
+                        onPressed: () {
+                          Provider.of<UiNotifier>(context, listen: false)
+                              .setSearchFilterOptionIndex(1);
+                        },
+                      ),
+                    ],
                   ),
-                  SearchFilterOption(
-                    label: 'Peoples',
-                    index: 1,
-                    onPressed: () {
-                      Provider.of<UiNotifier>(context, listen: false)
-                          .setSearchFilterOptionIndex(1);
-                    },
-                  ),
-                ],
+                ),
               ),
             ),
             Provider.of<UiNotifier>(context, listen: true)

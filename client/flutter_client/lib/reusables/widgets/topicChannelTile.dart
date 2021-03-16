@@ -44,7 +44,7 @@ class TopicChannelTile extends StatelessWidget {
               width:
                   Provider.of<UiNotifier>(context, listen: true).leftNavIndex ==
                           index
-                      ? 2
+                      ? 3
                       : 1),
           borderRadius:
               BorderRadius.circular(SizeConfig.screenWidth * 10 / 360),

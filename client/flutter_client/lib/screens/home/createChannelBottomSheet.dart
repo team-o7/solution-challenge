@@ -22,71 +22,75 @@ void bottomSheetForChannelCreate(BuildContext context, Channel channel) {
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return Container(
+        return SingleChildScrollView(
+          child: Container(
+            // padding: EdgeInsets.only(
+            //     bottom: MediaQuery.of(context).viewInsets.bottom),
             height: 200,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                CreateTopicTextField(
-                  hintText: 'Title',
-                  maxLines: 1,
-                  topMargin: SizeConfig.screenHeight * 25 / 640,
-                  onChanged: (val) {
-                    title = val.trim();
-                  },
-                ),
-                Container(
-                    height: SizeConfig.screenHeight * 1 / 18,
-                    margin: EdgeInsets.only(
-                      left: SizeConfig.screenWidth * 15 / 360,
-                      right: SizeConfig.screenWidth * 15 / 360,
-                      bottom: SizeConfig.screenHeight * 10 / 640,
-                    ),
-                    child: MaterialButton(
-                        textColor: Colors.white,
-                        color: kPrimaryColor0,
-                        child: Text('Create'),
-                        onPressed: () {
-                          if (title != null && title != '') {
-                            var params = {
-                              'id': Provider.of<UiNotifier>(context,
-                                      listen: false)
-                                  .leftNavIndex,
-                              'title': title
-                            };
-                            if (channel == Channel.publicChannels) {
-                              callable1.call(params).then((value) {
-                                Navigator.pop(context);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(value.data)));
-                              });
-                            } else {
-                              callable2.call(params).then((value) {
-                                Navigator.pop(context);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(value.data)));
-                              });
+            child: Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  CreateTopicTextField(
+                    hintText: 'Title',
+                    maxLines: 1,
+                    topMargin: SizeConfig.screenHeight * 25 / 640,
+                    onChanged: (val) {
+                      title = val.trim();
+                    },
+                  ),
+                  Container(
+                      height: SizeConfig.screenHeight * 1 / 18,
+                      margin: EdgeInsets.only(
+                        left: SizeConfig.screenWidth * 15 / 360,
+                        right: SizeConfig.screenWidth * 15 / 360,
+                        bottom: SizeConfig.screenHeight * 10 / 640,
+                      ),
+                      child: MaterialButton(
+                          textColor: Colors.white,
+                          color: kPrimaryColor0,
+                          child: Text('Create'),
+                          onPressed: () {
+                            if (title != null && title != '') {
+                              var params = {
+                                'id': Provider.of<UiNotifier>(context,
+                                        listen: false)
+                                    .leftNavIndex,
+                                'title': title
+                              };
+                              if (channel == Channel.publicChannels) {
+                                callable1.call(params).then((value) {
+                                  Navigator.pop(context);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(value.data)));
+                                });
+                              } else {
+                                callable2.call(params).then((value) {
+                                  Navigator.pop(context);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(value.data)));
+                                });
+                              }
                             }
-                          }
-                        })),
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: SizeConfig.screenWidth * 15 / 360,
-                      top: SizeConfig.screenHeight * 5 / 640),
-                  child: channel == Channel.publicChannels
-                      ? Text(
-                          'Everyone in the topic will have access to public channels.',
-                          style: TextStyle(color: Colors.black45),
-                        )
-                      : Text(
-                          'You can add peoples in private channel after creating.',
-                          style: TextStyle(color: Colors.black45),
-                        ),
-                )
-              ],
+                          })),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: SizeConfig.screenWidth * 15 / 360,
+                        top: SizeConfig.screenHeight * 5 / 640),
+                    child: channel == Channel.publicChannels
+                        ? Text(
+                            'Everyone in the topic will have access to public channels.',
+                            style: TextStyle(color: Colors.black45),
+                          )
+                        : Text(
+                            'You can add peoples in private channel after creating.',
+                            style: TextStyle(color: Colors.black45),
+                          ),
+                  )
+                ],
+              ),
             ),
-          );
-        });
+          ),
+        );
       });
 }

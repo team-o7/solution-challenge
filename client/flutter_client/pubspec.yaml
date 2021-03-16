@@ -25,6 +25,7 @@ dependencies:
   cloud_firestore: ^0.16.0
   cloud_functions: ^0.9.0
   firebase_messaging:
+  firebase_dynamic_links:
   google_sign_in: ^4.5.1
 
   #Other Tools
@@ -41,6 +42,7 @@ dependencies:
   flutter_rating_bar: ^3.2.0+1
   flutter_inner_drawer: ^0.5.7+2
   cached_network_image: ^2.5.0
+  share: ^2.0.1
   shared_preferences:
 
 dev_dependencies:

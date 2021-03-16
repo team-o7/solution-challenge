@@ -3,6 +3,7 @@ import 'package:flutter_client/screens/auth/googleLogin.dart';
 import 'package:flutter_client/screens/auth/registration1.dart';
 import 'package:flutter_client/screens/auth/registration2.dart';
 import 'package:flutter_client/screens/channelChat/channelChat.dart';
+import 'package:flutter_client/screens/leftDrawer/invitePage.dart';
 import 'package:flutter_client/screens/mainScreen.dart';
 import 'package:flutter_client/screens/profile/editProfile.dart';
 import 'package:flutter_client/screens/profile/requests.dart';
@@ -27,6 +28,8 @@ class Routes {
         return MaterialPageRoute(builder: (_) => Registration2());
       case '/drawerHolder':
         return MaterialPageRoute(builder: (_) => DrawerHolder());
+      case '/invitePage':
+        return MaterialPageRoute(builder: (_) => InvitePage());
       // case '/userProfile':
       //   return MaterialPageRoute(builder: (_) => UserProfile());
       case '/editProfile':

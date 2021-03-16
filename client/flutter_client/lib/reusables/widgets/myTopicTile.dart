@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:share/share.dart';
 
 import '../constants.dart';
 
 class MyTopicTile extends StatelessWidget {
-  final String title, description;
+  final String title, description, link;
   final int noOfPeoples;
   final double rating;
   final bool isPrivate;
@@ -15,6 +16,7 @@ class MyTopicTile extends StatelessWidget {
       this.title,
       this.description,
       this.noOfPeoples,
+      this.link,
       this.rating,
       this.isPrivate})
       : super(key: key);
@@ -47,7 +49,9 @@ class MyTopicTile extends StatelessWidget {
                     Icons.share_outlined,
                     size: 34,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Share.share(link);
+                  },
                 ),
               ),
               Padding(

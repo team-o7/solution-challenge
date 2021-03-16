@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
@@ -205,7 +206,7 @@ class DatabaseHandler {
       'private': isPrivate,
       'requests': [],
       'peoples': [firebaseAuth.currentUser.uid],
-    }).then((value) {
+    }).then((value) async {
       value.collection('peoples').add({
         'access': 'creator',
         'color': myColor,
@@ -213,6 +214,8 @@ class DatabaseHandler {
         'uid': firebaseAuth.currentUser.uid,
         'rating': 0.0
       });
+      String link = await _createDynamicLink(value.id, dp, title);
+      value.update({'link': link});
       value.update({'id': value.id});
       value.collection('adminChannels').add({'title': 'Announcements'});
       value.collection('adminChannels').add({'title': 'Documents'});
@@ -228,5 +231,31 @@ class DatabaseHandler {
       value.collection('publicChannels').add({'title': title});
       value.collection('publicChannels').add({'title': 'General'});
     });
+  }
+
+  Future<String> _createDynamicLink(String id, String dp, String title) async {
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+        uriPrefix: 'https://sensei7.page.link',
+        link:
+            Uri.parse('https://github.com/team-o7/solution-challenge/?id=$id'),
+        androidParameters: AndroidParameters(
+          packageName: 'com.prakash.sensei',
+          minimumVersion: 0,
+        ),
+        dynamicLinkParametersOptions: DynamicLinkParametersOptions(
+          shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
+        ),
+        socialMetaTagParameters: SocialMetaTagParameters(
+            imageUrl: Uri.parse(dp),
+            title: 'Hey! Join this topic: $title on sensei App',
+            description:
+                'Sensei is a communication platform which enables anyone to share their knowledge from anywhere'));
+
+    Uri url;
+
+    final ShortDynamicLink shortLink = await parameters.buildShortLink();
+    url = shortLink.shortUrl;
+
+    return url.toString();
   }
 }

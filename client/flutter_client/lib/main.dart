@@ -54,7 +54,7 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider<UiNotifier>(create: (_) => UiNotifier())
       ],
-      child: MaterialApp(
+      builder: (context, app) => MaterialApp(
         title: 'sensei',
         debugShowCheckedModeBanner: false,
         onGenerateRoute: Routes.generateRoute,

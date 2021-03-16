@@ -124,13 +124,40 @@ class LeftDrawer extends StatelessWidget {
                   height: SizeConfig.screenHeight * 1 / 40,
                 ),
                 TopicOptionTile(
-                    title: 'Invite people', icon: Icons.insert_invitation),
+                  title: 'Invite people',
+                  icon: Icons.insert_invitation,
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/invitePage');
+                  },
+                ),
                 SizedBox(
                   height: SizeConfig.screenHeight * 1 / 40,
                 ),
                 TopicOptionTile(
-                    title: 'Mute notification',
-                    icon: Icons.notifications_off_outlined),
+                  title: 'Mute notification',
+                  icon: Icons.notifications_off_outlined,
+                  onPressed: () async {
+                    await showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  RadioListTile(
+                                      title: Text('Receive all'),
+                                      value: true,
+                                      groupValue: false,
+                                      onChanged: (val) {}),
+                                  RadioListTile(
+                                      title: Text('Mute public channels'),
+                                      value: false,
+                                      groupValue: false,
+                                      onChanged: (val) {}),
+                                ],
+                              ),
+                            ));
+                  },
+                ),
                 SizedBox(
                   height: SizeConfig.screenHeight * 1 / 40,
                 ),

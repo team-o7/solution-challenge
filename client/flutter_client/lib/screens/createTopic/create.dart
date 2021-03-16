@@ -292,6 +292,7 @@ class MyTopics extends StatelessWidget {
             String title = data['title'];
             String description = data['description'];
             bool isPrivate = data['private'];
+            String link = data['link'];
             int noOfPeoples = data['peoples'].length;
             double rating = data['avgRating'].toDouble();
             MyTopicTile widget = new MyTopicTile(
@@ -300,6 +301,7 @@ class MyTopics extends StatelessWidget {
               isPrivate: isPrivate,
               noOfPeoples: noOfPeoples,
               rating: rating,
+              link: link,
             );
             tiles.add(widget);
           }
