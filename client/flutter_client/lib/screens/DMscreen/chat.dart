@@ -56,11 +56,13 @@ class Chat extends StatelessWidget {
                             String sender = doc.data()['sender'];
                             bool isFile = doc.data()['isFile'];
                             String fileLink = doc.data()['fileLink'];
+                            Timestamp time = doc.data()['timeStamp'];
                             OneToOneMessageBox box = new OneToOneMessageBox(
                               message: msg,
                               isMe: firebaseAuth.currentUser.uid == sender,
                               isFile: isFile,
                               downloadUrl: fileLink,
+                              time: time,
                             );
                             messages.add(box);
                           }

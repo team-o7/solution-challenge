@@ -26,7 +26,7 @@ class MyTopicTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 12, right: 12, top: 12),
       child: Material(
-        elevation: 8,
+        elevation: 3,
         borderRadius: BorderRadius.all(Radius.circular(12)),
         child: Container(
           height: SizeConfig.screenHeight * 0.2,

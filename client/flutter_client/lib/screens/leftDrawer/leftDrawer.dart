@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
+import 'package:flutter_client/reusables/widgets/createTopicModalSheet.dart';
 import 'package:flutter_client/reusables/widgets/topicChannelTile.dart';
 import 'package:flutter_client/screens/leftDrawer/peoples.dart';
 import 'package:flutter_client/screens/leftDrawer/requests.dart';
@@ -41,7 +42,9 @@ class LeftDrawer extends StatelessWidget {
                       children: [
                         TopicsStream(),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            createTopicBottomSheet(context);
+                          },
                           child: Container(
                             margin: EdgeInsets.only(left: 8, right: 8, top: 8),
                             height: SizeConfig.screenHeight * 0.1,
