@@ -67,6 +67,9 @@ class _HomeState extends State<Home> {
                   icon: Icon(
                     Icons.home_outlined,
                   ),
+                  activeIcon: Icon(
+                    Icons.home_rounded,
+                  ),
                   label: 'Home'),
               BottomNavigationBarItem(
                 icon: Icon(Icons.search_outlined),
@@ -75,7 +78,9 @@ class _HomeState extends State<Home> {
               BottomNavigationBarItem(
                   icon: Icon(Icons.create_outlined), label: 'Create'),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.account_circle_outlined), label: 'Profile'),
+                  icon: Icon(Icons.account_circle_outlined),
+                  activeIcon: Icon(Icons.account_circle_rounded),
+                  label: 'Profile'),
             ],
           ),
         ),

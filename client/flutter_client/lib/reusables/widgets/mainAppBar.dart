@@ -28,7 +28,7 @@ class MainAppBar extends StatelessWidget {
         backgroundColor: kPrimaryColor0,
         actions: [
           IconButton(
-              icon: Icon(Icons.messenger_outline_sharp),
+              icon: Icon(Icons.message_rounded),
               onPressed: () {
                 innerDrawerKey.currentState
                     .open(direction: InnerDrawerDirection.end);

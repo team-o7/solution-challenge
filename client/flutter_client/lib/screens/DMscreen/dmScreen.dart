@@ -37,6 +37,7 @@ class DmScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 12, right: 12, top: 16),
                 child: RoundedTextField(
                   hintText: 'search',
+                  borderRadius: 5,
                   suffixIcon: Icon(
                     Icons.search_outlined,
                     color: kPrimaryColor0,

@@ -128,7 +128,6 @@ class _ProfileState extends State<Profile> {
                   style: TextStyle(
                     fontSize: SizeConfig.screenWidth * 22 / 360,
                     fontWeight: FontWeight.w700,
-                    color: kPrimaryColor1,
                   ),
                 ),
               ),
@@ -142,7 +141,6 @@ class _ProfileState extends State<Profile> {
                 style: TextStyle(
                   fontSize: SizeConfig.screenWidth * 12 / 360,
                   fontWeight: FontWeight.w400,
-                  color: kPrimaryColor1,
                 ),
               ),
             ),
@@ -207,7 +205,6 @@ class _ProfileState extends State<Profile> {
                 style: TextStyle(
                   fontSize: SizeConfig.screenWidth * 14 / 360,
                   fontWeight: FontWeight.w500,
-                  color: kPrimaryColor1,
                 ),
               ),
             ),
@@ -222,7 +219,6 @@ class _ProfileState extends State<Profile> {
                 style: TextStyle(
                   fontSize: SizeConfig.screenWidth * 14 / 360,
                   fontWeight: FontWeight.w500,
-                  color: kPrimaryColor1,
                 ),
               ),
             ),
@@ -244,7 +240,6 @@ class _ProfileState extends State<Profile> {
                 style: TextStyle(
                   fontSize: SizeConfig.screenWidth * 14 / 360,
                   fontWeight: FontWeight.w300,
-                  color: kPrimaryColor1,
                 ),
               ),
             ),
@@ -260,7 +255,6 @@ class _ProfileState extends State<Profile> {
                 style: TextStyle(
                   fontSize: SizeConfig.screenWidth * 14 / 360,
                   fontWeight: FontWeight.w500,
-                  color: kPrimaryColor1,
                 ),
               ),
             ),
@@ -279,7 +273,6 @@ class _ProfileState extends State<Profile> {
                 style: TextStyle(
                   fontSize: SizeConfig.screenWidth * 14 / 360,
                   fontWeight: FontWeight.w500,
-                  color: kPrimaryColor1,
                 ),
               ),
             ),
@@ -319,7 +312,6 @@ class ProfileWidget0 extends StatelessWidget {
                 style: TextStyle(
                   fontSize: countFontSize,
                   fontWeight: FontWeight.w700,
-                  color: kPrimaryColor1,
                 ),
               ),
               Text(
@@ -327,7 +319,6 @@ class ProfileWidget0 extends StatelessWidget {
                 style: TextStyle(
                   fontSize: SizeConfig.screenWidth * 12 / 360,
                   fontWeight: FontWeight.w600,
-                  color: Color(0x803F0E40),
                 ),
               ),
             ],
