@@ -18,6 +18,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:string_to_hex/string_to_hex.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart';
 
 class ChannelChat extends StatefulWidget {
   final String title;
@@ -122,9 +123,15 @@ class _ChannelChatState extends State<ChannelChat> {
 class ChannelMessageBox extends StatefulWidget {
   final String sender, msg, downloadUrl;
   final bool isFile;
+  final Timestamp time;
 
   const ChannelMessageBox(
-      {Key key, this.sender, this.isFile, this.msg, this.downloadUrl})
+      {Key key,
+      this.sender,
+      this.isFile,
+      this.msg,
+      this.downloadUrl,
+      this.time})
       : super(key: key);
 
   @override
@@ -170,31 +177,54 @@ class _ChannelMessageBoxState extends State<ChannelMessageBox> {
                       ),
                 radius: 12,
               ),
-              title: Text(
-                snapshot.hasData
-                    ? snapshot.data['firstName'] +
-                        ' ' +
-                        snapshot.data['lastName']
-                    : '',
-                style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: strToHex(snapshot.data['color'])),
-              ),
-              subtitle: Linkify(
-                onOpen: (link) async {
-                  if (await canLaunch(link.url)) {
-                    await launch(
-                      link.url,
-                      enableJavaScript: true,
-                    );
-                  } else {
-                    throw 'Could not launch $link';
-                  }
-                },
-                text: widget.msg,
-                style: TextStyle(color: Colors.black87, fontSize: 15),
-                linkStyle: TextStyle(color: Colors.blue, fontSize: 15),
+              title: RichText(
+                  text: TextSpan(
+                      text: snapshot.hasData
+                          ? snapshot.data['firstName'] +
+                              ' ' +
+                              snapshot.data['lastName'] +
+                              '  '
+                          : '',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: strToHex(
+                          snapshot.data['color'],
+                        ),
+                      ),
+                      children: [
+                    TextSpan(
+                        text: DateFormat.Hm()
+                                .format(widget.time.toDate())
+                                .toString() +
+                            ' ' +
+                            DateFormat.yMMMd()
+                                .format(widget.time.toDate())
+                                .toString(),
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          fontStyle: FontStyle.italic,
+                          color: Colors.blueGrey,
+                        ))
+                  ])),
+              subtitle: Padding(
+                padding: EdgeInsets.only(top: 3),
+                child: Linkify(
+                  onOpen: (link) async {
+                    if (await canLaunch(link.url)) {
+                      await launch(
+                        link.url,
+                        enableJavaScript: true,
+                      );
+                    } else {
+                      throw 'Could not launch $link';
+                    }
+                  },
+                  text: widget.msg,
+                  style: TextStyle(color: Colors.black87, fontSize: 15),
+                  linkStyle: TextStyle(color: Colors.blue, fontSize: 15),
+                ),
               ),
               trailing: widget.isFile
                   ? IconButton(
@@ -264,11 +294,13 @@ class ChannelChatStream extends StatelessWidget {
             String sender = data['sender'];
             bool isFile = data['isFile'];
             String downloadUrl = data['fileLink'];
+            Timestamp time = data['timeStamp'];
             ChannelMessageBox tile = new ChannelMessageBox(
               msg: msg,
               sender: sender,
               isFile: isFile,
               downloadUrl: downloadUrl,
+              time: time,
             );
             tiles.add(tile);
           }
