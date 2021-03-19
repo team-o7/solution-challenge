@@ -194,13 +194,9 @@ class _ChannelMessageBoxState extends State<ChannelMessageBox> {
                       ),
                       children: [
                     TextSpan(
-                        text: DateFormat.Hm()
-                                .format(widget.time.toDate())
-                                .toString() +
-                            ' ' +
-                            DateFormat.yMMMd()
-                                .format(widget.time.toDate())
-                                .toString(),
+                        text: DateFormat.jm()
+                            .format(widget.time.toDate())
+                            .toString(),
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w400,

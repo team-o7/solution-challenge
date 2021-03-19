@@ -36,7 +36,7 @@ class TopicTile extends StatelessWidget {
       builder: (context, snapshot) => Padding(
         padding: const EdgeInsets.only(left: 12, right: 12, top: 12),
         child: Material(
-          elevation: 4,
+          elevation: 1,
           borderRadius: BorderRadius.all(Radius.circular(12)),
           child: Container(
             height: SizeConfig.screenHeight * 1 / 4.5,
@@ -115,6 +115,7 @@ class TopicTile extends StatelessWidget {
                         ),
                         MaterialButton(
                           color: Colors.grey[200],
+                          elevation: 2,
                           child: Text(
                             !isPrivate ? 'Join' : 'Request',
                             style: TextStyle(

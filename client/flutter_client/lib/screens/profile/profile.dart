@@ -7,6 +7,7 @@ import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_client/reusables/widgets/mainAppBar.dart';
 import 'package:flutter_client/screens/profile/editProfile.dart';
+
 import 'package:flutter_client/services/authProvider.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:intl/intl.dart';
@@ -164,9 +165,7 @@ class _ProfileState extends State<Profile> {
                   ProfileWidget0(
                     text: 'Friends',
                     count: _friends?.length.toString(),
-                    onTap: () {
-                      //todo:
-                    },
+                    onTap: () {},
                   ),
                   ProfileWidget0(
                     text: 'Topics',

@@ -27,32 +27,70 @@ class UserListTile extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(12)),
         child: ListTile(
           onTap: onTap,
-
-          /// extract this  [circleAvatar] for displaying circular
-          /// image at other places
-          leading: CachedNetworkImage(
-            imageUrl: dp,
-            fadeInDuration: Duration(microseconds: 0),
-            fadeOutDuration: Duration(microseconds: 0),
-            imageBuilder: (context, imageProvider) => Container(
-              width: SizeConfig.screenWidth * 45 / 360,
-              height: SizeConfig.screenWidth * 45 / 360,
-              decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.circular(SizeConfig.screenWidth * 4 / 360),
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.fill,
+          leading: GestureDetector(
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Dialog(
+                      insetPadding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.screenWidth * 40 / 360),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(SizeConfig.b * 1.5),
+                      ),
+                      child: CachedNetworkImage(
+                        imageUrl: dp,
+                        fadeInDuration: Duration(microseconds: 0),
+                        fadeOutDuration: Duration(microseconds: 0),
+                        imageBuilder: (context, imageProvider) => Container(
+                          width: SizeConfig.screenWidth * 100 / 360,
+                          height: SizeConfig.screenWidth * 250 / 360,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                                SizeConfig.screenWidth * 6 / 360),
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                        placeholder: (context, url) => Container(
+                          width: SizeConfig.screenWidth * 100 / 360,
+                          height: SizeConfig.screenWidth * 250 / 360,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                                SizeConfig.screenWidth * 6 / 360),
+                            color: Color(0xffE5E5E5),
+                          ),
+                        ),
+                      ),
+                    );
+                  });
+            },
+            child: CachedNetworkImage(
+              imageUrl: dp,
+              fadeInDuration: Duration(microseconds: 0),
+              fadeOutDuration: Duration(microseconds: 0),
+              imageBuilder: (context, imageProvider) => Container(
+                width: SizeConfig.screenWidth * 45 / 360,
+                height: SizeConfig.screenWidth * 45 / 360,
+                decoration: BoxDecoration(
+                  borderRadius:
+                      BorderRadius.circular(SizeConfig.screenWidth * 4 / 360),
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
-            ),
-            placeholder: (context, url) => Container(
-              width: SizeConfig.screenWidth * 45 / 360,
-              height: SizeConfig.screenWidth * 45 / 360,
-              decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.circular(SizeConfig.screenWidth * 5 / 360),
-                color: Color(0xffE5E5E5),
+              placeholder: (context, url) => Container(
+                width: SizeConfig.screenWidth * 45 / 360,
+                height: SizeConfig.screenWidth * 45 / 360,
+                decoration: BoxDecoration(
+                  borderRadius:
+                      BorderRadius.circular(SizeConfig.screenWidth * 5 / 360),
+                  color: Color(0xffE5E5E5),
+                ),
               ),
             ),
           ),
