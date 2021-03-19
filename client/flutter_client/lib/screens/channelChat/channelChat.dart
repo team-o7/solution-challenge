@@ -13,12 +13,12 @@ import 'package:flutter_client/screens/home/body.dart';
 import 'package:flutter_client/services/databaseHandler.dart';
 import 'package:flutter_client/services/storageHandler.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:string_to_hex/string_to_hex.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:intl/intl.dart';
 
 class ChannelChat extends StatefulWidget {
   final String title;
@@ -186,7 +186,7 @@ class _ChannelMessageBoxState extends State<ChannelMessageBox> {
                               '  '
                           : '',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.w600,
                         color: strToHex(
                           snapshot.data['color'],
@@ -205,7 +205,7 @@ class _ChannelMessageBoxState extends State<ChannelMessageBox> {
                           fontSize: 12,
                           fontWeight: FontWeight.w400,
                           fontStyle: FontStyle.italic,
-                          color: Colors.blueGrey,
+                          color: Colors.black45,
                         ))
                   ])),
               subtitle: Padding(

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_client/screens/leftDrawer/requests.dart';
 import 'package:flutter_client/services/authProvider.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 
 // ignore: must_be_immutable
 class LeftDrawer extends StatelessWidget {
@@ -126,8 +128,14 @@ class LeftDrawer extends StatelessWidget {
                 TopicOptionTile(
                   title: 'Invite people',
                   icon: Icons.insert_invitation,
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/invitePage');
+                  onPressed: () async {
+                    DocumentSnapshot ds = await _firestore
+                        .collection('topics')
+                        .doc(Provider.of<UiNotifier>(context, listen: false)
+                            .leftNavIndex)
+                        .get();
+                    String link = ds.data()['link'];
+                    Share.share(link);
                   },
                 ),
                 SizedBox(
@@ -137,23 +145,43 @@ class LeftDrawer extends StatelessWidget {
                   title: 'Mute notification',
                   icon: Icons.notifications_off_outlined,
                   onPressed: () async {
+                    Stream<QuerySnapshot> sqs = _firestore
+                        .collection('topics')
+                        .doc(Provider.of<UiNotifier>(context, listen: false)
+                            .leftNavIndex)
+                        .collection('peoples')
+                        .where('uid',
+                            isEqualTo: FirebaseAuth.instance.currentUser.uid)
+                        .snapshots();
+                    QuerySnapshot qs = await sqs.first;
+                    bool notify = qs.docs[0].data()['push notification'];
                     await showDialog(
                         context: context,
-                        builder: (_) => AlertDialog(
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  RadioListTile(
-                                      title: Text('Receive all'),
-                                      value: true,
-                                      groupValue: false,
-                                      onChanged: (val) {}),
-                                  RadioListTile(
-                                      title: Text('Mute public channels'),
-                                      value: false,
-                                      groupValue: false,
-                                      onChanged: (val) {}),
-                                ],
+                        builder: (_) => StatefulBuilder(
+                              builder: (_, setState) => AlertDialog(
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    RadioListTile(
+                                        title: Text('Receive all'),
+                                        value: true,
+                                        groupValue: notify,
+                                        onChanged: (val) {
+                                          qs.docs[0].reference.update(
+                                              {'push notification': val});
+                                          Navigator.pop(context);
+                                        }),
+                                    RadioListTile(
+                                        title: Text('Mute public channels'),
+                                        value: false,
+                                        groupValue: notify,
+                                        onChanged: (val) {
+                                          qs.docs[0].reference.update(
+                                              {'push notification': val});
+                                          Navigator.pop(context);
+                                        }),
+                                  ],
+                                ),
                               ),
                             ));
                   },
@@ -287,6 +315,8 @@ class LeftDrawer extends StatelessWidget {
     );
   }
 }
+
+enum notification { ReceiveAll, MutePublic }
 
 class TopicOptionTile extends StatelessWidget {
   final String title;

@@ -696,7 +696,7 @@ export const onPublicTopicJoinRequest = functions.https.onCall(
       await topic.ref.collection("peoples").add({
         uid: uid,
         access: "general",
-        rating: 0.0,
+        rating: -1.0,
         "push notification": true,
         color: titleColors[getRndInteger(0, 7)],
       });
@@ -797,7 +797,7 @@ export const onRequestAccept = functions.https.onCall(async (data, contex) => {
     await topic.ref.collection("peoples").add({
       uid: useruid,
       access: "general",
-      rating: 0.0,
+      rating: -1.0,
       "push notification": true,
       color: titleColors[getRndInteger(0, 7)],
     });
@@ -866,32 +866,6 @@ export const createPublicChannel = functions.https.onCall(
     }
 
     return status;
-  }
-);
-
-export const toggleNotification = functions.https.onCall(
-  async (data, context) => {
-    const topicId = data.topic;
-    const me = context.auth.uid;
-    const newVal = data.newVal;
-
-    const topic = await admin
-      .firestore()
-      .collection("topics")
-      .doc(topicId)
-      .get();
-
-    await topic.ref
-      .collection("peoples")
-      .where("uid", "==", me)
-      .get()
-      .then((value) => {
-        value.docs[0].ref.update({
-          "push notification": newVal,
-        });
-      });
-
-    return "Update Succesfull";
   }
 );
 
@@ -1128,15 +1102,19 @@ export const rate = functions.https.onCall(async (data, context) => {
     });
 
   let newRating = 0.0;
+  let count = 0;
 
   await topic.ref
     .collection("peoples")
     .get()
     .then((value) => {
       value.docs.forEach((element) => {
-        newRating += element.data().rating;
+        if(element.data().rating !== -1){
+          newRating += element.data().rating;
+          count ++;
+        }
       });
-      newRating = newRating / value.docs.length;
+      newRating = newRating / count;
     });
 
   await topic.ref.update({

@@ -212,7 +212,7 @@ class DatabaseHandler {
         'color': myColor,
         'push notification': true,
         'uid': firebaseAuth.currentUser.uid,
-        'rating': 0.0
+        'rating': -1.0
       });
       String link = await _createDynamicLink(value.id, dp, title);
       value.update({'link': link});

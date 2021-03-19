@@ -44,6 +44,7 @@ dependencies:
   cached_network_image: ^2.5.0
   share: ^2.0.1
   shared_preferences:
+  encrypt: ^4.1.0
 
 dev_dependencies:
   flutter_test:
