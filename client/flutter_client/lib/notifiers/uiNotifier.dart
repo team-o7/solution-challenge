@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/reusables/widgets/dmtile.dart';
@@ -14,6 +13,7 @@ class UiNotifier extends ChangeNotifier {
   static String userName, firstName, lastName;
   DateTime dob;
   Map<String, dynamic> userData;
+  static Map<String, dynamic> allData = {};
   bool isUserNameOkay = true;
   //todo: replace with notifier in registration1
   int searchFilterOptionIndex = 0;
@@ -21,28 +21,13 @@ class UiNotifier extends ChangeNotifier {
   List<RequestsTile> reqTiles = [];
   List<DmTile> dmTiles = [];
 
-  Future<void> buildChats() async {
-    dmTiles = [];
-    QuerySnapshot snapshot = await _databaseHandler.myChats();
-    var docs = snapshot.docs;
-    for (var doc in docs) {
-      var data = doc.data();
-      String otherGuy;
-      List users = data['users'];
-      if (users[0] == _databaseHandler.firebaseAuth.currentUser.uid)
-        otherGuy = users[1];
-      else
-        otherGuy = users[0];
-      var tileData = await _databaseHandler.getUserDataByUid(otherGuy);
-      DmTile newTile = new DmTile(
-        reference: doc.reference,
-        name: tileData['firstName'] + ' ' + tileData['lastName'],
-        userName: tileData['userName'],
-        dp: tileData['dp'],
-      );
-      dmTiles.add(newTile);
-    }
-    notifyListeners();
+  Future<void> _addAllData() async {
+    allData = {};
+    await _databaseHandler.firestore.collection('users').get().then((value) {
+      value.docs.forEach((element) {
+        allData[element.data()['uid']] = element.data();
+      });
+    });
   }
 
   void saveTiles(List r) {
@@ -72,7 +57,8 @@ class UiNotifier extends ChangeNotifier {
 
   Future<void> setUserData() async {
     userData = await _databaseHandler.getUserData();
-    await buildChats();
+    await _addAllData();
+    print(allData.length);
     notifyListeners();
   }
 

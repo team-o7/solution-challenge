@@ -7,7 +7,6 @@ import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_client/reusables/widgets/mainAppBar.dart';
 import 'package:flutter_client/screens/profile/editProfile.dart';
-
 import 'package:flutter_client/services/authProvider.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:intl/intl.dart';
@@ -42,7 +41,7 @@ class _ProfileState extends State<Profile> {
     _topics = data['topics'];
   }
 
-  //todo: FUCKUP i have changed 'friendRequest' to 'friendRequestsReceived' in DS
+  //todo: i have changed 'friendRequest' to 'friendRequestsReceived' in DS
   ///update any error as you see
 
   @override
@@ -165,14 +164,12 @@ class _ProfileState extends State<Profile> {
                   ProfileWidget0(
                     text: 'Friends',
                     count: _friends?.length.toString(),
-                    onTap: () {},
+                    onTap: null,
                   ),
                   ProfileWidget0(
                     text: 'Topics',
                     count: _topics?.length.toString(),
-                    onTap: () {
-                      //todo:
-                    },
+                    onTap: null,
                   ),
                   ProfileWidget0(
                     text: 'Requests',

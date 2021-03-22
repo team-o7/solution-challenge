@@ -151,115 +151,107 @@ class _ChannelMessageBoxState extends State<ChannelMessageBox> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _databaseHandler.getUserDataByUid(widget.sender),
-      builder: (context, snapshot) => !snapshot.hasData
-          ? Container()
-          : ListTile(
-              onLongPress: () {
-                Clipboard.setData(
-                  new ClipboardData(text: widget.msg),
-                ).then((_) {
-                  Scaffold.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("copied to clipboard"),
-                    ),
-                  );
-                });
-              },
-              leading: CircleAvatar(
-                backgroundColor: kPrimaryColor0,
-                child: snapshot.hasData
-                    ? CustomCachedNetworkImage(dp: snapshot.data['dp'])
-                    : Text(
-                        '',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                radius: 12,
+    return ListTile(
+      onLongPress: () {
+        Clipboard.setData(
+          new ClipboardData(text: widget.msg),
+        ).then((_) {
+          Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: Text("copied to clipboard"),
+            ),
+          );
+        });
+      },
+      leading: CircleAvatar(
+        backgroundColor: kPrimaryColor0,
+        child: true
+            ? CustomCachedNetworkImage(
+                dp: UiNotifier.allData[widget.sender]['dp'])
+            : Text(
+                '',
+                style: TextStyle(fontSize: 12),
               ),
-              title: RichText(
-                  text: TextSpan(
-                      text: snapshot.hasData
-                          ? snapshot.data['firstName'] +
-                              ' ' +
-                              snapshot.data['lastName'] +
-                              '  '
-                          : '',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: strToHex(
-                          snapshot.data['color'],
-                        ),
-                      ),
-                      children: [
-                    TextSpan(
-                        text: DateFormat.jm()
-                            .format(widget.time.toDate())
-                            .toString(),
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          fontStyle: FontStyle.italic,
-                          color: Colors.black45,
-                        ))
-                  ])),
-              subtitle: Padding(
-                padding: EdgeInsets.only(top: 3),
-                child: Linkify(
-                  onOpen: (link) async {
-                    if (await canLaunch(link.url)) {
-                      await launch(
-                        link.url,
-                        enableJavaScript: true,
-                      );
-                    } else {
-                      throw 'Could not launch $link';
-                    }
-                  },
-                  text: widget.msg,
-                  style: TextStyle(color: Colors.black87, fontSize: 15),
-                  linkStyle: TextStyle(color: Colors.blue, fontSize: 15),
+        radius: 12,
+      ),
+      title: RichText(
+          text: TextSpan(
+              text: true
+                  ? UiNotifier.allData[widget.sender]['firstName'] +
+                      ' ' +
+                      UiNotifier.allData[widget.sender]['lastName'] +
+                      '  '
+                  : '',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: strToHex(
+                  UiNotifier.allData[widget.sender]['color'],
                 ),
               ),
-              trailing: widget.isFile
-                  ? IconButton(
-                      icon: Icon(
-                        Icons.arrow_circle_down_outlined,
-                        color: Colors.black87,
-                        size: 32,
-                      ),
-                      onPressed: () async {
-                        var path =
-                            await ExtStorage.getExternalStoragePublicDirectory(
-                                ExtStorage.DIRECTORY_DOWNLOADS);
+              children: [
+            TextSpan(
+                text: DateFormat.jm().format(widget.time.toDate()).toString(),
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  fontStyle: FontStyle.italic,
+                  color: Colors.black45,
+                ))
+          ])),
+      subtitle: Padding(
+        padding: EdgeInsets.only(top: 3),
+        child: Linkify(
+          onOpen: (link) async {
+            if (await canLaunch(link.url)) {
+              await launch(
+                link.url,
+                enableJavaScript: true,
+              );
+            } else {
+              throw 'Could not launch $link';
+            }
+          },
+          text: widget.msg,
+          style: TextStyle(color: Colors.black87, fontSize: 15),
+          linkStyle: TextStyle(color: Colors.blue, fontSize: 15),
+        ),
+      ),
+      trailing: widget.isFile
+          ? IconButton(
+              icon: Icon(
+                Icons.arrow_circle_down_outlined,
+                color: Colors.black87,
+                size: 32,
+              ),
+              onPressed: () async {
+                var path = await ExtStorage.getExternalStoragePublicDirectory(
+                    ExtStorage.DIRECTORY_DOWNLOADS);
 
-                        if (await FileSystemEntity.isFile(
-                            path + '/' + widget.msg)) {
-                          await OpenFile.open(path + '/' + widget.msg);
-                        } else {
-                          final status = await Permission.storage.request();
-                          if (status.isGranted) {
-                            final dir = await ExtStorage
-                                .getExternalStoragePublicDirectory(
-                                    ExtStorage.DIRECTORY_DOWNLOADS);
-                            StorageHandler().downloadFile(
-                                widget.msg, dir, widget.downloadUrl);
-                          } else {
-                            print('!!!!!!!!!!!!!!!!!!!!!!!!!');
-                            print("Permission deined");
-                            print('!!!!!!!!!!!!!!!!!!!!!!!!!');
-                          }
-                        }
-                      },
-                    )
-                  : SizedBox(
-                      width: 0,
-                    ),
-              dense: true,
-              minLeadingWidth: 13,
-              horizontalTitleGap: 8,
+                if (await FileSystemEntity.isFile(path + '/' + widget.msg)) {
+                  await OpenFile.open(path + '/' + widget.msg);
+                } else {
+                  final status = await Permission.storage.request();
+                  if (status.isGranted) {
+                    final dir =
+                        await ExtStorage.getExternalStoragePublicDirectory(
+                            ExtStorage.DIRECTORY_DOWNLOADS);
+                    StorageHandler()
+                        .downloadFile(widget.msg, dir, widget.downloadUrl);
+                  } else {
+                    print('!!!!!!!!!!!!!!!!!!!!!!!!!');
+                    print("Permission deined");
+                    print('!!!!!!!!!!!!!!!!!!!!!!!!!');
+                  }
+                }
+              },
+            )
+          : SizedBox(
+              width: 0,
             ),
+      dense: true,
+      minLeadingWidth: 13,
+      horizontalTitleGap: 8,
     );
   }
 }

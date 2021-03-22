@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
+import 'package:flutter_client/reusables/widgets/dmtile.dart';
 import 'package:flutter_client/reusables/widgets/roundedTextField.dart';
+import 'package:flutter_client/services/databaseHandler.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
-import 'package:provider/provider.dart';
 
 class DmScreen extends StatelessWidget {
   final GlobalKey<InnerDrawerState> innerDrawerKey;
+  static DatabaseHandler _databaseHandler = new DatabaseHandler();
   const DmScreen({Key key, this.innerDrawerKey}) : super(key: key);
 
   @override
@@ -44,17 +46,46 @@ class DmScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Provider.of<UiNotifier>(context, listen: true).dmTiles.length == 0
-                  ? Column(children: [
+              StreamBuilder(
+                stream: _databaseHandler.myChats(),
+                // ignore: missing_return
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Container();
+                  }
+                  var docs = snapshot.data.docs;
+                  if (docs.length == 0) {
+                    return Column(children: [
                       SizedBox(
                         height: SizeConfig.screenHeight * 0.4,
                       ),
                       Text('Add friends to start chats with them'),
-                    ])
-                  : Column(
-                      children: Provider.of<UiNotifier>(context, listen: true)
-                          .dmTiles,
-                    )
+                    ]);
+                  }
+                  List<DmTile> dmTiles = [];
+                  for (var doc in docs) {
+                    var data = doc.data();
+                    String otherGuy;
+                    List users = data['users'];
+                    if (users[0] ==
+                        _databaseHandler.firebaseAuth.currentUser.uid)
+                      otherGuy = users[1];
+                    else
+                      otherGuy = users[0];
+                    var tileData = UiNotifier.allData[otherGuy];
+                    DmTile newTile = new DmTile(
+                      reference: doc.reference,
+                      name: tileData['firstName'] + ' ' + tileData['lastName'],
+                      userName: tileData['userName'],
+                      dp: tileData['dp'],
+                    );
+                    dmTiles.add(newTile);
+                  }
+                  return Column(
+                    children: dmTiles,
+                  );
+                },
+              )
             ],
           ),
         ),

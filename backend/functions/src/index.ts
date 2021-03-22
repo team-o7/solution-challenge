@@ -325,18 +325,19 @@ export const onNewDm = functions.firestore
       receiver = peoples[1];
     }
 
-    const receiverData = await getUserDataByUid(receiver);
-    const senderData = await getUserDataByUid(msg.sender);
-    const deviceToken = receiverData.deviceToken;
+    const receiverData =  getUserDataByUid(receiver);
+    const senderData =  getUserDataByUid(msg.sender);
+    const ps = await Promise.all([receiverData, senderData]);
+    const deviceToken = ps[0].deviceToken;
 
     const payload = {
       notification: {
-        title: "Message from " + senderData.firstName,
+        title: "Message from " + ps[1].firstName,
         body: msg.msg,
         sound: "default",
       },
       data: {
-        sendername: senderData.firstName + " " + senderData.lastName,
+        sendername: ps[1].firstName + " " + ps[1].lastName,
         message: "sensei",
       },
     };
@@ -362,6 +363,8 @@ export const onNewMsgInPublicChannel = functions.firestore
     const topicData = topic.data();
 
     let deviceToken = [];
+    let users = [];
+
     await topic.ref
       .collection("peoples")
       .where("push notification", "==", true)
@@ -369,12 +372,16 @@ export const onNewMsgInPublicChannel = functions.firestore
       .then((docs) => {
         docs.forEach(async (element) => {
           const data = element.data();
-          const user = await getUserDataByUid(data.uid);
-          const token = user.deviceToken;
-          deviceToken.push(token);
+          const user = getUserDataByUid(data.uid);
+          users.push(user);
         });
       });
 
+   await Promise.all(users).then((val)=> {
+      val.forEach((element) => {
+        deviceToken.push(element.deviceToken); 
+      })
+    })
     const msg = snapshot.data();
     const sender = await getUserDataByUid(msg.sender);
 
@@ -411,11 +418,17 @@ export const onNewMsgInAdminChannel = functions.firestore
     const topicData = topic.data();
     const receivers: Array<string> = topic.data().peoples;
     let deviceToken = [];
+    let users = [];
     receivers.forEach(async (element) => {
-      const user = await getUserDataByUid(element);
-      const token = user.deviceToken;
-      deviceToken.push(token);
+      const user = getUserDataByUid(element);
+      users.push(user);
     });
+
+    await Promise.all(users).then((val) => {
+       val.forEach((element) => {
+         deviceToken.push(element.deviceToken);
+       })
+    })
 
     const msg = snapshot.data();
     const sender = await getUserDataByUid(msg.sender);
@@ -456,11 +469,17 @@ export const onNewMsgInPrivateChannel = functions.firestore
     const receivers = await channel.data().peoples;
     console.log(receivers);
     let deviceToken = [];
+    let users = [];
     receivers.forEach(async (element) => {
-      const user = await getUserDataByUid(element);
-      const token = user.deviceToken;
-      deviceToken.push(token);
+      const user = getUserDataByUid(element);
+      users.push(user);
     });
+
+    await Promise.all(users).then((val) => {
+       val.forEach((element) => {
+         deviceToken.push(element.deviceToken);
+       })
+    })
 
     console.log(deviceToken);
 

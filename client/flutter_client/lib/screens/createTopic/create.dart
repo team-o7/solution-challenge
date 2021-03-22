@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_client/reusables/widgets/createTopicModalSheet.dart';
@@ -17,8 +18,6 @@ class CreateTopic extends StatefulWidget {
 }
 
 class _CreateTopicState extends State<CreateTopic> {
-  static bool _isPrivate = false;
-  String _title, _description, _dp;
   File imageFile;
   String imageName;
   bool isLoading = false;

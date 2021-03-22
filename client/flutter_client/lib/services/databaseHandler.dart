@@ -67,11 +67,11 @@ class DatabaseHandler {
       throw 'No signed in user';
   }
 
-  Future<QuerySnapshot> myChats() async {
+  Stream<QuerySnapshot> myChats() {
     return firestore
         .collection('chats')
         .where('users', arrayContains: firebaseAuth.currentUser.uid)
-        .get();
+        .snapshots();
   }
 
   Stream<QuerySnapshot> searchedUsers(String key) {

@@ -6,14 +6,22 @@ import 'package:flutter_client/reusables/widgets/customCachedNetworkImage.dart';
 import 'package:flutter_client/services/databaseHandler.dart';
 import 'package:provider/provider.dart';
 
-class TopicRequestsStream extends StatelessWidget {
+class TopicRequestsStream extends StatefulWidget {
   final List<dynamic> reqs;
+
+  static FirebaseFunctions _functions =
+      FirebaseFunctions.instanceFor(region: 'us-central1');
 
   const TopicRequestsStream({Key key, @required this.reqs}) : super(key: key);
 
   @override
+  _TopicRequestsStreamState createState() => _TopicRequestsStreamState();
+}
+
+class _TopicRequestsStreamState extends State<TopicRequestsStream> {
+  @override
   Widget build(BuildContext context) {
-    return reqs.length == 0
+    return widget.reqs.length == 0
         ? Scaffold(
             appBar: AppBar(
               backgroundColor: kPrimaryColor0,
@@ -24,7 +32,7 @@ class TopicRequestsStream extends StatelessWidget {
             ),
           )
         : StreamBuilder(
-            stream: DatabaseHandler().topicJoinRequests(reqs),
+            stream: DatabaseHandler().topicJoinRequests(widget.reqs),
             // ignore: missing_return
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
@@ -44,6 +52,22 @@ class TopicRequestsStream extends StatelessWidget {
                   dp: dp,
                   userName: userName,
                   uid: uid,
+                  onRespond: () {
+                    var params = {
+                      'id': Provider.of<UiNotifier>(context, listen: false)
+                          .leftNavIndex,
+                      'useruid': uid
+                    };
+                    TopicRequestsStream._functions
+                        .httpsCallable('onRequestAccept')
+                        .call(params)
+                        .then((value) {
+                      widget.reqs.remove(uid);
+                      setState(() {});
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(value.data)));
+                    });
+                  },
                 );
                 usersList.add(userListTile);
               }
@@ -63,9 +87,7 @@ class TopicRequestsStream extends StatelessWidget {
 
 class TopicRequestsTile extends StatelessWidget {
   final String firstName, dp, lastName, userName, uid;
-
-  static FirebaseFunctions _functions =
-      FirebaseFunctions.instanceFor(region: 'us-central1');
+  final Function onRespond;
 
   const TopicRequestsTile(
       {Key key,
@@ -73,6 +95,7 @@ class TopicRequestsTile extends StatelessWidget {
       this.dp,
       this.lastName,
       this.userName,
+      this.onRespond,
       this.uid})
       : super(key: key);
 
@@ -91,20 +114,7 @@ class TopicRequestsTile extends StatelessWidget {
             child: Text('Accept'),
             disabledBorderColor: kPrimaryColor0,
             highlightedBorderColor: kPrimaryColor0,
-            onPressed: () {
-              var params = {
-                'id': Provider.of<UiNotifier>(context, listen: false)
-                    .leftNavIndex,
-                'useruid': uid
-              };
-              _functions
-                  .httpsCallable('onRequestAccept')
-                  .call(params)
-                  .then((value) {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text(value.data)));
-              });
-            },
+            onPressed: onRespond,
           ),
         ),
       ),
