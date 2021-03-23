@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_client/notifiers/progressIndicators.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/routes/routes.dart';
@@ -20,7 +21,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<UiNotifier>(create: (_) => UiNotifier())
+        ChangeNotifierProvider<UiNotifier>(create: (_) => UiNotifier()),
+        ChangeNotifierProvider<ProgressIndicatorStatus>(
+            create: (_) => ProgressIndicatorStatus()),
       ],
       builder: (context, app) => MaterialApp(
         title: 'sensei',

@@ -45,6 +45,7 @@ dependencies:
   share:
   shared_preferences:
   encrypt: ^4.1.0
+  modal_progress_hud: ^0.1.3
 
 dev_dependencies:
   flutter_test:

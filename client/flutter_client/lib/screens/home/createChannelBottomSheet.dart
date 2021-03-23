@@ -50,7 +50,7 @@ void bottomSheetForChannelCreate(BuildContext context, Channel channel) {
                           textColor: Colors.white,
                           color: kPrimaryColor0,
                           child: Text('Create'),
-                          onPressed: () {
+                          onPressed: () async {
                             if (title != null && title != '') {
                               var params = {
                                 'id': Provider.of<UiNotifier>(context,
@@ -59,13 +59,13 @@ void bottomSheetForChannelCreate(BuildContext context, Channel channel) {
                                 'title': title
                               };
                               if (channel == Channel.publicChannels) {
-                                callable1.call(params).then((value) {
+                                await callable1.call(params).then((value) {
                                   Navigator.pop(context);
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(content: Text(value.data)));
                                 });
                               } else {
-                                callable2.call(params).then((value) {
+                                await callable2.call(params).then((value) {
                                   Navigator.pop(context);
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(content: Text(value.data)));

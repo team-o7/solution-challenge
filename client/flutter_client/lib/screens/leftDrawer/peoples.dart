@@ -146,11 +146,13 @@ void bottomSheetForPeoples(
                 access == 'general'
                     ? callable1.call(params).then((value) {
                         Navigator.pop(context);
+
                         ScaffoldMessenger.of(context)
                             .showSnackBar(SnackBar(content: Text(value.data)));
                       })
                     : callable3.call(params).then((value) {
                         Navigator.pop(context);
+
                         ScaffoldMessenger.of(context)
                             .showSnackBar(SnackBar(content: Text(value.data)));
                       });

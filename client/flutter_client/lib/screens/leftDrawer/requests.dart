@@ -1,9 +1,11 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_client/notifiers/progressIndicators.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/widgets/customCachedNetworkImage.dart';
 import 'package:flutter_client/services/databaseHandler.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
 
 class TopicRequestsStream extends StatefulWidget {
@@ -31,56 +33,68 @@ class _TopicRequestsStreamState extends State<TopicRequestsStream> {
               child: Text('There are no requests'),
             ),
           )
-        : StreamBuilder(
-            stream: DatabaseHandler().topicJoinRequests(widget.reqs),
-            // ignore: missing_return
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Container();
-              }
-              final users = snapshot.data?.docs;
-              List<TopicRequestsTile> usersList = [];
-              for (var user in users) {
-                String firstName = user.data()['firstName'];
-                String lastName = user.data()['lastName'];
-                String dp = user.data()['dp'];
-                String userName = user.data()['userName'];
-                String uid = user.data()['uid'];
-                final userListTile = new TopicRequestsTile(
-                  firstName: firstName,
-                  lastName: lastName,
-                  dp: dp,
-                  userName: userName,
-                  uid: uid,
-                  onRespond: () {
-                    var params = {
-                      'id': Provider.of<UiNotifier>(context, listen: false)
-                          .leftNavIndex,
-                      'useruid': uid
-                    };
-                    TopicRequestsStream._functions
-                        .httpsCallable('onRequestAccept')
-                        .call(params)
-                        .then((value) {
-                      widget.reqs.remove(uid);
-                      setState(() {});
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(SnackBar(content: Text(value.data)));
-                    });
-                  },
+        : ModalProgressHUD(
+            inAsyncCall:
+                Provider.of<ProgressIndicatorStatus>(context, listen: true)
+                    .topicRequestRespond,
+            child: StreamBuilder(
+              stream: DatabaseHandler().topicJoinRequests(widget.reqs),
+              // ignore: missing_return
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Container();
+                }
+                final users = snapshot.data?.docs;
+                List<TopicRequestsTile> usersList = [];
+                for (var user in users) {
+                  String firstName = user.data()['firstName'];
+                  String lastName = user.data()['lastName'];
+                  String dp = user.data()['dp'];
+                  String userName = user.data()['userName'];
+                  String uid = user.data()['uid'];
+                  final userListTile = new TopicRequestsTile(
+                    firstName: firstName,
+                    lastName: lastName,
+                    dp: dp,
+                    userName: userName,
+                    uid: uid,
+                    onRespond: () {
+                      Provider.of<ProgressIndicatorStatus>(context,
+                              listen: false)
+                          .toggleTopicRequestRespond();
+                      var params = {
+                        'id': Provider.of<UiNotifier>(context, listen: false)
+                            .leftNavIndex,
+                        'useruid': uid
+                      };
+                      TopicRequestsStream._functions
+                          .httpsCallable('onRequestAccept')
+                          .call(params)
+                          .then((value) {
+                        widget.reqs.remove(uid);
+                        Provider.of<ProgressIndicatorStatus>(context,
+                                listen: false)
+                            .toggleTopicRequestRespond();
+
+                        setState(() {});
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text(value.data)));
+                      });
+                    },
+                  );
+                  usersList.add(userListTile);
+                }
+                return Scaffold(
+                  appBar: AppBar(
+                    backgroundColor: kPrimaryColor0,
+                    title: Text('Requests'),
+                  ),
+                  body: ListView(
+                    children: usersList,
+                  ),
                 );
-                usersList.add(userListTile);
-              }
-              return Scaffold(
-                appBar: AppBar(
-                  backgroundColor: kPrimaryColor0,
-                  title: Text('Requests'),
-                ),
-                body: ListView(
-                  children: usersList,
-                ),
-              );
-            },
+              },
+            ),
           );
   }
 }

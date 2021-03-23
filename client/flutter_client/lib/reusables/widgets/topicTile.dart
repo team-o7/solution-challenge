@@ -2,10 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_client/notifiers/progressIndicators.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_client/services/databaseHandler.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
 
 class TopicTile extends StatelessWidget {
   final bool isPrivate;
@@ -124,12 +126,19 @@ class TopicTile extends StatelessWidget {
                           ),
                           minWidth: 40,
                           onPressed: () {
+                            Provider.of<ProgressIndicatorStatus>(context,
+                                    listen: false)
+                                .toggleJoinTopic();
                             Map<String, dynamic> params = {'id': reference.id};
                             isPrivate
                                 ? _functions
                                     .httpsCallable('onPrivateTopicJoinRequest')
                                     .call(params)
                                     .then((value) {
+                                    Provider.of<ProgressIndicatorStatus>(
+                                            context,
+                                            listen: false)
+                                        .toggleJoinTopic();
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(content: Text(value.data)));
                                   })
@@ -137,6 +146,10 @@ class TopicTile extends StatelessWidget {
                                     .httpsCallable('onPublicTopicJoinRequest')
                                     .call(params)
                                     .then((value) {
+                                    Provider.of<ProgressIndicatorStatus>(
+                                            context,
+                                            listen: false)
+                                        .toggleJoinTopic();
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(content: Text(value.data)));
                                   });

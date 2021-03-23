@@ -1,10 +1,11 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_client/notifiers/progressIndicators.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
 import 'package:flutter_client/reusables/constants.dart';
-import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_client/reusables/widgets/customCachedNetworkImage.dart';
 import 'package:flutter_client/services/databaseHandler.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
 
 class Requests extends StatelessWidget {
@@ -49,51 +50,63 @@ class RequestsTile extends StatelessWidget {
     return showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            title: Text('Respond to $name'),
-            shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(SizeConfig.screenWidth * 10 / 360)),
-            actions: [
-              MaterialButton(
-                  onPressed: () {
-                    Map<String, dynamic> params = {'otherUid': uid};
-                    var callable = _functions.httpsCallable(
-                        'onFriendRequestDecline',
-                        options: HttpsCallableOptions(
-                            timeout: Duration(seconds: 60)));
-                    //todo: circularProgressIndicator
-                    callable.call(params).then((value) async {
-                      await Provider.of<UiNotifier>(context, listen: false)
-                          .setUserData();
-                      Navigator.pop(context);
-                      Provider.of<UiNotifier>(context, listen: false)
-                          .removeReqTile(index);
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(SnackBar(content: Text(value.data)));
-                    });
-                  },
-                  child: Text('Decline')),
-              MaterialButton(
-                  onPressed: () {
-                    Map<String, dynamic> params = {'otherUid': uid};
-                    var callable = _functions.httpsCallable(
-                        'onFriendRequestAccept',
-                        options: HttpsCallableOptions(
-                            timeout: Duration(seconds: 60)));
-                    //todo: circularProgressIndicator
-                    callable.call(params).then((value) async {
-                      await Provider.of<UiNotifier>(context, listen: false)
-                          .setUserData();
-                      Provider.of<UiNotifier>(context, listen: false)
-                          .removeReqTile(index);
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(SnackBar(content: Text(value.data)));
-                    });
-                  },
-                  child: Text('Accept')),
-            ],
+          return ModalProgressHUD(
+            inAsyncCall:
+                Provider.of<ProgressIndicatorStatus>(context, listen: true)
+                    .respondFriendRequest,
+            child: AlertDialog(
+              title: Text('Respond to $name'),
+              actions: [
+                MaterialButton(
+                    onPressed: () {
+                      Provider.of<ProgressIndicatorStatus>(context,
+                              listen: false)
+                          .toggleRespondFriendRequest();
+                      Map<String, dynamic> params = {'otherUid': uid};
+                      var callable = _functions.httpsCallable(
+                          'onFriendRequestDecline',
+                          options: HttpsCallableOptions(
+                              timeout: Duration(seconds: 60)));
+                      callable.call(params).then((value) async {
+                        await Provider.of<UiNotifier>(context, listen: false)
+                            .setUserData();
+                        Provider.of<ProgressIndicatorStatus>(context,
+                                listen: false)
+                            .toggleRespondFriendRequest();
+                        Navigator.pop(context);
+                        Provider.of<UiNotifier>(context, listen: false)
+                            .removeReqTile(index);
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text(value.data)));
+                      });
+                    },
+                    child: Text('Decline')),
+                MaterialButton(
+                    onPressed: () {
+                      Provider.of<ProgressIndicatorStatus>(context,
+                              listen: false)
+                          .toggleRespondFriendRequest();
+                      Map<String, dynamic> params = {'otherUid': uid};
+                      var callable = _functions.httpsCallable(
+                          'onFriendRequestAccept',
+                          options: HttpsCallableOptions(
+                              timeout: Duration(seconds: 60)));
+                      callable.call(params).then((value) async {
+                        await Provider.of<UiNotifier>(context, listen: false)
+                            .setUserData();
+                        Provider.of<UiNotifier>(context, listen: false)
+                            .removeReqTile(index);
+                        Provider.of<ProgressIndicatorStatus>(context,
+                                listen: false)
+                            .toggleRespondFriendRequest();
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text(value.data)));
+                      });
+                    },
+                    child: Text('Accept')),
+              ],
+            ),
           );
         });
   }
