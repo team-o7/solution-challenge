@@ -29,7 +29,7 @@ class DmTile extends StatelessWidget {
             contentPadding: EdgeInsets.only(left: 12, right: 12, top: 1),
             title: Text(name),
             subtitle: Text(
-              userName,
+              "@" + userName,
               style: TextStyle(
                   color: Colors.black,
                   fontWeight:

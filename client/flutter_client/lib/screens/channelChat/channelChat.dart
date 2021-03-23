@@ -11,6 +11,7 @@ import 'package:flutter_client/reusables/widgets/ChatTextField.dart';
 import 'package:flutter_client/reusables/widgets/customCachedNetworkImage.dart';
 import 'package:flutter_client/screens/home/body.dart';
 import 'package:flutter_client/services/databaseHandler.dart';
+import 'package:flutter_client/services/e2eEncryption.dart';
 import 'package:flutter_client/services/storageHandler.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:intl/intl.dart';
@@ -284,7 +285,7 @@ class ChannelChatStream extends StatelessWidget {
             String downloadUrl = data['fileLink'];
             Timestamp time = data['timeStamp'];
             ChannelMessageBox tile = new ChannelMessageBox(
-              msg: msg,
+              msg: tryDecrypt(msg),
               sender: sender,
               isFile: isFile,
               downloadUrl: downloadUrl,
@@ -303,5 +304,13 @@ class ChannelChatStream extends StatelessWidget {
         }
       },
     );
+  }
+
+  tryDecrypt(String text) {
+    try {
+      return MyEncryptionDecryption.decryptAES(text);
+    } catch (e) {
+      return text;
+    }
   }
 }

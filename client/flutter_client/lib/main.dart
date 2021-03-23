@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_client/notifiers/progressIndicators.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
 import 'package:flutter_client/reusables/constants.dart';
@@ -19,6 +20,10 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<UiNotifier>(create: (_) => UiNotifier()),

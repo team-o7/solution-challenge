@@ -21,9 +21,9 @@ class OneToOneMessageBox extends StatelessWidget {
   final String downloadUrl;
   final Timestamp time;
   static const senderPadding =
-      EdgeInsets.only(left: 60, top: 0, right: 10, bottom: 2);
+      EdgeInsets.only(left: 60, top: 6, right: 10, bottom: 2);
   static const receiverPadding =
-      EdgeInsets.only(left: 10, top: 0, right: 60, bottom: 2);
+      EdgeInsets.only(left: 10, top: 6, right: 60, bottom: 2);
 
   const OneToOneMessageBox(
       {Key key,
@@ -77,7 +77,7 @@ class OneToOneMessageBox extends StatelessWidget {
                           )
                         : Column(
                             children: [
-                              GestureDetector(
+                              InkWell(
                                 onTap: () async {
                                   var path = await ExtStorage
                                       .getExternalStoragePublicDirectory(
@@ -106,8 +106,10 @@ class OneToOneMessageBox extends StatelessWidget {
                                   width: 150,
                                   height: 100,
                                   child: Center(
-                                    child:
-                                        Icon(Icons.insert_drive_file_rounded),
+                                    child: Icon(
+                                      Icons.arrow_circle_down_outlined,
+                                      size: 48,
+                                    ),
                                   ),
                                 ),
                               ),

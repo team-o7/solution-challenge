@@ -15,113 +15,120 @@ class Body extends StatelessWidget {
   const Body({Key key, @required this.innerDrawerKey}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(56),
-          child: MainAppBar(
-            innerDrawerKey: innerDrawerKey,
-            title: 'sensei',
-          )),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 6, right: 6),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 12,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: RoundedTextField(
-                  hintText: 'Jump to...',
-                  borderRadius: 5,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(56),
+            child: MainAppBar(
+              innerDrawerKey: innerDrawerKey,
+              title: 'sensei',
+            )),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 6, right: 6),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 12,
                 ),
-              ),
-              SizedBox(
-                height: SizeConfig.screenHeight * 0.02,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                  'Admin channels',
-                  style: TextStyle(
-                      fontSize: SizeConfig.screenWidth * 18 / 360,
-                      fontWeight: FontWeight.w600),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: RoundedTextField(
+                    hintText: 'Jump to...',
+                    borderRadius: 5,
+                  ),
                 ),
-              ),
-              ChannelsStream(channel: Channel.adminChannels),
-              SizedBox(
-                height: 24,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                  'Private channels',
-                  style: TextStyle(
-                      fontSize: SizeConfig.screenWidth * 18 / 360,
-                      fontWeight: FontWeight.w600),
+                SizedBox(
+                  height: SizeConfig.screenHeight * 0.02,
                 ),
-              ),
-              ChannelsStream(
-                channel: Channel.privateChannels,
-              ),
-              MaterialButton(
-                onPressed: () {
-                  bottomSheetForChannelCreate(context, Channel.privateChannels);
-                },
-                child: Row(
-                  children: [
-                    Icon(
-                      CupertinoIcons.add_circled_solid,
-                    ),
-                    SizedBox(
-                      width: SizeConfig.screenWidth * 8 / 360,
-                    ),
-                    Text(
-                      'Add Channel',
-                      style: TextStyle(
-                          fontSize: SizeConfig.screenWidth * 15 / 360,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    'Admin channels',
+                    style: TextStyle(
+                        fontSize: SizeConfig.screenWidth * 18 / 360,
+                        fontWeight: FontWeight.w600),
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 24,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                  'Public channels',
-                  style: TextStyle(
-                      fontSize: SizeConfig.screenWidth * 18 / 360,
-                      fontWeight: FontWeight.w600),
+                ChannelsStream(channel: Channel.adminChannels),
+                SizedBox(
+                  height: 24,
                 ),
-              ),
-              ChannelsStream(channel: Channel.publicChannels),
-              MaterialButton(
-                onPressed: () {
-                  bottomSheetForChannelCreate(context, Channel.publicChannels);
-                },
-                child: Row(
-                  children: [
-                    Icon(
-                      CupertinoIcons.add_circled_solid,
-                    ),
-                    SizedBox(
-                      width: SizeConfig.screenWidth * 8 / 360,
-                    ),
-                    Text(
-                      'Add Channel',
-                      style: TextStyle(
-                          fontSize: SizeConfig.screenWidth * 15 / 360,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    'Private channels',
+                    style: TextStyle(
+                        fontSize: SizeConfig.screenWidth * 18 / 360,
+                        fontWeight: FontWeight.w600),
+                  ),
                 ),
-              ),
-            ],
+                ChannelsStream(
+                  channel: Channel.privateChannels,
+                ),
+                MaterialButton(
+                  onPressed: () {
+                    bottomSheetForChannelCreate(
+                        context, Channel.privateChannels);
+                  },
+                  child: Row(
+                    children: [
+                      Icon(
+                        CupertinoIcons.add_circled_solid,
+                      ),
+                      SizedBox(
+                        width: SizeConfig.screenWidth * 8 / 360,
+                      ),
+                      Text(
+                        'Add Channel',
+                        style: TextStyle(
+                            fontSize: SizeConfig.screenWidth * 15 / 360,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 24,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    'Public channels',
+                    style: TextStyle(
+                        fontSize: SizeConfig.screenWidth * 18 / 360,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ),
+                ChannelsStream(channel: Channel.publicChannels),
+                MaterialButton(
+                  onPressed: () {
+                    bottomSheetForChannelCreate(
+                        context, Channel.publicChannels);
+                  },
+                  child: Row(
+                    children: [
+                      Icon(
+                        CupertinoIcons.add_circled_solid,
+                      ),
+                      SizedBox(
+                        width: SizeConfig.screenWidth * 8 / 360,
+                      ),
+                      Text(
+                        'Add Channel',
+                        style: TextStyle(
+                            fontSize: SizeConfig.screenWidth * 15 / 360,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

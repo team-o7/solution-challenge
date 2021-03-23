@@ -1,4 +1,5 @@
 gradle-wrapper.jar
+key.properties
 /.gradle
 /captures/
 /gradlew
