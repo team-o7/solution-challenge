@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/reusables/widgets/roundedTextField.dart';
 import 'package:flutter_client/services/databaseHandler.dart';
+import 'package:flutter_client/services/e2eEncryption.dart';
 import 'package:flutter_client/services/storageHandler.dart';
 
 import '../constants.dart';
@@ -68,8 +69,11 @@ class ChatTextField extends StatelessWidget {
               minWidth: SizeConfig.screenWidth * 10 / 360,
               onPressed: () {
                 if (msg != null && msg != '') {
+                  var em = MyEncryptionDecryption.encryptAES(msg);
+                  print(MyEncryptionDecryption.decryptAES(
+                      'r+bOdqxOh4ejRqwanIouiQ=='));
                   reference.collection('messages').add({
-                    'msg': msg,
+                    'msg': em,
                     'isFile': false,
                     'sender': currentUser,
                     'timeStamp': DateTime.now()

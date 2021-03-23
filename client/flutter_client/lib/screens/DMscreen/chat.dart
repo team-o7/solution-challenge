@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/widgets/1to1messageBox.dart';
 import 'package:flutter_client/reusables/widgets/ChatTextField.dart';
+import 'package:flutter_client/services/e2eEncryption.dart';
 
 // ignore: must_be_immutable
 class Chat extends StatelessWidget {
@@ -69,7 +70,7 @@ class Chat extends StatelessWidget {
                               String fileLink = doc.data()['fileLink'];
                               Timestamp time = doc.data()['timeStamp'];
                               OneToOneMessageBox box = new OneToOneMessageBox(
-                                message: msg,
+                                message: tryDecrypt(msg),
                                 isMe: firebaseAuth.currentUser.uid == sender,
                                 isFile: isFile,
                                 downloadUrl: fileLink,
@@ -101,5 +102,13 @@ class Chat extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  tryDecrypt(String text) {
+    try {
+      return MyEncryptionDecryption.decryptAES(text);
+    } catch (e) {
+      return text;
+    }
   }
 }
