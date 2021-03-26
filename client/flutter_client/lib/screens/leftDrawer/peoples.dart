@@ -61,6 +61,16 @@ class PeoplesInTopicStream extends StatelessWidget {
           return Container();
         }
         var docs = snapshot1.data.docs;
+        if(docs.length == 0){
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: kPrimaryColor0,
+            ),
+            body: Center(
+              child: Text('Error'),
+            ),
+          );
+        }
         List<FutureBuilder> tiles = [];
         for (var doc in docs) {
           var data = doc.data();

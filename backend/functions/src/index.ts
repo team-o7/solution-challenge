@@ -332,8 +332,8 @@ export const onNewDm = functions.firestore
 
     const payload = {
       notification: {
-        title: "Message from " + ps[1].firstName,
-        body: msg.msg,
+        title: "DM",
+        body: "New DM from " + ps[1].firstName,
         sound: "default",
       },
       data: {
@@ -388,7 +388,7 @@ export const onNewMsgInPublicChannel = functions.firestore
     const payload = {
       notification: {
         title: topicData.title,
-        body: sender.firstName + ": " + msg.msg,
+        body: "New message from " +sender.firstName,
         sound: "default",
       },
       data: {
@@ -436,7 +436,7 @@ export const onNewMsgInAdminChannel = functions.firestore
     const payload = {
       notification: {
         title: topicData.title,
-        body: sender.firstName + ": " + msg.msg,
+        body: "New message from " + sender.firstName,
         sound: "default",
       },
       data: {
@@ -466,7 +466,7 @@ export const onNewMsgInPrivateChannel = functions.firestore
       .doc(context.params.channelId)
       .get();
     const channelData = channel.data();
-    const receivers = await channel.data().peoples;
+    const receivers = channelData.peoples;
     console.log(receivers);
     let deviceToken = [];
     let users = [];
@@ -489,7 +489,7 @@ export const onNewMsgInPrivateChannel = functions.firestore
     const payload = {
       notification: {
         title: channelData.title,
-        body: sender.firstName + ": " + msg.msg,
+        body: "New msg from " + sender.firstName,
         sound: "default",
       },
       data: {
