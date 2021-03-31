@@ -1,6 +1,6 @@
 # solution-challenge
 Repository for solution challenge.
-* Note : The app is online on Playstore:
+* Note : The app is online on Playstore.
 
 # Sensei
 Sensei app is mostly written in dart (flutter), powered by Firebase as backend.
