@@ -1130,10 +1130,12 @@ export const rate = functions.https.onCall(async (data, context) => {
       value.docs.forEach((element) => {
         if(element.data().rating !== -1){
           newRating += element.data().rating;
-          count ++;
+          ++count;
         }
       });
+      if(count > 0) {
       newRating = newRating / count;
+      }
     });
 
   await topic.ref.update({
