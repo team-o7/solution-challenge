@@ -26,7 +26,7 @@ flutter pub get
 ```
 
 **Step 3:**
-To run the application, execute the following code:
+To run the application, execute the following code in console:
 
 ```
 flutter run
