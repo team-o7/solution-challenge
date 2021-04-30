@@ -5,6 +5,8 @@ Repository for solution challenge.
 # Sensei
 Sensei app is mostly written in dart (flutter), powered by Firebase as backend.
 
+Features video: https://youtu.be/jS2dGt4Pbcw
+
 # How to run the code
 * Note: To run and analyse the code, flutter must be installed in your system, if flutter is installed in your system follow Part 1 else follow Part 2.
 
