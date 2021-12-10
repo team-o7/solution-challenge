@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/notifiers/progressIndicators.dart';
 import 'package:flutter_client/notifiers/uiNotifier.dart';
+import 'package:flutter_client/reusables/constants.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
 import 'package:flutter_client/reusables/widgets/createTopicModalSheet.dart';
 import 'package:flutter_client/reusables/widgets/topicChannelTile.dart';
@@ -41,7 +42,7 @@ class LeftDrawer extends StatelessWidget {
                 width: SizeConfig.screenWidth * 1 / 4,
                 child: Container(
                     alignment: Alignment.center,
-                    color: Colors.grey[200],
+                    color: Colors.black87,
                     child: SingleChildScrollView(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -81,6 +82,10 @@ class LeftDrawer extends StatelessWidget {
                         ],
                       ),
                     )),
+              ),
+              Divider(
+                color: kPrimaryColor0,
+                thickness: 2.0,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,7 +144,7 @@ class LeftDrawer extends StatelessWidget {
                     title: 'Invite people',
                     icon: Icons.insert_invitation,
                     onPressed: () async {
-                      DocumentSnapshot ds = await _firestore
+                      DocumentSnapshot<Map> ds = await _firestore
                           .collection('topics')
                           .doc(Provider.of<UiNotifier>(context, listen: false)
                               .leftNavIndex)
@@ -163,7 +168,7 @@ class LeftDrawer extends StatelessWidget {
                           .where('uid',
                               isEqualTo: FirebaseAuth.instance.currentUser.uid)
                           .snapshots();
-                      QuerySnapshot qs = await sqs.first;
+                      QuerySnapshot<Map> qs = await sqs.first;
                       bool notify = qs.docs[0].data()['push notification'];
                       await showDialog(
                           context: context,

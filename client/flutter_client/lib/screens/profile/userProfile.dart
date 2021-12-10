@@ -145,7 +145,6 @@ class UserProfile extends StatelessWidget {
               margin: EdgeInsets.symmetric(
                   horizontal: SizeConfig.screenWidth * 10 / 360),
               decoration: BoxDecoration(
-                color: Color(0xffF5F5F5),
                 borderRadius:
                     BorderRadius.circular(SizeConfig.screenWidth * 10 / 360),
                 border: Border.all(
@@ -199,7 +198,6 @@ class UserProfile extends StatelessWidget {
               margin: EdgeInsets.symmetric(
                   horizontal: SizeConfig.screenWidth * 10 / 360),
               decoration: BoxDecoration(
-                  color: Color(0xffF5F5F5),
                   borderRadius:
                       BorderRadius.circular(SizeConfig.screenWidth * 10 / 360),
                   border: Border.all(
@@ -256,10 +254,9 @@ class ProfileWidget0 extends StatelessWidget {
             Text(
               text,
               style: TextStyle(
-                fontSize: SizeConfig.screenWidth * 12 / 360,
-                fontWeight: FontWeight.w600,
-                color: Color(0x803F0E40),
-              ),
+                  fontSize: SizeConfig.screenWidth * 12 / 360,
+                  fontWeight: FontWeight.w600,
+                  color: kPrimaryColor0),
             ),
           ],
         ),

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ext_storage/ext_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_client/reusables/sizeConfig.dart';
@@ -79,28 +78,29 @@ class OneToOneMessageBox extends StatelessWidget {
                             children: [
                               InkWell(
                                 onTap: () async {
-                                  var path = await ExtStorage
-                                      .getExternalStoragePublicDirectory(
-                                          ExtStorage.DIRECTORY_DOWNLOADS);
+                                  //TODO
+                                  // var path = await ExtStorage
+                                  //     .getExternalStoragePublicDirectory(
+                                  //         ExtStorage.DIRECTORY_DOWNLOADS);
 
-                                  if (await FileSystemEntity.isFile(
-                                      path + '/' + message)) {
-                                    await OpenFile.open(path + '/' + message);
-                                  } else {
-                                    final status =
-                                        await Permission.storage.request();
-                                    if (status.isGranted) {
-                                      final dir = await ExtStorage
-                                          .getExternalStoragePublicDirectory(
-                                              ExtStorage.DIRECTORY_DOWNLOADS);
-                                      StorageHandler().downloadFile(
-                                          message, dir, downloadUrl);
-                                    } else {
-                                      print('!!!!!!!!!!!!!!!!!!!!!!!!!');
-                                      print("Permission deined");
-                                      print('!!!!!!!!!!!!!!!!!!!!!!!!!');
-                                    }
-                                  }
+                                  // if (await FileSystemEntity.isFile(
+                                  //     path + '/' + message)) {
+                                  //   await OpenFile.open(path + '/' + message);
+                                  // } else {
+                                  //   final status =
+                                  //       await Permission.storage.request();
+                                  //   if (status.isGranted) {
+                                  //     final dir = await ExtStorage
+                                  //         .getExternalStoragePublicDirectory(
+                                  //             ExtStorage.DIRECTORY_DOWNLOADS);
+                                  //     StorageHandler().downloadFile(
+                                  //         message, dir, downloadUrl);
+                                  //   } else {
+                                  //     print('!!!!!!!!!!!!!!!!!!!!!!!!!');
+                                  //     print("Permission deined");
+                                  //     print('!!!!!!!!!!!!!!!!!!!!!!!!!');
+                                  //   }
+                                  // }
                                 },
                                 child: Container(
                                   width: 150,

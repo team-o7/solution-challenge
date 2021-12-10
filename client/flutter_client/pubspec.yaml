@@ -14,22 +14,21 @@ dependencies:
 
   cupertino_icons: ^1.0.1
 
-  provider: ^4.3.3
-  intl: ^0.16.1
+  provider: ^6.0.1
+  intl: ^0.17.0
 
   #Firebase
 
-  firebase_core: ^0.7.0
-  firebase_storage: ^7.0.0
-  firebase_auth: ^0.20.0+1
-  cloud_firestore: ^0.16.0
-  cloud_functions: ^0.9.0
+  firebase_core: ^1.7.0
+  firebase_storage: ^10.0.4
+  firebase_auth: ^3.1.2
+  cloud_firestore: ^2.5.3
+  cloud_functions: ^3.0.4
   firebase_messaging:
   firebase_dynamic_links:
-  google_sign_in: ^4.5.1
+  google_sign_in: ^5.1.1
 
   #Other Tools
-  ext_storage:
   url_launcher:
   flutter_linkify:
   open_file:
@@ -37,21 +36,21 @@ dependencies:
   flutter_downloader:
   path_provider:
   file_picker:
-  image_picker: ^0.6.7+22
+  image_picker: ^0.8.4+2
   string_to_hex: ^0.2.1+30
-  flutter_rating_bar: ^3.2.0+1
-  flutter_inner_drawer: ^0.5.7+2
-  cached_network_image: ^2.5.0
+  flutter_rating_bar: ^4.0.0
+  flutter_inner_drawer: ^1.0.0+1
+  cached_network_image: ^3.1.0
   share:
   shared_preferences:
-  encrypt: ^4.1.0
+  encrypt: ^5.0.1
   modal_progress_hud: ^0.1.3
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  integration_test:
-    sdk: flutter
+  # flutter_test:
+  #   sdk: flutter
+  # integration_test:
+  #   sdk: flutter
 
 
 flutter:

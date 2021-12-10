@@ -152,7 +152,6 @@ class _ProfileState extends State<Profile> {
               margin: EdgeInsets.symmetric(
                   horizontal: SizeConfig.screenWidth * 10 / 360),
               decoration: BoxDecoration(
-                color: Color(0x80F5F5F5),
                 borderRadius:
                     BorderRadius.circular(SizeConfig.screenWidth * 10 / 360),
                 border: Border.all(
@@ -194,7 +193,7 @@ class _ProfileState extends State<Profile> {
               leading: Icon(
                 Icons.school,
                 size: SizeConfig.screenWidth * 25 / 360,
-                color: Colors.black54,
+                color: kPrimaryColor0,
               ),
               title: Text(
                 _college,
@@ -208,7 +207,7 @@ class _ProfileState extends State<Profile> {
               leading: Icon(
                 Icons.celebration,
                 size: SizeConfig.screenWidth * 25 / 360,
-                color: Colors.black54,
+                color: kPrimaryColor0,
               ),
               title: Text(
                 DateFormat.yMMMd().format(_dob.toDate()).toString(),
@@ -225,7 +224,6 @@ class _ProfileState extends State<Profile> {
               margin: EdgeInsets.symmetric(
                   horizontal: SizeConfig.screenWidth * 10 / 360),
               decoration: BoxDecoration(
-                  color: Color(0xffF5F5F5),
                   borderRadius:
                       BorderRadius.circular(SizeConfig.screenWidth * 10 / 360),
                   border: Border.all(
@@ -244,7 +242,7 @@ class _ProfileState extends State<Profile> {
               leading: Icon(
                 Icons.nights_stay_outlined,
                 size: SizeConfig.screenWidth * 25 / 360,
-                color: Colors.black54,
+                color: kPrimaryColor0,
               ),
               title: Text(
                 'Night mode',
@@ -262,7 +260,7 @@ class _ProfileState extends State<Profile> {
               leading: Icon(
                 Icons.logout,
                 size: SizeConfig.screenWidth * 25 / 360,
-                color: Colors.black54,
+                color: kPrimaryColor0,
               ),
               title: Text(
                 'Logout',

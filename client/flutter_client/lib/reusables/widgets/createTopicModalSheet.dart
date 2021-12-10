@@ -76,20 +76,6 @@ class _CreateTopicModalSheetState extends State<CreateTopicModalSheet> {
                       child: imageFile == null
                           ? Container(
                               child: CachedNetworkImage(
-                                imageUrl: _dp == null ? " " : _dp,
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  width: SizeConfig.screenWidth * 90 / 360,
-                                  height: SizeConfig.screenWidth * 90 / 360,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                        SizeConfig.screenWidth * 5 / 360),
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                ),
                                 placeholder: (context, url) => Container(
                                   child: Icon(
                                     Icons.add_a_photo_outlined,
@@ -101,6 +87,22 @@ class _CreateTopicModalSheetState extends State<CreateTopicModalSheet> {
                                     borderRadius: BorderRadius.circular(
                                         SizeConfig.screenWidth * 5 / 360),
                                     color: Color(0xffE5E5E5),
+                                  ),
+                                ),
+                                imageUrl: _dp == null
+                                    ? "https://firebasestorage.googleapis.com/v0/b/sensei-56215.appspot.com/o/i.jpg?alt=media&token=d94ef544-40d7-4ace-a7d4-60ccc46f60b4"
+                                    : _dp,
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  width: SizeConfig.screenWidth * 90 / 360,
+                                  height: SizeConfig.screenWidth * 90 / 360,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                        SizeConfig.screenWidth * 5 / 360),
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.fill,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -142,11 +144,11 @@ class _CreateTopicModalSheetState extends State<CreateTopicModalSheet> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
-                          color: kTextColor,
                           letterSpacing: 1.5,
                         ),
                       ),
                       value: _isPrivate,
+                      activeColor: kPrimaryColor0,
                       onChanged: (val) {
                         setState(() {
                           _isPrivate = val;

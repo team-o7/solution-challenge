@@ -80,11 +80,11 @@ void bottomSheetForChannelCreate(BuildContext context, Channel channel) {
                     child: channel == Channel.publicChannels
                         ? Text(
                             'Everyone in the topic will have access to public channels.',
-                            style: TextStyle(color: Colors.black45),
+                            style: TextStyle(color: kPrimaryColorLight),
                           )
                         : Text(
                             'You can add peoples in private channel after creating.',
-                            style: TextStyle(color: Colors.black45),
+                            style: TextStyle(color: kPrimaryColorLight),
                           ),
                   )
                 ],

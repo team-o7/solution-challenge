@@ -36,7 +36,6 @@ class CreateTopicTextField extends StatelessWidget {
             right: SizeConfig.screenWidth * 10 / 360,
           ),
           filled: true,
-          // fillColor: Colors.white,
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(
                 Radius.circular(SizeConfig.screenWidth * 5 / 360)),
@@ -72,7 +71,6 @@ class CreateTopicTextField extends StatelessWidget {
         style: TextStyle(
           fontSize: SizeConfig.screenWidth * 14 / 360,
           fontWeight: FontWeight.w400,
-          color: kTextColor,
           letterSpacing: 1.5,
         ),
       ),

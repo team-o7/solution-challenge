@@ -62,7 +62,6 @@ class _EditProfileState extends State<EditProfile> {
           IconButton(
             icon: Icon(
               Icons.check,
-              color: Colors.green,
             ),
             onPressed: () async {
               String imageName = "profileImage/" +
@@ -125,7 +124,6 @@ class _EditProfileState extends State<EditProfile> {
           )
         ],
       ),
-      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Stack(
           children: [

@@ -25,7 +25,7 @@ class PeoplesInPrivateChannel extends StatelessWidget {
           IconButton(
               icon: Icon(Icons.add),
               onPressed: () async {
-                var ss = await reference.get();
+                DocumentSnapshot<Map> ss = await reference.get();
                 List<dynamic> peoples = ss.data()['peoples'];
                 Navigator.push(
                     context,
@@ -85,7 +85,7 @@ class PeoplesInPrivateChannel extends StatelessWidget {
               leading: Icon(Icons.add),
               title: Text('Add more peoples'),
               onTap: () async {
-                var ss = await reference.get();
+                DocumentSnapshot<Map> ss = await reference.get();
                 List<dynamic> peoples = ss.data()['peoples'];
                 Navigator.push(
                     context,

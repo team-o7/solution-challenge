@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ext_storage/ext_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,11 +9,8 @@ import 'package:flutter_client/reusables/widgets/customCachedNetworkImage.dart';
 import 'package:flutter_client/screens/home/body.dart';
 import 'package:flutter_client/services/databaseHandler.dart';
 import 'package:flutter_client/services/e2eEncryption.dart';
-import 'package:flutter_client/services/storageHandler.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:intl/intl.dart';
-import 'package:open_file/open_file.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:string_to_hex/string_to_hex.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -146,13 +140,14 @@ class _ChannelMessageBoxState extends State<ChannelMessageBox> {
     try {
       return Color(StringToHex.toColor(c));
     } catch (e) {
-      return Color(0xff000000);
+      return Color(0xffffffff);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      tileColor: Colors.grey[900],
       onLongPress: () {
         Clipboard.setData(
           new ClipboardData(text: widget.msg),
@@ -214,7 +209,6 @@ class _ChannelMessageBoxState extends State<ChannelMessageBox> {
             }
           },
           text: widget.msg,
-          style: TextStyle(color: Colors.black87, fontSize: 15),
           linkStyle: TextStyle(color: Colors.blue, fontSize: 15),
         ),
       ),
@@ -222,29 +216,27 @@ class _ChannelMessageBoxState extends State<ChannelMessageBox> {
           ? IconButton(
               icon: Icon(
                 Icons.arrow_circle_down_outlined,
-                color: Colors.black87,
                 size: 32,
               ),
               onPressed: () async {
-                var path = await ExtStorage.getExternalStoragePublicDirectory(
-                    ExtStorage.DIRECTORY_DOWNLOADS);
-
-                if (await FileSystemEntity.isFile(path + '/' + widget.msg)) {
-                  await OpenFile.open(path + '/' + widget.msg);
-                } else {
-                  final status = await Permission.storage.request();
-                  if (status.isGranted) {
-                    final dir =
-                        await ExtStorage.getExternalStoragePublicDirectory(
-                            ExtStorage.DIRECTORY_DOWNLOADS);
-                    StorageHandler()
-                        .downloadFile(widget.msg, dir, widget.downloadUrl);
-                  } else {
-                    print('!!!!!!!!!!!!!!!!!!!!!!!!!');
-                    print("Permission deined");
-                    print('!!!!!!!!!!!!!!!!!!!!!!!!!');
-                  }
-                }
+                //var path = await ExtStorage.getExternalStoragePublicDirectory(
+                //    ExtStorage.DIRECTORY_DOWNLOADS);
+                // if (await FileSystemEntity.isFile(path + '/' + widget.msg)) {
+                //   await OpenFile.open(path + '/' + widget.msg);
+                // } else {
+                //   final status = await Permission.storage.request();
+                //   if (status.isGranted) {
+                //     final dir =
+                //         await ExtStorage.getExternalStoragePublicDirectory(
+                //             ExtStorage.DIRECTORY_DOWNLOADS);
+                //     StorageHandler()
+                //         .downloadFile(widget.msg, dir, widget.downloadUrl);
+                //   } else {
+                //     print('!!!!!!!!!!!!!!!!!!!!!!!!!');
+                //     print("Permission deined");
+                //     print('!!!!!!!!!!!!!!!!!!!!!!!!!');
+                //   }
+                // }
               },
             )
           : SizedBox(

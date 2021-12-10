@@ -1,12 +1,13 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+
 import 'package:flutter_client/reusables/sizeConfig.dart';
 
-const Color kPrimaryColor0 = Color(0xff350D36);
-const Color kPrimaryColor1 = Color(0xff350D36);
-const Color kPrimaryColorLight = Color(0xffea9fed);
-const Color kPrimaryColorVeryLight = Color(0xffeacaeb);
+final Color kPrimaryColor0 = Colors.deepPurpleAccent;
+final Color kPrimaryColor1 = kPrimaryColor0;
+const Color kPrimaryColorLight = Colors.deepPurple;
+Color kPrimaryColorVeryLight = Colors.deepPurple[400];
 const Color kTextColor = Color(0xff1D1C1D);
 
 const kBottomNavLabelTextStyle = TextStyle(

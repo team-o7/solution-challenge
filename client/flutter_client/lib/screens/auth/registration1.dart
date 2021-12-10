@@ -20,7 +20,6 @@ class _Registration1State extends State<Registration1> {
     SizeConfig().init(context);
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
         body: Builder(
           builder: (context) => Column(
             crossAxisAlignment: CrossAxisAlignment.start,

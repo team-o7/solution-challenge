@@ -40,14 +40,12 @@ class EditProfileTextField extends StatelessWidget {
           labelStyle: TextStyle(
             fontSize: SizeConfig.screenWidth * 14 / 360,
             fontWeight: FontWeight.w400,
-            color: kTextColor,
           ),
           labelText: labelText,
         ),
         style: TextStyle(
           fontSize: SizeConfig.screenWidth * 14 / 360,
           fontWeight: FontWeight.w500,
-          color: kTextColor,
           letterSpacing: 1.5,
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client/screens/auth/googleLogin.dart';
 import 'package:flutter_client/screens/auth/registration1.dart';
@@ -17,35 +18,35 @@ class Routes {
 
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => Welcome());
+        return CupertinoPageRoute(builder: (_) => Welcome());
       case '/logIn':
-        return MaterialPageRoute(
+        return CupertinoPageRoute(
           builder: (_) => GoogleLogin(),
         );
       case '/registration1':
-        return MaterialPageRoute(builder: (_) => Registration1());
+        return CupertinoPageRoute(builder: (_) => Registration1());
       case '/registration2':
-        return MaterialPageRoute(builder: (_) => Registration2());
+        return CupertinoPageRoute(builder: (_) => Registration2());
       case '/drawerHolder':
-        return MaterialPageRoute(builder: (_) => DrawerHolder());
+        return CupertinoPageRoute(builder: (_) => DrawerHolder());
       case '/invitePage':
-        return MaterialPageRoute(builder: (_) => InvitePage());
+        return CupertinoPageRoute(builder: (_) => InvitePage());
       // case '/userProfile':
       //   return MaterialPageRoute(builder: (_) => UserProfile());
       case '/editProfile':
-        return MaterialPageRoute(builder: (_) => EditProfile());
+        return CupertinoPageRoute(builder: (_) => EditProfile());
       case '/profile/requests':
-        return MaterialPageRoute(
+        return CupertinoPageRoute(
             builder: (_) => Requests(
                   requests: args,
                 ));
       case '/userProfile':
-        return MaterialPageRoute(
+        return CupertinoPageRoute(
             builder: (_) => UserProfile(
                   userData: args,
                 ));
       case '/channelChat':
-        return MaterialPageRoute(
+        return CupertinoPageRoute(
             builder: (_) => ChannelChat(
                   title: args,
                 ));
@@ -56,7 +57,7 @@ class Routes {
   }
 
   static Route<dynamic> _errorRoute() {
-    return MaterialPageRoute(builder: (_) {
+    return CupertinoPageRoute(builder: (_) {
       return Scaffold(
         body: Center(
           child: Text('ERROR'),

@@ -17,7 +17,6 @@ class Registration2 extends StatelessWidget {
     SizeConfig().init(context);
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
         body: ModalProgressHUD(
           inAsyncCall:
               Provider.of<ProgressIndicatorStatus>(context, listen: true)

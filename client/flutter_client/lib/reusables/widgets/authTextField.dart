@@ -20,7 +20,6 @@ class AuthTextField extends StatelessWidget {
       enabled: true, // to trigger disabledBorder
       decoration: InputDecoration(
           filled: true,
-          fillColor: Colors.white,
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(
                 Radius.circular(SizeConfig.screenWidth * 5 / 360)),
@@ -55,7 +54,6 @@ class AuthTextField extends StatelessWidget {
       style: TextStyle(
         fontSize: SizeConfig.screenWidth * 16 / 360,
         fontWeight: FontWeight.w400,
-        color: kTextColor,
         letterSpacing: 1.5,
       ),
     );

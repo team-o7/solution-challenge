@@ -27,9 +27,9 @@ class _DobPickerState extends State<DobPicker> {
         return Theme(
           data: ThemeData.light().copyWith(
             colorScheme: ColorScheme.light(
-              primary: Color(0xff350D36),
-              surface: Color(0xff350D36),
-            ),
+                primary: kPrimaryColor0,
+                background: Colors.black,
+                surface: Colors.black),
           ),
           child: child,
         );
